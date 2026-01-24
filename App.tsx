@@ -49,16 +49,16 @@ import LogoutModal from './components/LogoutModal';
 import CelebrationModal from './components/CelebrationModal';
 
 // --- CUSTOM HOOK PARA PERSISTENCIA (EL CEREBRO DE LA APP) ---
-// --- CUSTOM HOOK PARA PERSISTENCIA (Deshabilitado temporalmente para debug) ---
+// --- CUSTOM HOOK PARA PERSISTENCIA (EL CEREBRO DE LA APP) ---
 function useStickyState<T>(defaultValue: T, key: string): [T, React.Dispatch<React.SetStateAction<T>>] {
-  // DEBUG MODE: Ignoramos localStorage por si hay datos corruptos
-  const [value, setValue] = useState<T>(defaultValue);
+  const [value, setValue] = useState<T>(() => {
+    const stickyValue = window.localStorage.getItem(key);
+    return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue;
+  });
 
-  /* 
   useEffect(() => {
     window.localStorage.setItem(key, JSON.stringify(value));
   }, [key, value]);
-  */
 
   return [value, setValue];
 }
@@ -445,33 +445,7 @@ const AppContent: React.FC = () => {
             return <Landing onStart={() => navigateTo(View.LOGIN)} onNavigate={navigateTo} />;
         }
       })()}
-      {(() => {
-        switch (view) {
-          // ... (existing cases)
-          default:
-            return <Landing onStart={() => navigateTo(View.LOGIN)} onNavigate={navigateTo} />;
-        }
-      })()}
 
-      <div style={{
-        position: 'fixed',
-        bottom: '10px',
-        left: '10px',
-        background: 'rgba(0,0,0,0.8)',
-        color: '#0f0',
-        padding: '10px',
-        zIndex: 99999,
-        fontSize: '12px',
-        pointerEvents: 'none',
-        maxWidth: '300px',
-        wordWrap: 'break-word'
-      }}>
-        <strong>DEBUG INFO:</strong><br />
-        View: {view}<br />
-        User: {user ? user.email : 'null'}<br />
-        Agreements: {agreements.length}<br />
-        Build: Fix Regression
-      </div>
     </>
   );
 };
