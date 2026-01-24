@@ -13,6 +13,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [companyName, setCompanyName] = useState(''); // Estado para nombre de empresa
+    const [showPassword, setShowPassword] = useState(false);
 
     const [isOrgCreator, setIsOrgCreator] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState<'FREE' | 'ENTERPRISE'>('FREE');
@@ -164,14 +165,26 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                                     </button>
                                 )}
                             </div>
-                            <input
-                                type="password"
-                                required
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full p-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium"
-                                placeholder="••••••••"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full p-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium pr-10"
+                                    placeholder="••••••••"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors focus:outline-none"
+                                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                >
+                                    <span className="material-symbols-outlined">
+                                        {showPassword ? 'visibility_off' : 'visibility'}
+                                    </span>
+                                </button>
+                            </div>
                         </div>
                     )}
 
