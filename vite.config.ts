@@ -5,7 +5,15 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'dist',
-    sourcemap: false
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000, // Aumentar límite a 1MB para evitar warnings en Vercel
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'lucide-react'], // Separar librerías grandes
+        },
+      },
+    },
   },
   server: {
     port: 3000
