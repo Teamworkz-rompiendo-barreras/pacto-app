@@ -1,0 +1,10 @@
+{
+    "name": "pacto-app-final",
+    "framework": "vite",
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}

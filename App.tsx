@@ -4,6 +4,7 @@ import { View, UserProfile, AccessibilitySettings, Ritual, Agreement } from './t
 import { LanguageProvider } from './LanguageContext';
 import { supabase } from './supabaseClient'; // Import supabase
 import { userService } from './services/userService';
+import { authService } from './services/authService';
 
 // Components
 import Landing from './components/Landing';
@@ -102,25 +103,38 @@ const AppContent: React.FC = () => {
   };
 
 
+  // --- VERIFICACIÓN DE SESIÓN AL INICIO ---
+  useEffect(() => {
+    const checkSession = async () => {
+      const currentUser = await authService.getCurrentUser();
+      if (currentUser) {
+        setUser(currentUser);
+        // Si estaba en landing, mover a dashboard
+        if (view === View.LANDING) setView(View.DASHBOARD);
+      }
+    };
+    checkSession();
+  }, []);
 
   const handleLogin = async (name: string, settings: AccessibilitySettings) => {
-    // Generar IDs aleatorios tipo UUID para el MVP
-    const userId = crypto.randomUUID();
-    const settingsId = crypto.randomUUID();
+    // Ya no creamos el usuario aquí, porque authService.signUp/signIn ya nos devuelve el usuario completo
+    // Simplemente actualizamos estado y navegamos
 
-    const newUser: UserProfile = {
-      id: userId,
-      name,
-      email: `${name.toLowerCase().replace(/\s/g, '.')}@equipo.pacto`,
-      role: name.toLowerCase().includes('admin') ? 'Administrador' : 'Miembro de Equipo',
-      settings: { ...settings, id: settingsId }, // Asignar ID nuevo a los ajustes
-      avatar: `https://ui-avatars.com/api/?name=${name}&background=374BA6&color=fff`
-    };
+    // NOTA: Como Login.tsx nos pasa el usuario ya "cocinado", podríamos necesitar 
+    // recargar el objeto completo si faltan datos, pero por ahora confiamos en lo que nos llega.
+    // Sin embargo, para consistencia con el flujo nuevo, Login.tsx debería pasarnos el objeto UserProfile completo,
+    // pero para no romper la firma de la función `handleLogin(name, settings)`, lo reconstruimos o lo buscamos.
 
-    // Guardar en Supabase (sin bloquear la UI si falla, o podríamos mostrar loading)
-    await userService.createUserProfile(newUser);
+    // Estrategia rápida: Buscar el usuario actual que acaba de loguearse
+    const currentUser = await authService.getCurrentUser();
+    if (currentUser) {
+      setUser(currentUser);
+    } else {
+      // Fallback por si acaso (ej. modo offline o error raro)
+      console.warn("No se pudo recuperar usuario tras login, usando datos locales temporales");
+      // ... Logica legacy si fuera necesaria, o redirect a error.
+    }
 
-    setUser(newUser);
     navigateTo(View.DASHBOARD);
   };
 
