@@ -60,10 +60,38 @@ export const authService = {
             if (!data.user) return { user: null, error: "Error de inicio de sesión." };
 
             // Obtener el perfil completo de la base de datos
-            const userProfile = await userService.getUserProfileByEmail(email);
+            let userProfile = await userService.getUserProfileByEmail(email);
 
             if (!userProfile) {
-                return { user: null, error: "Usuario autenticado pero sin perfil." };
+                console.warn("⚠️ Usuario autenticado pero sin perfil. Intentando autorrecuperación...");
+
+                // Intento de autocuración (Self-healing)
+                // Usamos los metadatos del usuario o valores por defecto
+                const meta = data.user.user_metadata || {};
+
+                const recoveredUser: UserProfile = {
+                    id: data.user.id,
+                    name: meta.full_name || email.split('@')[0], // Fallback al nombre del email
+                    email: email,
+                    role: 'Miembro de Equipo',
+                    settings: {
+                        id: crypto.randomUUID(),
+                        low_stimulus: false,
+                        dyslexia_font: false,
+                        high_contrast: false,
+                        comm_preference: 'Escrito'
+                    },
+                    avatar: `https://ui-avatars.com/api/?name=${meta.full_name || 'User'}&background=random`
+                };
+
+                const savedProfile = await userService.createUserProfile(recoveredUser);
+
+                if (savedProfile) {
+                    userProfile = savedProfile;
+                    console.log("✅ Perfil recuperado exitosamente.");
+                } else {
+                    return { user: null, error: "Error crítico: Tu cuenta existe pero no se pudo generar tu perfil. Contacta soporte." };
+                }
             }
 
             return { user: userProfile, error: null };
