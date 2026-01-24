@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -9,9 +8,7 @@ if (!rootElement) throw new Error("Root element not found");
 const root = ReactDOM.createRoot(rootElement);
 try {
   root.render(
-    root.render(
-      <App />
-    );
+    <App />
   );
 } catch (err) {
   console.error("Error al montar la app:", err);
