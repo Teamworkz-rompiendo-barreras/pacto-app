@@ -12,17 +12,9 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
-    const [isOrgCreator, setIsOrgCreator] = useState(false);
-    const [selectedPlan, setSelectedPlan] = useState<'FREE' | 'ENTERPRISE'>('FREE');
-    const [notification, setNotification] = useState<string | null>(null);
+    const [companyName, setCompanyName] = useState(''); // Estado para nombre de empresa
 
-    const [settings, setSettings] = useState<AccessibilitySettings>({
-        id: 'temp',
-        low_stimulus: false,
-        dyslexia_font: false,
-        high_contrast: false,
-        comm_preference: 'Escrito'
-    });
+    // ... (rest of states)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -31,18 +23,24 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
         if (mode === 'LOGIN') {
             const { user, error } = await authService.signIn(email, password);
             if (error) {
-                setNotification(error); // Mostrar error real
-                // Truco: si el error dice "Invalid login credentials", lo traducimos
-                if (error === "Credenciales incorrectas") setNotification("Correo o contraseña incorrectos.");
+                // Traducción de errores comunes
+                let msg = error;
+                if (error === "Credenciales incorrectas") msg = "Correo o contraseña incorrectos.";
+                if (error.includes("rate limit")) msg = "Has intentado demasiadas veces. Espera unos minutos.";
+                setNotification(msg);
             } else if (user) {
                 onLogin(user.name, user.settings);
             }
 
         } else if (mode === 'SIGNUP') {
             if (name) {
-                const { user, error } = await authService.signUp(email, password, name, settings);
+                // Pasamos companyName al registro
+                const { user, error } = await authService.signUp(email, password, name, settings, companyName);
                 if (error) {
-                    setNotification(error);
+                    let msg = error;
+                    if (error.includes("rate limit")) msg = "Límite de intentos seguridad excedido. Espera 1h.";
+                    if (error.includes("already registered")) msg = "Este correo ya está registrado.";
+                    setNotification(msg);
                 } else if (user) {
                     onLogin(user.name, user.settings);
                 }
@@ -52,7 +50,9 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
             if (email) {
                 const { success, error } = await authService.resetPassword(email);
                 if (!success && error) {
-                    setNotification(error);
+                    let msg = error;
+                    if (error.includes("rate limit")) msg = "Espera unos minutos antes de volver a intentarlo.";
+                    setNotification(msg);
                 } else {
                     setNotification('¡Listo! Revisa tu email para restablecer la contraseña.');
                     setTimeout(() => setMode('LOGIN'), 3000);
@@ -61,6 +61,12 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                 setNotification('Por favor, introduce tu correo electrónico.');
             }
         }
+    };
+
+    // Helper para determinar si es error (Rojo) o éxito (Verde)
+    const isErrorCallback = (txt: string) => {
+        if (txt.includes('¡Listo!')) return false;
+        return true; // Por defecto es error (rojo) para evitar falsos positivos verdes
     };
 
     return (
@@ -81,9 +87,9 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                 </div>
 
                 {notification && (
-                    <div className={`mb-6 p-4 rounded-xl text-sm font-bold flex items-center gap-2 border ${notification.includes('incorrectos') || notification.includes('Error') ? 'bg-red-50 text-red-700 border-red-100' : 'bg-green-50 text-green-700 border-green-100'}`}>
+                    <div className={`mb-6 p-4 rounded-xl text-sm font-bold flex items-center gap-2 border ${isErrorCallback(notification) ? 'bg-red-50 text-red-700 border-red-100' : 'bg-green-50 text-green-700 border-green-100'}`}>
                         <span className="material-symbols-outlined text-lg">
-                            {notification.includes('incorrectos') || notification.includes('Error') ? 'error' : 'check_circle'}
+                            {isErrorCallback(notification) ? 'error' : 'check_circle'}
                         </span>
                         {notification}
                     </div>
@@ -104,6 +110,22 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                         </div>
                     )}
 
+                    {mode === 'SIGNUP' && (
+                        <div className="space-y-1">
+                            <label className="text-sm font-bold text-text-n900">
+                                {isOrgCreator ? 'Nombre de tu Organización' : 'Empresa / Equipo al que te unes'}
+                            </label>
+                            <input
+                                type="text"
+                                required={isOrgCreator} // Obligatorio si crea la org, opcional si es miembro (aunque recomendable)
+                                value={companyName}
+                                onChange={(e) => setCompanyName(e.target.value)}
+                                className="w-full p-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium"
+                                placeholder={isOrgCreator ? "Ej. Teamworkz Inc" : "Ej. Teamworkz (Opcional)"}
+                            />
+                        </div>
+                    )}
+
                     <div className="space-y-1">
                         <label className="text-sm font-bold text-text-n900">Correo Electrónico</label>
                         <input
@@ -115,6 +137,8 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                             placeholder="nombre@empresa.com"
                         />
                     </div>
+                    {/* ... Resto del form sin cambios significativos ... usage of companyName above */}
+
 
                     {mode !== 'RECOVERY' && (
                         <div className="space-y-1">

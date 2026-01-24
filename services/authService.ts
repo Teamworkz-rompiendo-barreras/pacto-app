@@ -4,7 +4,7 @@ import { userService } from './userService';
 
 export const authService = {
     // Registrar nuevo usuario
-    async signUp(email: string, password: string, name: string, settings: AccessibilitySettings): Promise<{ user: UserProfile | null, error: string | null }> {
+    async signUp(email: string, password: string, name: string, settings: AccessibilitySettings, companyName?: string): Promise<{ user: UserProfile | null, error: string | null }> {
         try {
             // 1. Crear usuario en Supabase Auth
             const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -13,6 +13,7 @@ export const authService = {
                 options: {
                     data: {
                         full_name: name,
+                        company_name: companyName, // Guardamos la empresa en metadata
                     }
                 }
             });
