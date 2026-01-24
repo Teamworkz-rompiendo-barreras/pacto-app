@@ -9,7 +9,32 @@ import { authService } from './services/authService';
 // Components
 import Landing from './components/Landing';
 import Login from './components/Login';
+import UpdatePassword from './components/UpdatePassword'; // Import UpdatePassword
 import Dashboard from './components/Dashboard';
+// ... rest of imports
+
+// ...
+
+// --- VERIFICACIÓN DE SESIÓN AL INICIO Y RUTAS ---
+useEffect(() => {
+  const checkSession = async () => {
+    // 1. Detectar si estamos en flujo de recuperación de contraseña
+    const isRecovery = window.location.pathname === '/update-password' || window.location.hash.includes('type=recovery');
+
+    if (isRecovery) {
+      setView(View.UPDATE_PASSWORD);
+    }
+
+    // 2. Verificar usuario normal
+    const currentUser = await authService.getCurrentUser();
+    if (currentUser) {
+      setUser(currentUser);
+      // Solo redirigir al dashboard si estábamos en Landing y NO estamos recuperando pass
+      if (view === View.LANDING && !isRecovery) setView(View.DASHBOARD);
+    }
+  };
+  checkSession();
+}, []);
 import MyCommitments from './components/MyCommitments';
 import AgreementForm from './components/AgreementForm';
 import AgreementDetails from './components/AgreementDetails';
@@ -227,6 +252,9 @@ const AppContent: React.FC = () => {
 
           case View.LOGIN:
             return <div className="min-h-screen bg-bg-s1 flex items-center justify-center p-4"><Login onLogin={handleLogin} onCancel={() => navigateTo(View.LANDING)} /></div>;
+
+          case View.UPDATE_PASSWORD:
+            return <UpdatePassword onSuccess={() => navigateTo(View.DASHBOARD)} onCancel={() => navigateTo(View.LOGIN)} />;
 
           case View.DASHBOARD:
             return (
