@@ -10,7 +10,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'lucide-react'], // Separar librerías grandes
+          vendor: ['react', 'react-dom'], // Separar librerías grandes
         },
       },
     },
