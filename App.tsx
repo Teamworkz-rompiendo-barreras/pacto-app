@@ -9,32 +9,8 @@ import { authService } from './services/authService';
 // Components
 import Landing from './components/Landing';
 import Login from './components/Login';
-import UpdatePassword from './components/UpdatePassword'; // Import UpdatePassword
+import UpdatePassword from './components/UpdatePassword';
 import Dashboard from './components/Dashboard';
-// ... rest of imports
-
-// ...
-
-// --- VERIFICACIÓN DE SESIÓN AL INICIO Y RUTAS ---
-useEffect(() => {
-  const checkSession = async () => {
-    // 1. Detectar si estamos en flujo de recuperación de contraseña
-    const isRecovery = window.location.pathname === '/update-password' || window.location.hash.includes('type=recovery');
-
-    if (isRecovery) {
-      setView(View.UPDATE_PASSWORD);
-    }
-
-    // 2. Verificar usuario normal
-    const currentUser = await authService.getCurrentUser();
-    if (currentUser) {
-      setUser(currentUser);
-      // Solo redirigir al dashboard si estábamos en Landing y NO estamos recuperando pass
-      if (view === View.LANDING && !isRecovery) setView(View.DASHBOARD);
-    }
-  };
-  checkSession();
-}, []);
 import MyCommitments from './components/MyCommitments';
 import AgreementForm from './components/AgreementForm';
 import AgreementDetails from './components/AgreementDetails';
@@ -128,8 +104,28 @@ const AppContent: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
+  // --- VERIFICACIÓN DE SESIÓN AL INICIO Y RUTAS ---
+  useEffect(() => {
+    const checkSession = async () => {
+      // 1. Detectar si estamos en flujo de recuperación de contraseña
+      const isRecovery = window.location.pathname === '/update-password' || window.location.hash.includes('type=recovery');
 
-  // --- VERIFICACIÓN DE SESIÓN AL INICIO ---
+      if (isRecovery) {
+        setView(View.UPDATE_PASSWORD);
+      }
+
+      // 2. Verificar usuario normal
+      const currentUser = await authService.getCurrentUser();
+      if (currentUser) {
+        setUser(currentUser);
+        // Solo redirigir al dashboard si estábamos en Landing y NO estamos recuperando pass
+        if (view === View.LANDING && !isRecovery) setView(View.DASHBOARD);
+      }
+    };
+    checkSession();
+  }, []); // Dependencias vacías para ejecutar solo al montar app
+
+  // --- VERIFICACIÓN DE SESIÓN AL INICIO (LEGACY REMOVED) ---
   useEffect(() => {
     const checkSession = async () => {
       const currentUser = await authService.getCurrentUser();
