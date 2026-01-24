@@ -7,15 +7,10 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     chunkSizeWarningLimit: 1000, // Aumentar límite a 1MB para evitar warnings en Vercel
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'], // Separar librerías grandes
-        },
-      },
-    },
+    chunkSizeWarningLimit: 1000, // Aumentar límite a 1MB para evitar warnings en Vercel
   },
+},
   server: {
-    port: 3000
-  }
+  port: 3000
+}
 });
