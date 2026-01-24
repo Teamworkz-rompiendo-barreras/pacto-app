@@ -9,9 +9,9 @@ if (!rootElement) throw new Error("Root element not found");
 const root = ReactDOM.createRoot(rootElement);
 try {
   root.render(
-    <React.StrictMode>
+    root.render(
       <App />
-    </React.StrictMode>
+    );
   );
 } catch (err) {
   console.error("Error al montar la app:", err);

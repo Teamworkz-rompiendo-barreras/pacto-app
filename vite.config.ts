@@ -11,6 +11,9 @@ export default defineConfig({
     sourcemap: false,
     chunkSizeWarningLimit: 1000, // Aumentar límite a 1MB para evitar warnings en Vercel
   },
+  optimizeDeps: {
+    include: ['react', 'react-dom'],
+  },
   server: {
     port: 3000
   }
