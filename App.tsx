@@ -11,6 +11,7 @@ import Landing from './components/Landing';
 import Login from './components/Login';
 import UpdatePassword from './components/UpdatePassword';
 import Dashboard from './components/Dashboard';
+import Layout from './components/Layout';
 import MyCommitments from './components/MyCommitments';
 import AgreementForm from './components/AgreementForm';
 import AgreementDetails from './components/AgreementDetails';
@@ -241,245 +242,280 @@ const AppContent: React.FC = () => {
         <CelebrationModal onClose={() => setShowCelebration(false)} />
       )}
 
-      {(() => {
-        switch (view) {
-          case View.LANDING:
-            return <Landing onStart={() => navigateTo(View.LOGIN)} onContact={() => navigateTo(View.CONTACT)} onNavigate={navigateTo} />;
+  // --- RENDERIZADO CON LAYOUT ---
+  const renderContent = () => {
+    switch (view) {
+      case View.LANDING:
+      return <Landing onStart={() => navigateTo(View.LOGIN)} onContact={() => navigateTo(View.CONTACT)} onNavigate={navigateTo} />;
 
-          case View.LOGIN:
-            return <div className="min-h-screen bg-bg-s1 flex items-center justify-center p-4"><Login onLogin={handleLogin} onCancel={() => navigateTo(View.LANDING)} /></div>;
+      case View.LOGIN:
+      return <div className="min-h-screen bg-bg-s1 flex items-center justify-center p-4"><Login onLogin={handleLogin} onCancel={() => navigateTo(View.LANDING)} /></div>;
 
-          case View.UPDATE_PASSWORD:
-            return <UpdatePassword onSuccess={() => navigateTo(View.DASHBOARD)} onCancel={() => navigateTo(View.LOGIN)} />;
+      case View.UPDATE_PASSWORD:
+      return <UpdatePassword onSuccess={() => navigateTo(View.DASHBOARD)} onCancel={() => navigateTo(View.LOGIN)} />;
 
-          case View.DASHBOARD:
-            return (
-              <div className="w-full bg-bg-s1 min-h-screen">
-                <Dashboard
-                  user={user}
-                  agreements={agreements}
-                  onCreateNew={() => { setAgreementTemplate(undefined); navigateTo(View.NEW_AGREEMENT); }}
-                  onViewAgreement={() => navigateTo(View.AGREEMENT_DETAILS)}
-                  onEditAgreement={(agreement) => {
-                    setSelectedAgreement(agreement);
-                    navigateTo(View.EDIT_AGREEMENT);
-                  }}
-                  onExploreLibrary={() => navigateTo(View.LIBRARY)}
-                  onNavigate={navigateTo}
-                />
-              </div>
-            );
+      case View.DASHBOARD:
+      return (
+      <Dashboard
+        user={user}
+        agreements={agreements}
+        onCreateNew={() => { setAgreementTemplate(undefined); navigateTo(View.NEW_AGREEMENT); }}
+        onViewAgreement={() => navigateTo(View.AGREEMENT_DETAILS)}
+        onEditAgreement={(agreement) => {
+          setSelectedAgreement(agreement);
+          navigateTo(View.EDIT_AGREEMENT);
+        }}
+        onExploreLibrary={() => navigateTo(View.LIBRARY)}
+        onNavigate={navigateTo}
+      />
+      );
 
-          case View.MY_COMMITMENTS:
-            return <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen"><MyCommitments onBack={() => navigateTo(View.DASHBOARD)} /></div>;
+      case View.MY_COMMITMENTS:
+      return <div className="p-6 md:p-10 w-full"><MyCommitments onBack={() => navigateTo(View.DASHBOARD)} /></div>;
 
-          case View.NEW_AGREEMENT:
-            return (
-              <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen">
-                <AgreementForm
-                  initialData={agreementTemplate}
-                  onSave={handleSaveAgreement}
-                  onCancel={() => navigateTo(View.DASHBOARD)}
-                />
-              </div>
-            );
+      case View.NEW_AGREEMENT:
+      return (
+      <div className="p-6 md:p-10 w-full">
+        <AgreementForm
+          initialData={agreementTemplate}
+          onSave={handleSaveAgreement}
+          onCancel={() => navigateTo(View.DASHBOARD)}
+        />
+      </div>
+      );
 
-          case View.EDIT_AGREEMENT:
-            return (
-              <div className="w-full bg-bg-s1 min-h-screen">
-                <EditAgreement
-                  initialData={selectedAgreement}
-                  onSave={() => { /* Lógica de guardado dummy, aquí conectaríamos handleUpdate */ handleUpdateAgreement({}) }}
-                  onBack={() => navigateTo(View.DASHBOARD)}
-                />
-              </div>
-            );
+      case View.EDIT_AGREEMENT:
+      return (
+      <div className="w-full">
+        <EditAgreement
+          initialData={selectedAgreement}
+          onSave={() => { /* Lógica de guardado dummy */ handleUpdateAgreement({}) }}
+          onBack={() => navigateTo(View.DASHBOARD)}
+        />
+      </div>
+      );
 
-          case View.AGREEMENT_DETAILS:
-            return <AgreementDetails onBack={() => navigateTo(View.DASHBOARD)} onEdit={() => navigateTo(View.EDIT_AGREEMENT)} />;
+      case View.AGREEMENT_DETAILS:
+      return <AgreementDetails onBack={() => navigateTo(View.DASHBOARD)} onEdit={() => navigateTo(View.EDIT_AGREEMENT)} />;
 
-          case View.PROFILE:
-            if (!user) return null;
-            return (
-              <div className="w-full bg-bg-s1 min-h-screen">
-                <Profile
-                  user={user}
-                  settings={user.settings}
-                  onSaveSettings={(s) => setUser({ ...user, settings: s })}
-                  onUpdateUser={(u) => setUser({ ...user, ...u })}
-                  onCreateNew={() => navigateTo(View.NEW_AGREEMENT)}
-                  onOpenPublicView={() => navigateTo(View.PUBLIC_PROFILE)}
-                  onLogout={() => setShowLogoutModal(true)}
-                  onDeleteAccount={handleLogout}
-                  onNavigateToLanguage={() => navigateTo(View.LANGUAGE_REGION)}
-                  onBack={() => navigateTo(View.DASHBOARD)}
-                />
-              </div>
-            );
+      case View.PROFILE:
+      if (!user) return null;
+      return (
+      <div className="w-full">
+        <Profile
+          user={user}
+          settings={user.settings}
+          onSaveSettings={(s) => setUser({ ...user, settings: s })}
+          onUpdateUser={(u) => setUser({ ...user, ...u })}
+          onCreateNew={() => navigateTo(View.NEW_AGREEMENT)}
+          onOpenPublicView={() => navigateTo(View.PUBLIC_PROFILE)}
+          onLogout={() => setShowLogoutModal(true)}
+          onDeleteAccount={handleLogout}
+          onNavigateToLanguage={() => navigateTo(View.LANGUAGE_REGION)}
+          onBack={() => navigateTo(View.DASHBOARD)}
+        />
+      </div>
+      );
 
-          case View.PUBLIC_PROFILE:
-            return <PublicProfile user={user || undefined} onBack={() => navigateTo(View.PROFILE)} onProposeAgreement={() => navigateTo(View.NEW_AGREEMENT)} />;
+      case View.PUBLIC_PROFILE:
+      return <PublicProfile user={user || undefined} onBack={() => navigateTo(View.PROFILE)} onProposeAgreement={() => navigateTo(View.NEW_AGREEMENT)} />;
 
-          case View.TEAM:
-            return (
-              <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen">
-                <TeamDirectory
-                  members={teamMembers}
-                  onViewProfile={() => navigateTo(View.PUBLIC_PROFILE)}
-                  onGoBack={() => navigateTo(View.DASHBOARD)}
-                  onNavigateToPrivacy={() => navigateTo(View.TEAM_PRIVACY)}
-                />
-              </div>
-            );
+      case View.TEAM:
+      return (
+      <div className="p-6 md:p-10 w-full">
+        <TeamDirectory
+          members={teamMembers}
+          onViewProfile={() => navigateTo(View.PUBLIC_PROFILE)}
+          onGoBack={() => navigateTo(View.DASHBOARD)}
+          onNavigateToPrivacy={() => navigateTo(View.TEAM_PRIVACY)}
+        />
+      </div>
+      );
 
-          case View.TEAM_PRIVACY:
-            return <TeamPrivacySettings onBack={() => navigateTo(View.TEAM)} onSave={() => navigateTo(View.TEAM)} userAvatar={user?.avatar} />;
+      case View.TEAM_PRIVACY:
+      return <TeamPrivacySettings onBack={() => navigateTo(View.TEAM)} onSave={() => navigateTo(View.TEAM)} userAvatar={user?.avatar} />;
 
-          case View.FEEDBACK:
-            return <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen"><Feedback onSave={() => navigateTo(View.DASHBOARD)} onCancel={() => navigateTo(View.DASHBOARD)} /></div>;
+      case View.FEEDBACK:
+      return <div className="p-6 md:p-10 w-full"><Feedback onSave={() => navigateTo(View.DASHBOARD)} onCancel={() => navigateTo(View.DASHBOARD)} /></div>;
 
-          case View.INCLUSION_BOX:
-            return <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen"><InclusionBox onBack={() => navigateTo(View.DASHBOARD)} /></div>;
+      case View.INCLUSION_BOX:
+      return <div className="p-6 md:p-10 w-full"><InclusionBox onBack={() => navigateTo(View.DASHBOARD)} /></div>;
 
-          case View.ACHIEVEMENTS:
-            return <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen"><Achievements onCelebrate={() => setShowCelebration(true)} onGoBack={() => navigateTo(View.DASHBOARD)} /></div>;
+      case View.ACHIEVEMENTS:
+      return <div className="p-6 md:p-10 w-full"><Achievements onCelebrate={() => setShowCelebration(true)} onGoBack={() => navigateTo(View.DASHBOARD)} /></div>;
 
-          case View.ORGANIZATION:
-            return <div className="w-full h-screen bg-bg-s1 overflow-hidden"><OrganizationPanel onNavigateToBulkUpload={() => navigateTo(View.BULK_UPLOAD)} onNavigateToDataExport={() => navigateTo(View.DATA_EXPORT)} /></div>;
+      case View.ORGANIZATION:
+      return <div className="w-full overflow-hidden"><OrganizationPanel onNavigateToBulkUpload={() => navigateTo(View.BULK_UPLOAD)} onNavigateToDataExport={() => navigateTo(View.DATA_EXPORT)} /></div>;
 
-          case View.BULK_UPLOAD:
-            return <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen"><BulkUpload onBack={() => navigateTo(View.ORGANIZATION)} onComplete={() => navigateTo(View.ORGANIZATION)} /></div>;
+      case View.BULK_UPLOAD:
+      return <div className="p-6 md:p-10 w-full"><BulkUpload onBack={() => navigateTo(View.ORGANIZATION)} onComplete={() => navigateTo(View.ORGANIZATION)} /></div>;
 
-          case View.DATA_EXPORT:
-            return <DataExport onBack={() => navigateTo(View.ORGANIZATION)} />;
+      case View.DATA_EXPORT:
+      return <DataExport onBack={() => navigateTo(View.ORGANIZATION)} />;
 
-          case View.CLARITY_CARDS:
-            return <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen"><ClarityCards onGoDashboard={() => navigateTo(View.DASHBOARD)} onCreateNew={() => navigateTo(View.NEW_AGREEMENT)} /></div>;
+      case View.CLARITY_CARDS:
+      return <div className="p-6 md:p-10 w-full"><ClarityCards onGoDashboard={() => navigateTo(View.DASHBOARD)} onCreateNew={() => navigateTo(View.NEW_AGREEMENT)} /></div>;
 
-          case View.RITUALS:
-            return (
-              <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen h-full">
-                <Rituals
-                  rituals={rituals}
-                  onCreate={() => navigateTo(View.NEW_RITUAL)}
-                  onViewDetails={(r) => {
-                    setSelectedRitual(r);
-                    navigateTo(View.RITUAL_DETAILS);
-                  }}
-                  onToggleStatus={() => { }}
-                  onViewHistory={() => navigateTo(View.RITUAL_HISTORY)}
-                  onStartPreparation={() => navigateTo(View.RITUAL_PREPARATION)}
-                />
-              </div>
-            );
+      case View.RITUALS:
+      return (
+      <div className="p-6 md:p-10 w-full h-full">
+        <Rituals
+          rituals={rituals}
+          onCreate={() => navigateTo(View.NEW_RITUAL)}
+          onViewDetails={(r) => {
+            setSelectedRitual(r);
+            navigateTo(View.RITUAL_DETAILS);
+          }}
+          onToggleStatus={() => { }}
+          onViewHistory={() => navigateTo(View.RITUAL_HISTORY)}
+          onStartPreparation={() => navigateTo(View.RITUAL_PREPARATION)}
+        />
+      </div>
+      );
 
-          case View.NEW_RITUAL:
-            return <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen"><NewRitual onCancel={() => navigateTo(View.RITUALS)} onSave={handleSaveRitual} /></div>;
+      case View.NEW_RITUAL:
+      return <div className="p-6 md:p-10 w-full"><NewRitual onCancel={() => navigateTo(View.RITUALS)} onSave={handleSaveRitual} /></div>;
 
-          case View.RITUAL_DETAILS:
-            if (!selectedRitual) return <div className="p-10 text-center">No ritual selected</div>;
-            return <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen"><RitualDetails ritual={selectedRitual} onBack={() => navigateTo(View.RITUALS)} /></div>;
+      case View.RITUAL_DETAILS:
+      if (!selectedRitual) return <div className="p-10 text-center">No ritual selected</div>;
+      return <div className="p-6 md:p-10 w-full"><RitualDetails ritual={selectedRitual} onBack={() => navigateTo(View.RITUALS)} /></div>;
 
-          case View.RITUAL_HISTORY:
-            return <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen"><RitualHistory onBack={() => navigateTo(View.RITUALS)} onViewDetails={(item) => {/* Logic for history details */ }} /></div>;
+      case View.RITUAL_HISTORY:
+      return <div className="p-6 md:p-10 w-full"><RitualHistory onBack={() => navigateTo(View.RITUALS)} onViewDetails={(item) => {/* Logic for history details */ }} /></div>;
 
-          case View.RITUAL_REMINDER:
-            return <RitualReminder onJoin={() => navigateTo(View.RITUAL_PREPARATION)} onSnooze={() => navigateTo(View.DASHBOARD)} />;
+      case View.RITUAL_REMINDER:
+      return <RitualReminder onJoin={() => navigateTo(View.RITUAL_PREPARATION)} onSnooze={() => navigateTo(View.DASHBOARD)} />;
 
-          case View.RITUAL_PREPARATION:
-            return <RitualPreparation onBack={() => navigateTo(View.RITUALS)} onNext={() => navigateTo(View.RITUAL_REFLECTION)} />
+      case View.RITUAL_PREPARATION:
+      return <RitualPreparation onBack={() => navigateTo(View.RITUALS)} onNext={() => navigateTo(View.RITUAL_REFLECTION)} />
 
-          case View.RITUAL_REFLECTION:
-            return <RitualReflection onBack={() => navigateTo(View.RITUAL_PREPARATION)} onNext={() => navigateTo(View.RITUAL_CONCLUSIONS)} userAvatar={user?.avatar} />;
+      case View.RITUAL_REFLECTION:
+      return <RitualReflection onBack={() => navigateTo(View.RITUAL_PREPARATION)} onNext={() => navigateTo(View.RITUAL_CONCLUSIONS)} userAvatar={user?.avatar} />;
 
-          case View.RITUAL_CONCLUSIONS:
-            return <RitualConclusions onBack={() => navigateTo(View.RITUAL_REFLECTION)} onFinish={() => navigateTo(View.RITUALS)} />;
+      case View.RITUAL_CONCLUSIONS:
+      return <RitualConclusions onBack={() => navigateTo(View.RITUAL_REFLECTION)} onFinish={() => navigateTo(View.RITUALS)} />;
 
-          case View.REPORTS:
-            return (
-              <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen">
-                <MonthlyReport
-                  onBack={() => navigateTo(View.DASHBOARD)}
-                  onNavigateToWeekly={() => navigateTo(View.WEEKLY_SUMMARY)}
-                />
-              </div>
-            );
+      case View.REPORTS:
+      return (
+      <div className="p-6 md:p-10 w-full">
+        <MonthlyReport
+          onBack={() => navigateTo(View.DASHBOARD)}
+          onNavigateToWeekly={() => navigateTo(View.WEEKLY_SUMMARY)}
+        />
+      </div>
+      );
 
-          case View.WEEKLY_SUMMARY:
-            return <WeeklySummary onBack={() => navigateTo(View.REPORTS)} onNavigateToCards={() => navigateTo(View.CLARITY_CARDS)} />;
+      case View.WEEKLY_SUMMARY:
+      return <WeeklySummary onBack={() => navigateTo(View.REPORTS)} onNavigateToCards={() => navigateTo(View.CLARITY_CARDS)} />;
 
-          case View.NOTIFICATIONS:
-            return <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen"><Notifications onBack={() => navigateTo(View.DASHBOARD)} onConfigure={() => navigateTo(View.NOTIFICATION_SETTINGS)} onViewItem={(type) => navigateTo(type === 'weekly' ? View.WEEKLY_SUMMARY : View.DASHBOARD)} /></div>;
+      case View.NOTIFICATIONS:
+      return <div className="p-6 md:p-10 w-full"><Notifications onBack={() => navigateTo(View.DASHBOARD)} onConfigure={() => navigateTo(View.NOTIFICATION_SETTINGS)} onViewItem={(type) => navigateTo(type === 'weekly' ? View.WEEKLY_SUMMARY : View.DASHBOARD)} /></div>;
 
-          case View.NOTIFICATION_SETTINGS:
-            return <NotificationPreferences onBack={() => navigateTo(View.NOTIFICATIONS)} onSave={() => navigateTo(View.NOTIFICATIONS)} />;
+      case View.NOTIFICATION_SETTINGS:
+      return <NotificationPreferences onBack={() => navigateTo(View.NOTIFICATIONS)} onSave={() => navigateTo(View.NOTIFICATIONS)} />;
 
-          case View.LANGUAGE_REGION:
-            return <LanguageRegionSettings onBack={() => navigateTo(View.PROFILE)} onSave={() => navigateTo(View.PROFILE)} userAvatar={user?.avatar} />;
+      case View.LANGUAGE_REGION:
+      return <LanguageRegionSettings onBack={() => navigateTo(View.PROFILE)} onSave={() => navigateTo(View.PROFILE)} userAvatar={user?.avatar} />;
 
-          case View.GLOBAL_SEARCH:
-            return <div className="w-full bg-bg-s1 min-h-screen"><GlobalSearch onBack={() => navigateTo(View.DASHBOARD)} onAdoptAgreement={() => navigateTo(View.NEW_AGREEMENT)} /></div>;
+      case View.GLOBAL_SEARCH:
+      return <div className="w-full"><GlobalSearch onBack={() => navigateTo(View.DASHBOARD)} onAdoptAgreement={() => navigateTo(View.NEW_AGREEMENT)} /></div>;
 
-          case View.CONTACT:
-            return (
-              <div className="w-full bg-bg-s1 min-h-screen p-6 md:p-10">
-                <button onClick={() => navigateTo(View.LANDING)} className="mb-4 flex items-center gap-2 text-gray-500 hover:text-primary font-bold"><span className="material-symbols-outlined">arrow_back</span> Volver</button>
-                <ContactForm onCancel={() => navigateTo(View.LANDING)} onSend={() => navigateTo(View.LANDING)} isPublic={true} />
-              </div>
-            );
+      case View.CONTACT:
+      return (
+      <div className="w-full bg-bg-s1 min-h-screen p-6 md:p-10">
+        <button onClick={() => navigateTo(View.LANDING)} className="mb-4 flex items-center gap-2 text-gray-500 hover:text-primary font-bold"><span className="material-symbols-outlined">arrow_back</span> Volver</button>
+        <ContactForm onCancel={() => navigateTo(View.LANDING)} onSend={() => navigateTo(View.LANDING)} isPublic={true} />
+      </div>
+      );
 
-          case View.HELP_CENTER:
-            if (!user) return <Landing onStart={() => navigateTo(View.LOGIN)} onNavigate={navigateTo} />;
-            return <HelpCenter user={user} onNavigate={navigateTo} />;
+      case View.HELP_CENTER:
+      if (!user) return <Landing onStart={() => navigateTo(View.LOGIN)} onNavigate={navigateTo} />;
+      return <HelpCenter user={user} onNavigate={navigateTo} />;
 
-          case View.LIBRARY:
-            return (
-              <Library
-                onBack={() => navigateTo(View.DASHBOARD)}
-                onUseTemplate={(template) => {
-                  setAgreementTemplate(template);
-                  navigateTo(View.NEW_AGREEMENT);
-                }}
-              />
-            );
+      case View.LIBRARY:
+      return (
+      <Library
+        onBack={() => navigateTo(View.DASHBOARD)}
+        onUseTemplate={(template) => {
+          setAgreementTemplate(template);
+          navigateTo(View.NEW_AGREEMENT);
+        }}
+      />
+      );
 
-          case View.MY_LIBRARY:
-            return <div className="p-6 md:p-10 w-full bg-bg-s1 min-h-screen"><MyLibrary onGoToExplore={() => navigateTo(View.LIBRARY)} /></div>;
+      case View.MY_LIBRARY:
+      return <div className="p-6 md:p-10 w-full"><MyLibrary onGoToExplore={() => navigateTo(View.LIBRARY)} /></div>;
 
-          case View.METHODOLOGY:
-            return <Methodology onBack={() => navigateTo(View.LANDING)} />;
+      case View.METHODOLOGY:
+      return <Methodology onBack={() => navigateTo(View.LANDING)} />;
 
-          // Generic Info Pages
-          case View.MISSION:
-            return renderInfoPage("Nuestra Misión", "Empoderar a equipos neurodiversos a través de la claridad y la empatía.");
-          case View.SUCCESS_STORIES:
-            return renderInfoPage("Casos de Éxito", "Descubre cómo empresas líderes están transformando su cultura.");
-          case View.PRICING:
-            return renderInfoPage("Precios", "Planes flexibles para equipos de todos los tamaños.");
-          case View.ACCESSIBILITY:
-            return renderInfoPage("Declaración de Accesibilidad", "Comprometidos con WCAG 2.2 AAA.");
-          case View.PRIVACY:
-            return renderInfoPage("Política de Privacidad", "Tus datos son tuyos. Transparencia total.");
-          case View.COOKIES:
-            return renderInfoPage("Política de Cookies", "Solo lo esencial para que la plataforma funcione.");
-          case View.LEGAL:
-            return renderInfoPage("Aviso Legal", "Información legal de Teamworkz.");
+      // Generic Info Pages
+      case View.MISSION:
+      return renderInfoPage("Nuestra Misión", "Empoderar a equipos neurodiversos a través de la claridad y la empatía.");
+      case View.SUCCESS_STORIES:
+      return renderInfoPage("Casos de Éxito", "Descubre cómo empresas líderes están transformando su cultura.");
+      case View.PRICING:
+      return renderInfoPage("Precios", "Planes flexibles para equipos de todos los tamaños.");
+      case View.ACCESSIBILITY:
+      return renderInfoPage("Declaración de Accesibilidad", "Comprometidos con WCAG 2.2 AAA.");
+      case View.PRIVACY:
+      return renderInfoPage("Política de Privacidad", "Tus datos son tuyos. Transparencia total.");
+      case View.COOKIES:
+      return renderInfoPage("Política de Cookies", "Solo lo esencial para que la plataforma funcione.");
+      case View.LEGAL:
+      return renderInfoPage("Aviso Legal", "Información legal de Teamworkz.");
 
-          default:
-            return <Landing onStart={() => navigateTo(View.LOGIN)} onNavigate={navigateTo} />;
-        }
-      })()}
+      default:
+      // Si hay usuario y es una vista desconocida, dashboard; si no, landing
+      return user ? (
+      <Dashboard
+        user={user}
+        agreements={agreements}
+        onCreateNew={() => navigateTo(View.NEW_AGREEMENT)}
+        onViewAgreement={() => navigateTo(View.AGREEMENT_DETAILS)}
+        onEditAgreement={() => navigateTo(View.EDIT_AGREEMENT)}
+        onExploreLibrary={() => navigateTo(View.LIBRARY)}
+        onNavigate={navigateTo}
+      />
+      ) : <Landing onStart={() => navigateTo(View.LOGIN)} onContact={() => navigateTo(View.CONTACT)} onNavigate={navigateTo} />;
+    }
+  };
 
-    </>
-  );
+      return (
+      <>
+        {showLogoutModal && (
+          <LogoutModal
+            user={user}
+            onCancel={() => setShowLogoutModal(false)}
+            onConfirm={handleLogout}
+          />
+        )}
+
+        {showCelebration && (
+          <CelebrationModal onClose={() => setShowCelebration(false)} />
+        )}
+
+        {/* APLICAR LAYOUT SOLO SI HAY USUARIO Y NO ES UNA PÁGINA PÚBLICA */}
+        {user && ![View.LANDING, View.LOGIN, View.UPDATE_PASSWORD].includes(view) ? (
+          <Layout user={user} currentView={view} onNavigate={navigateTo} onLogout={() => setShowLogoutModal(true)}>
+            {renderContent()}
+          </Layout>
+        ) : (
+          renderContent()
+        )}
+
+      </>
+      );
+};
+      );
 };
 
 const App: React.FC = () => {
   return (
-    <LanguageProvider>
-      <AppContent />
-    </LanguageProvider>
-  );
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
+      );
 };
 
-export default App;
+      export default App;

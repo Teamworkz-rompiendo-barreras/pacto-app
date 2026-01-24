@@ -25,7 +25,6 @@ const TIPS_DB = [
 const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, onViewAgreement, onEditAgreement, onExploreLibrary, onNavigate }) => {
     const [tipStatus, setTipStatus] = useState<'idle' | 'sending' | 'success'>('idle');
     const [currentTip, setCurrentTip] = useState(TIPS_DB[0]);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [focusModeActive, setFocusModeActive] = useState(false);
 
     // Simular carga de "Tip del Día"
@@ -54,94 +53,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
         }
     };
 
-    const menuItems = [
-        { id: View.MY_COMMITMENTS, label: 'Mis Compromisos', icon: 'task_alt' },
-        { id: View.TEAM, label: 'Equipo', icon: 'groups' },
-        { id: View.RITUALS, label: 'Rituales', icon: 'event_repeat' },
-        { id: View.ACHIEVEMENTS, label: 'Logros', icon: 'emoji_events' },
-        { id: View.INCLUSION_BOX, label: 'Buzón de Inclusión', icon: 'mark_email_unread' },
-        { id: View.REPORTS, label: 'Reportes', icon: 'bar_chart' },
-        { id: View.PROFILE, label: 'Mi Perfil', icon: 'person' },
-    ];
-
     return (
         <div className="w-full max-w-7xl mx-auto animate-fade-in font-display pb-12 px-6 md:px-10 pt-6">
-
-            {/* Top Navbar */}
-            <nav className="flex items-center justify-between mb-8 pb-4 border-b border-black/5 sticky top-0 bg-bg-s1/95 backdrop-blur-md z-30 -mx-6 px-6 pt-2">
-                <div className="flex items-center gap-3">
-                    <div className="size-8 text-primary">
-                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
-                        </svg>
-                    </div>
-                    <span className="text-xl font-black text-primary leading-none tracking-tight hidden sm:inline-block">PACTO</span>
-                </div>
-
-                <div className="hidden md:flex items-center gap-6">
-                    <button onClick={() => onNavigate(View.RITUALS)} className="text-sm font-bold text-gray-600 hover:text-primary transition-colors">Rituales</button>
-                    <button onClick={() => onNavigate(View.TEAM)} className="text-sm font-bold text-gray-600 hover:text-primary transition-colors">Equipo</button>
-                    {user?.role === 'Administrador' && (
-                        <button onClick={() => onNavigate(View.ORGANIZATION)} className="text-sm font-bold text-purple-600 hover:text-purple-800 transition-colors">Admin Panel</button>
-                    )}
-                    <div className="h-4 w-px bg-gray-300"></div>
-                    <button onClick={() => onNavigate(View.NOTIFICATIONS)} className="p-2 rounded-full hover:bg-black/5 text-gray-600">
-                        <span className="material-symbols-outlined text-[20px]">notifications</span>
-                    </button>
-                    <button onClick={() => onNavigate(View.PROFILE)} className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs ring-2 ring-transparent hover:ring-primary/20 transition-all uppercase">
-                        {user ? user.name.substring(0, 2) : 'MP'}
-                    </button>
-                </div>
-
-                <button
-                    onClick={() => setIsMobileMenuOpen(true)}
-                    className="md:hidden p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                >
-                    <span className="material-symbols-outlined text-2xl">menu</span>
-                </button>
-            </nav>
-
-            {/* Mobile Menu Overlay */}
-            {isMobileMenuOpen && (
-                <div className="fixed inset-0 z-50 bg-white animate-fade-in flex flex-col">
-                    <div className="flex items-center justify-between p-6 border-b border-gray-100">
-                        <div className="flex items-center gap-3">
-                            <div className="size-8 text-primary">
-                                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
-                                </svg>
-                            </div>
-                            <span className="text-xl font-black text-primary leading-none tracking-tight">Menú</span>
-                        </div>
-                        <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 rounded-full hover:bg-gray-100 text-gray-500">
-                            <span className="material-symbols-outlined text-2xl">close</span>
-                        </button>
-                    </div>
-                    <div className="flex-1 overflow-y-auto p-6">
-                        <div className="grid grid-cols-2 gap-4">
-                            {menuItems.map(item => (
-                                <button
-                                    key={item.id}
-                                    onClick={() => { setIsMobileMenuOpen(false); onNavigate(item.id); }}
-                                    className="flex flex-col items-center justify-center gap-3 p-6 rounded-2xl bg-gray-50 border border-gray-100 active:bg-primary/5 active:border-primary/20 transition-all"
-                                >
-                                    <span className="material-symbols-outlined text-3xl text-primary">{item.icon}</span>
-                                    <span className="font-bold text-text-n900 text-sm">{item.label}</span>
-                                </button>
-                            ))}
-                        </div>
-
-                        <div className="mt-8 pt-8 border-t border-gray-100">
-                            <button onClick={() => { setIsMobileMenuOpen(false); onNavigate(View.HELP_CENTER); }} className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-gray-50 text-gray-600 font-medium">
-                                <span className="material-symbols-outlined">help</span> Centro de Ayuda
-                            </button>
-                            <button onClick={() => { setIsMobileMenuOpen(false); onNavigate(View.CONTACT); }} className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-gray-50 text-gray-600 font-medium">
-                                <span className="material-symbols-outlined">mail</span> Contacto
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
 
             {/* Header */}
             <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
