@@ -78,6 +78,31 @@ export const authService = {
         await supabase.auth.signOut();
     },
 
+    // Recuperar contraseña
+    async resetPassword(email: string): Promise<{ success: boolean; error: string | null }> {
+        try {
+            // 1. Verificar si el usuario existe en nuestra base de datos (requisito explícito del usuario)
+            const profile = await userService.getUserProfileByEmail(email);
+
+            if (!profile) {
+                return { success: false, error: "No existe ninguna cuenta con este correo electrónico." };
+            }
+
+            // 2. Enviar correo de recuperación real de Supabase
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + '/update-password', // URL a la que volverá el usuario (habría que crear esta vista si se quiere flujo completo, pero el email llega igual)
+            });
+
+            if (error) return { success: false, error: error.message };
+
+            return { success: true, error: null };
+
+        } catch (error) {
+            console.error("Error recuperación:", error);
+            return { success: false, error: "Error al procesar la solicitud." };
+        }
+    },
+
     // Obtener usuario actual (sesión activa)
     async getCurrentUser(): Promise<UserProfile | null> {
         const { data: { session } } = await supabase.auth.getSession();

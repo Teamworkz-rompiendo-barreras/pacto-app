@@ -48,9 +48,18 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                 }
             }
         } else {
-            // Recuperación simple
-            setNotification('Se ha enviado un correo de recuperación.');
-            setTimeout(() => setMode('LOGIN'), 2000);
+            // Recuperación Real
+            if (email) {
+                const { success, error } = await authService.resetPassword(email);
+                if (!success && error) {
+                    setNotification(error);
+                } else {
+                    setNotification('¡Listo! Revisa tu email para restablecer la contraseña.');
+                    setTimeout(() => setMode('LOGIN'), 3000);
+                }
+            } else {
+                setNotification('Por favor, introduce tu correo electrónico.');
+            }
         }
     };
 
