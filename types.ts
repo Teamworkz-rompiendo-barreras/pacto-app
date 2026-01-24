@@ -1,0 +1,102 @@
+
+export type CommPreference = 'Visual' | 'Escrito' | 'Verbal';
+
+export interface AccessibilitySettings {
+  id: string;
+  low_stimulus: boolean;
+  dyslexia_font: boolean;
+  high_contrast: boolean;
+  comm_preference: CommPreference;
+  avoid_calls?: boolean;
+  need_processing?: boolean;
+  profile_visibility?: 'team' | 'managers' | 'private';
+}
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  about?: string;
+  avatar?: string; // Nuevo campo para la foto
+  settings: AccessibilitySettings;
+}
+
+export interface Team {
+  id: string;
+  name: string;
+  description: string;
+  leadId?: string; // ID del usuario líder
+  memberCount: number;
+  color: string;
+}
+
+export interface Agreement {
+  id: string;
+  title: string;
+  description: string;
+  category: 'Comunicación' | 'Foco' | 'Feedback' | 'Social';
+  status: 'Activo' | 'Borrador' | 'Archivado';
+  rules?: string[];
+  participants?: string[];
+}
+
+export interface Ritual {
+  id: number;
+  title: string;
+  desc: string;
+  time: string;
+  type: string;
+  icon: string;
+  status: 'pending' | 'completed';
+  participants?: string[];
+  agenda?: string[];
+}
+
+export enum View {
+  LANDING = 'LANDING',
+  LOGIN = 'LOGIN',
+  DASHBOARD = 'DASHBOARD',
+  MY_COMMITMENTS = 'MY_COMMITMENTS',
+  NEW_AGREEMENT = 'NEW_AGREEMENT',
+  AGREEMENT_DETAILS = 'AGREEMENT_DETAILS',
+  EDIT_AGREEMENT = 'EDIT_AGREEMENT',
+  PROFILE = 'PROFILE',
+  PUBLIC_PROFILE = 'PUBLIC_PROFILE',
+  TEAM = 'TEAM',
+  TEAM_PRIVACY = 'TEAM_PRIVACY',
+  FEEDBACK = 'FEEDBACK',
+  INCLUSION_BOX = 'INCLUSION_BOX',
+  ACHIEVEMENTS = 'ACHIEVEMENTS',
+  ORGANIZATION = 'ORGANIZATION',
+  BULK_UPLOAD = 'BULK_UPLOAD',
+  DATA_EXPORT = 'DATA_EXPORT',
+  CLARITY_CARDS = 'CLARITY_CARDS',
+  RITUALS = 'RITUALS',
+  NEW_RITUAL = 'NEW_RITUAL',
+  RITUAL_DETAILS = 'RITUAL_DETAILS',
+  RITUAL_HISTORY = 'RITUAL_HISTORY',
+  RITUAL_REMINDER = 'RITUAL_REMINDER',
+  RITUAL_PREPARATION = 'RITUAL_PREPARATION',
+  RITUAL_REFLECTION = 'RITUAL_REFLECTION',
+  RITUAL_CONCLUSIONS = 'RITUAL_CONCLUSIONS', // Nueva vista
+  REPORTS = 'REPORTS',
+  WEEKLY_SUMMARY = 'WEEKLY_SUMMARY',
+  NOTIFICATIONS = 'NOTIFICATIONS',
+  NOTIFICATION_SETTINGS = 'NOTIFICATION_SETTINGS',
+  LANGUAGE_REGION = 'LANGUAGE_REGION',
+  GLOBAL_SEARCH = 'GLOBAL_SEARCH',
+  CONTACT = 'CONTACT',
+  HELP_CENTER = 'HELP_CENTER',
+  LIBRARY = 'LIBRARY',
+  MY_LIBRARY = 'MY_LIBRARY',
+  METHODOLOGY = 'METHODOLOGY',
+  // Páginas Informativas y Legales
+  ACCESSIBILITY = 'ACCESSIBILITY',
+  PRIVACY = 'PRIVACY',
+  COOKIES = 'COOKIES',
+  LEGAL = 'LEGAL',
+  PRICING = 'PRICING',
+  SUCCESS_STORIES = 'SUCCESS_STORIES',
+  MISSION = 'MISSION'
+}

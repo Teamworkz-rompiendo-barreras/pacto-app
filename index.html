@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PACTO by Teamworkz - Inclusión Neurodiversa</title>
+    
+    <!-- PWA Settings -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#F0E8D1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PACTO">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3208/3208899.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://assets.website-files.com/62e24f46cb61d904791a8770/css/open-dyslexic.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#374BA6',
+                        'primary-p2': '#374BA6',
+                        'bg-s1': '#F0E8D1',
+                        'secondary-s1': '#F0E8D1',
+                        'secondary-s3': '#8095F2',
+                        'p1': '#F2D680',
+                        'gray-border': '#D1D5DB',
+                        'card-bg': '#F9F7EF',
+                        'text-main': '#1F2937',
+                        'text-n900': '#0D1321',
+                        'accent-warm': '#E07A5F',
+                        'accent-blue': '#8095F2', // Added for Public Profile
+                        pacto: {
+                            bg: '#F0E8D1',
+                            text: '#0D1321',
+                            primary: '#374BA6',
+                            secondary: '#8095F2',
+                            border: '#D1D5DB'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Atkinson Hyperlegible"', 'sans-serif'],
+                        display: ['"Lexend"', 'sans-serif'],
+                        public: ['"Public Sans"', 'sans-serif'],
+                        jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        dyslexic: ['"OpenDyslexic"', 'sans-serif'],
+                        serif: ['"Merriweather"', 'serif'],
+                    },
+                    borderRadius: {
+                        'pacto': '12px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-body: #F0E8D1;
+            --text-body: #0D1321;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-body);
+            font-family: 'Atkinson Hyperlegible', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            overscroll-behavior-y: none; /* Previene el "rebote" elástico en iOS para sentirlo más nativo */
+        }
+
+        /* Accessibilidad: Fuente Dislexia */
+        body.dyslexia-font {
+            font-family: 'OpenDyslexic', sans-serif !important;
+        }
+        body.dyslexia-font * {
+            font-family: 'OpenDyslexic', sans-serif !important;
+        }
+
+        /* Accessibilidad: Alto Contraste */
+        .high-contrast {
+            --bg-body: #FFFFFF;
+            --text-body: #000000;
+            background-color: #FFFFFF !important;
+            color: #000000 !important;
+        }
+        .high-contrast * {
+            border-color: #000000 !important;
+        }
+        .high-contrast .bg-primary, 
+        .high-contrast .bg-primary-p2 {
+            background-color: #000000 !important;
+        }
+        .high-contrast .text-primary,
+        .high-contrast .text-primary-p2 {
+            color: #000000 !important;
+            font-weight: 900 !important;
+            text-decoration: underline;
+        }
+
+        /* Accessibilidad: Bajo Estímulo */
+        .low-stimulus *, .low-stimulus ::before, .low-stimulus ::after {
+            animation: none !important;
+            transition: none !important;
+            box-shadow: none !important;
+            background-image: none !important; 
+        }
+
+        :focus-visible {
+            outline: 4px solid #374BA6 !important;
+            outline-offset: 4px !important;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 10px;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
