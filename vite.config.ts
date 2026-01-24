@@ -7,10 +7,8 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     chunkSizeWarningLimit: 1000, // Aumentar límite a 1MB para evitar warnings en Vercel
-    chunkSizeWarningLimit: 1000, // Aumentar límite a 1MB para evitar warnings en Vercel
   },
-},
   server: {
-  port: 3000
-}
+    port: 3000
+  }
 });
