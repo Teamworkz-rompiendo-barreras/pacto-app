@@ -62,17 +62,10 @@ function useStickyState<T>(defaultValue: T, key: string): [T, React.Dispatch<Rea
   return [value, setValue];
 }
 
-// DATOS INICIALES (Solo se usan la primera vez)
-const DEFAULT_AGREEMENTS: Agreement[] = [
-  { id: '1', title: 'Política de Cámaras Opcionales', description: 'Uso de cámaras opcional en reuniones.', category: 'Comunicación', status: 'Activo' },
-  { id: '2', title: 'Horas de Foco', description: 'Sin reuniones de 9 a 11 AM.', category: 'Foco', status: 'Activo' },
-  { id: '3', title: 'Feedback Asíncrono', description: 'Feedback por escrito antes de 1:1.', category: 'Feedback', status: 'Borrador' },
-];
+// DATOS INICIALES (Vacíos para nuevos usuarios)
+const DEFAULT_AGREEMENTS: Agreement[] = [];
 
-const DEFAULT_RITUALS: Ritual[] = [
-  { id: 1, title: 'Replay Semanal', desc: 'Sincronización de equipo', time: 'Hoy, 09:00', type: 'replay', icon: 'sync', status: 'pending', participants: ['Ana', 'Luis'] },
-  { id: 2, title: 'Foco Profundo', desc: 'Bloque sin reuniones', time: 'Mañana, 10:00', type: 'focus', icon: 'timer', status: 'pending', participants: ['Todos'] }
-];
+const DEFAULT_RITUALS: Ritual[] = [];
 
 const AppContent: React.FC = () => {
   const [view, setView] = useState<View>(View.LANDING);
