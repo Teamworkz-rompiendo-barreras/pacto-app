@@ -14,7 +14,17 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
     const [name, setName] = useState('');
     const [companyName, setCompanyName] = useState(''); // Estado para nombre de empresa
 
-    // ... (rest of states)
+    const [isOrgCreator, setIsOrgCreator] = useState(false);
+    const [selectedPlan, setSelectedPlan] = useState<'FREE' | 'ENTERPRISE'>('FREE');
+    const [notification, setNotification] = useState<string | null>(null);
+
+    const [settings, setSettings] = useState<AccessibilitySettings>({
+        id: 'temp',
+        low_stimulus: false,
+        dyslexia_font: false,
+        high_contrast: false,
+        comm_preference: 'Escrito'
+    });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
