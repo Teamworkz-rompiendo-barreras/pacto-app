@@ -88,8 +88,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
                     <button onClick={() => onNavigate(View.NOTIFICATIONS)} className="p-2 rounded-full hover:bg-black/5 text-gray-600">
                         <span className="material-symbols-outlined text-[20px]">notifications</span>
                     </button>
-                    <button onClick={() => onNavigate(View.PROFILE)} className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs ring-2 ring-transparent hover:ring-primary/20 transition-all">
-                        AL
+                    <button onClick={() => onNavigate(View.PROFILE)} className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs ring-2 ring-transparent hover:ring-primary/20 transition-all uppercase">
+                        {user ? user.name.substring(0, 2) : 'MP'}
                     </button>
                 </div>
 
@@ -147,7 +147,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
             <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
                 <div className="flex flex-col gap-2">
                     <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
-                        Hola, Alex
+                        Hola, {user ? user.name.split(' ')[0] : 'Equipo'}
                     </h1>
                     <p className="text-xl text-gray-600 font-medium">
                         Aquí tienes el pulso de los acuerdos de tu equipo hoy.
@@ -187,7 +187,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
                                 <div className="flex flex-col gap-1">
                                     <div className="flex items-center gap-3 mb-1">
                                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${agreement.category === 'Comunicación' ? 'bg-blue-100 text-blue-700' :
-                                                agreement.category === 'Foco' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'
+                                            agreement.category === 'Foco' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'
                                             }`}>
                                             {agreement.category}
                                         </span>
@@ -287,8 +287,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
                         onClick={handleApplyTip}
                         disabled={tipStatus !== 'idle'}
                         className={`w-full md:w-auto flex items-center justify-center gap-2 shrink-0 px-6 py-3 text-white text-sm font-bold rounded-xl shadow-md transition-all min-w-[180px] ${tipStatus === 'success'
-                                ? 'bg-green-600 hover:bg-green-700'
-                                : (tipStatus === 'sending' ? 'bg-secondary-s3/70 cursor-wait' : 'bg-secondary-s3 hover:brightness-110 active:scale-95')
+                            ? 'bg-green-600 hover:bg-green-700'
+                            : (tipStatus === 'sending' ? 'bg-secondary-s3/70 cursor-wait' : 'bg-secondary-s3 hover:brightness-110 active:scale-95')
                             }`}
                     >
                         {tipStatus === 'sending' ? (
