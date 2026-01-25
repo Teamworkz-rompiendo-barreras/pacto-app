@@ -6,7 +6,7 @@ interface DashboardProps {
     user: UserProfile | null;
     agreements: Agreement[];
     onCreateNew: () => void;
-    onViewAgreement: () => void;
+    onViewAgreement: (agreement: Agreement) => void;
     onEditAgreement: (agreement: Agreement) => void;
     onExploreLibrary: () => void;
     onNavigate: (view: View) => void;
@@ -96,7 +96,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
 
                     <div className="grid gap-4">
                         {agreements.map((agreement) => (
-                            <div key={agreement.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group flex flex-col sm:flex-row justify-between gap-4 cursor-pointer" onClick={onViewAgreement}>
+                            <div key={agreement.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group flex flex-col sm:flex-row justify-between gap-4 cursor-pointer" onClick={() => onViewAgreement(agreement)}>
                                 <div className="flex flex-col gap-1">
                                     <div className="flex items-center gap-3 mb-1">
                                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${agreement.category === 'Comunicación' ? 'bg-blue-100 text-blue-700' :

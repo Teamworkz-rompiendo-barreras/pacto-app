@@ -12,24 +12,46 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [category, setCategory] = useState('Comunicación');
-  const [urgency, setUrgency] = useState('15 Min'); // Default value
-  const [deadline, setDeadline] = useState(''); // Optional deadline
+
+  // Granular Urgency State
+  const [days, setDays] = useState('');
+  const [hours, setHours] = useState('');
+  const [minutes, setMinutes] = useState('');
+
+  const [deadline, setDeadline] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Pre-fill data if available
+  // Helper to parse urgency string
+  const parseUrgency = (str: string) => {
+    if (!str) return;
+    // Simple heuristic parsing for legacy and new formats
+    if (str.includes('Min') || str.includes('m')) {
+      const m = str.match(/(\d+)/);
+      if (m) setMinutes(m[1]);
+    }
+    if (str.includes('Hora') || str.includes('h')) {
+      const h = str.match(/(\d+)/);
+      if (h) setHours(h[1]);
+    }
+    if (str.includes('día') || str.includes('d')) {
+      const d = str.match(/(\d+)/);
+      if (d) setDays(d[1]);
+    }
+    // Blockers
+    if (str.includes('Inmediato')) {
+      setMinutes('0'); setHours('0'); setDays('0');
+    }
+  };
+
+  // Pre-fill data
   useEffect(() => {
     if (initialData) {
       if (initialData.title) setTitle(initialData.title);
       if (initialData.description) setDesc(initialData.description);
       if (initialData.category) setCategory(initialData.category);
-      if (initialData.urgency) setUrgency(initialData.urgency);
+      if (initialData.urgency) parseUrgency(initialData.urgency);
       if (initialData.deadline) setDeadline(initialData.deadline);
-      // If we have rules from a template (Clarity Card), we might want to pre-fill them somehow.
-      // But AgreementForm currently doesn't have a 'rules' input list, it only has title/desc.
-      // The user asked to fill "Title, Category and Description". 
-      // I will respect that limitation for now to avoid over-complicating the form which is currently just a Title/Desc/Category form.
-      // However, if I want to support rules, I would need to add that field to AgreementForm.
-      // For now, I will append the rules to the description if they exist, so they aren't lost.
+
       if (initialData.rules && initialData.rules.length > 0) {
         const rulesText = initialData.rules.join('\n- ');
         setDesc(prev => (initialData.description || prev) + '\n\nNormas Sugeridas:\n- ' + rulesText);
@@ -40,12 +62,22 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim()) {
+      // Construct urgency string
+      let urgencyStr = '';
+      if (days && days !== '0') urgencyStr += `${days}d `;
+      if (hours && hours !== '0') urgencyStr += `${hours}h `;
+      if (minutes && minutes !== '0') urgencyStr += `${minutes}m`;
+      urgencyStr = urgencyStr.trim();
+
+      if (!urgencyStr && (days === '0' || hours === '0' || minutes === '0')) urgencyStr = 'Inmediato (Blocker)';
+      if (!urgencyStr) urgencyStr = 'Sin urgencia';
+
       onSave({
         title,
         description: desc,
         category: category as any,
-        urgency, // New field, assuming types.ts will be updated or it accepts partial
-        deadline // New field
+        urgency: urgencyStr,
+        deadline
       });
     } else {
       alert("Por favor inserta un título para el acuerdo.");
@@ -130,23 +162,47 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <label htmlFor="urgency" className="block text-lg font-bold text-text-n900">Urgencia Esperada</label>
-            <div className="relative">
-              <select
-                id="urgency"
-                value={urgency}
-                onChange={(e) => setUrgency(e.target.value)}
-                className="w-full p-4 border-2 border-gray-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none bg-white appearance-none cursor-pointer font-medium"
-              >
-                <option>Inmediato (Blocker)</option>
-                <option>15 Min</option>
-                <option>4 Horas</option>
-                <option>24 Horas</option>
-                <option>3 días</option>
-                <option>Sin urgencia</option>
-              </select>
-              <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
+          <div className="space-y-3">
+            <label className="block text-lg font-bold text-text-n900">Urgencia Esperada</label>
+            <div className="bg-gray-50 p-4 rounded-xl border border-gray-border">
+              <p className="text-xs text-gray-500 mb-3 font-bold uppercase tracking-wider">Tiempo de respuesta máximo</p>
+              <div className="flex gap-2">
+                <div className="flex-1 relative">
+                  <input
+                    type="number"
+                    min="0"
+                    value={days}
+                    onChange={(e) => setDays(e.target.value)}
+                    className="w-full h-12 pl-3 pr-8 rounded-lg border border-gray-300 font-bold text-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                    placeholder="0"
+                  />
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 pointer-events-none uppercase">Días</span>
+                </div>
+                <div className="flex-1 relative">
+                  <input
+                    type="number"
+                    min="0"
+                    max="23"
+                    value={hours}
+                    onChange={(e) => setHours(e.target.value)}
+                    className="w-full h-12 pl-3 pr-8 rounded-lg border border-gray-300 font-bold text-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                    placeholder="0"
+                  />
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 pointer-events-none uppercase">Hrs</span>
+                </div>
+                <div className="flex-1 relative">
+                  <input
+                    type="number"
+                    min="0"
+                    max="59"
+                    value={minutes}
+                    onChange={(e) => setMinutes(e.target.value)}
+                    className="w-full h-12 pl-3 pr-8 rounded-lg border border-gray-300 font-bold text-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                    placeholder="0"
+                  />
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 pointer-events-none uppercase">Min</span>
+                </div>
+              </div>
             </div>
           </div>
 

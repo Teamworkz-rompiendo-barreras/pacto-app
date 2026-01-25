@@ -223,7 +223,10 @@ const AppContent: React.FC = () => {
             user={user}
             agreements={agreements}
             onCreateNew={() => { setAgreementTemplate(undefined); navigateTo(View.NEW_AGREEMENT); }}
-            onViewAgreement={() => navigateTo(View.AGREEMENT_DETAILS)}
+            onViewAgreement={(agreement) => {
+              setSelectedAgreement(agreement);
+              navigateTo(View.AGREEMENT_DETAILS);
+            }}
             onEditAgreement={(agreement) => {
               setSelectedAgreement(agreement);
               navigateTo(View.EDIT_AGREEMENT);
