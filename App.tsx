@@ -51,11 +51,24 @@ import CelebrationModal from './components/CelebrationModal';
 // --- CUSTOM HOOK PARA PERSISTENCIA (EL CEREBRO DE LA APP) ---
 function useStickyState<T>(defaultValue: T, key: string): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [value, setValue] = useState<T>(() => {
+    if (typeof window === 'undefined') return defaultValue;
     const stickyValue = window.localStorage.getItem(key);
     return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue;
   });
 
+  // Actualizar estado si cambia la key (ej: cambio de usuario)
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const stickyValue = window.localStorage.getItem(key);
+    if (stickyValue !== null) {
+      setValue(JSON.parse(stickyValue));
+    } else {
+      setValue(defaultValue);
+    }
+  }, [key, defaultValue]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
     window.localStorage.setItem(key, JSON.stringify(value));
   }, [key, value]);
 
@@ -64,16 +77,19 @@ function useStickyState<T>(defaultValue: T, key: string): [T, React.Dispatch<Rea
 
 // DATOS INICIALES (Vacíos para nuevos usuarios)
 const DEFAULT_AGREEMENTS: Agreement[] = [];
-
 const DEFAULT_RITUALS: Ritual[] = [];
 
 const AppContent: React.FC = () => {
   const [view, setView] = useState<View>(View.LANDING);
 
-  // ESTADOS PERSISTENTES (Se guardan en el móvil/PC)
+  // 1. ESTADO DE USUARIO (Global)
   const [user, setUser] = useStickyState<UserProfile | null>(null, 'pacto_user_v1');
-  const [agreements, setAgreements] = useStickyState<Agreement[]>(DEFAULT_AGREEMENTS, 'pacto_agreements_v1');
-  const [rituals, setRituals] = useStickyState<Ritual[]>(DEFAULT_RITUALS, 'pacto_rituals_v1');
+
+  // 2. ESTADOS DE DATOS (Scopeados por ID de usuario para evitar mezclar datos)
+  const userKey = user ? `pacto_data_${user.id}` : 'pacto_data_guest';
+
+  const [agreements, setAgreements] = useStickyState<Agreement[]>(DEFAULT_AGREEMENTS, `${userKey}_agreements`);
+  const [rituals, setRituals] = useStickyState<Ritual[]>(DEFAULT_RITUALS, `${userKey}_rituals`);
 
   // Estados temporales (UI)
 
@@ -83,12 +99,8 @@ const AppContent: React.FC = () => {
   const [selectedAgreement, setSelectedAgreement] = useState<Agreement | undefined>(undefined);
   const [agreementTemplate, setAgreementTemplate] = useState<Partial<Agreement> | undefined>(undefined);
 
-  // Mock data for Team (Static for now)
-  const [teamMembers] = useState<UserProfile[]>([
-    { id: '1', name: 'Ana García', email: 'ana@pacto.dev', role: 'Engineering Manager', settings: { id: '1', low_stimulus: false, dyslexia_font: false, high_contrast: false, comm_preference: 'Escrito' } },
-    { id: '2', name: 'Luis Chen', email: 'luis@pacto.dev', role: 'Frontend Developer', settings: { id: '2', low_stimulus: true, dyslexia_font: false, high_contrast: false, comm_preference: 'Visual' } },
-    { id: '3', name: 'Marta Ruiz', email: 'marta@pacto.dev', role: 'Product Owner', settings: { id: '3', low_stimulus: false, dyslexia_font: false, high_contrast: false, comm_preference: 'Verbal' } },
-  ]);
+  // Mock data for Team (Ahora vacío o sólo el usuario actual para no confundir)
+  const [teamMembers] = useState<UserProfile[]>([]);
 
   const navigateTo = (newView: View) => {
     setView(newView);
