@@ -1,13 +1,14 @@
 
 import React, { useState } from 'react';
-import { Ritual } from '../types';
+import { Ritual, Agreement } from '../types';
 
 interface NewRitualProps {
+  activeAgreements: Agreement[];
   onCancel: () => void;
   onSave: (ritual: Omit<Ritual, 'id' | 'status' | 'icon'>) => void;
 }
 
-const NewRitual: React.FC<NewRitualProps> = ({ onCancel, onSave }) => {
+const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSave }) => {
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [date, setDate] = useState('');
@@ -182,9 +183,35 @@ const NewRitual: React.FC<NewRitualProps> = ({ onCancel, onSave }) => {
             </div>
           </div>
 
-          {/* Checklist Section */}
+          {/* Active Agreements Selector */}
+          {activeAgreements.length > 0 && (
+            <div className="flex flex-col gap-3 p-4 bg-primary/5 rounded-xl border border-primary/10">
+              <h3 className="text-sm font-bold text-primary uppercase tracking-wider flex items-center gap-2">
+                <span className="material-symbols-outlined text-lg">link</span>
+                Vincular Acuerdos Activos
+              </h3>
+              <p className="text-xs text-gray-600 mb-2">Selecciona un acuerdo para añadirlo automáticamente a la agenda de revisión.</p>
+              <div className="flex flex-wrap gap-2">
+                {activeAgreements.map(agreement => (
+                  <button
+                    key={agreement.id}
+                    onClick={() => {
+                      if (!checklist.includes(`Revisar: ${agreement.title}`)) {
+                        setChecklist([...checklist, `Revisar: ${agreement.title}`]);
+                      }
+                    }}
+                    className="px-3 py-1.5 bg-white border border-primary/20 text-text-n900 text-xs font-bold rounded-lg shadow-sm hover:bg-primary hover:text-white transition-all flex items-center gap-2"
+                  >
+                    <span className="material-symbols-outlined text-[14px]">add</span>
+                    {agreement.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="flex flex-col gap-4">
-            <h3 className="text-text-n900 text-lg font-bold">Acuerdos a Revisar</h3>
+            <h3 className="text-text-n900 text-lg font-bold">Agenda del Ritual</h3>
             <div className="grid grid-cols-1 gap-3">
               {checklist.map((item, index) => (
                 <div key={index} className="flex items-center gap-3 p-4 rounded-lg bg-gray-50 border border-gray-100 transition-all group">

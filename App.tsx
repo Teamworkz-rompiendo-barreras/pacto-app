@@ -281,7 +281,7 @@ const AppContent: React.FC = () => {
         );
 
       case View.PUBLIC_PROFILE:
-        return <PublicProfile user={user || undefined} onBack={() => navigateTo(View.PROFILE)} onProposeAgreement={() => navigateTo(View.NEW_AGREEMENT)} />;
+        return <PublicProfile user={user || undefined} agreements={agreements} onBack={() => navigateTo(View.PROFILE)} onProposeAgreement={() => navigateTo(View.NEW_AGREEMENT)} />;
 
       case View.TEAM:
         return (
@@ -317,7 +317,18 @@ const AppContent: React.FC = () => {
         return <DataExport onBack={() => navigateTo(View.ORGANIZATION)} />;
 
       case View.CLARITY_CARDS:
-        return <div className="p-6 md:p-10 w-full"><ClarityCards onGoDashboard={() => navigateTo(View.DASHBOARD)} onCreateNew={() => navigateTo(View.NEW_AGREEMENT)} /></div>;
+        return (
+          <div className="p-6 md:p-10 w-full">
+            <ClarityCards
+              onGoDashboard={() => navigateTo(View.DASHBOARD)}
+              onCreateNew={() => navigateTo(View.NEW_AGREEMENT)}
+              onConvertToAgreement={(template) => {
+                setAgreementTemplate(template);
+                navigateTo(View.NEW_AGREEMENT);
+              }}
+            />
+          </div>
+        );
 
       case View.RITUALS:
         return (
@@ -337,7 +348,7 @@ const AppContent: React.FC = () => {
         );
 
       case View.NEW_RITUAL:
-        return <div className="p-6 md:p-10 w-full"><NewRitual onCancel={() => navigateTo(View.RITUALS)} onSave={handleSaveRitual} /></div>;
+        return <div className="p-6 md:p-10 w-full"><NewRitual activeAgreements={agreements.filter(a => a.status === 'Activo')} onCancel={() => navigateTo(View.RITUALS)} onSave={handleSaveRitual} /></div>;
 
       case View.RITUAL_DETAILS:
         if (!selectedRitual) return <div className="p-10 text-center">No ritual selected</div>;

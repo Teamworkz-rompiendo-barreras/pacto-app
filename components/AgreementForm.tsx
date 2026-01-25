@@ -22,6 +22,18 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
       if (initialData.title) setTitle(initialData.title);
       if (initialData.description) setDesc(initialData.description);
       if (initialData.category) setCategory(initialData.category);
+      if (initialData.urgency) setUrgency(initialData.urgency);
+      if (initialData.deadline) setDeadline(initialData.deadline);
+      // If we have rules from a template (Clarity Card), we might want to pre-fill them somehow.
+      // But AgreementForm currently doesn't have a 'rules' input list, it only has title/desc.
+      // The user asked to fill "Title, Category and Description". 
+      // I will respect that limitation for now to avoid over-complicating the form which is currently just a Title/Desc/Category form.
+      // However, if I want to support rules, I would need to add that field to AgreementForm.
+      // For now, I will append the rules to the description if they exist, so they aren't lost.
+      if (initialData.rules && initialData.rules.length > 0) {
+        const rulesText = initialData.rules.join('\n- ');
+        setDesc(prev => (initialData.description || prev) + '\n\nNormas Sugeridas:\n- ' + rulesText);
+      }
     }
   }, [initialData]);
 

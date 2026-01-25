@@ -1,9 +1,12 @@
 
 import React, { useState } from 'react';
 
+import { Agreement } from '../types';
+
 interface ClarityCardsProps {
   onGoDashboard: () => void;
   onCreateNew: () => void;
+  onConvertToAgreement: (template: Partial<Agreement>) => void;
 }
 
 const CARDS = [
@@ -99,7 +102,7 @@ const CARDS = [
   },
 ];
 
-const ClarityCards: React.FC<ClarityCardsProps> = ({ onGoDashboard, onCreateNew }) => {
+const ClarityCards: React.FC<ClarityCardsProps> = ({ onGoDashboard, onCreateNew, onConvertToAgreement }) => {
   const [selectedCard, setSelectedCard] = useState<typeof CARDS[0] | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('Todas');
   const [searchTerm, setSearchTerm] = useState('');
@@ -410,11 +413,25 @@ Generado por PACTO by Teamworkz.
                   Descargar Guía
                 </button>
                 <button
+                  onClick={() => {
+                    onConvertToAgreement({
+                      title: selectedCard.title,
+                      description: selectedCard.fullDesc,
+                      category: selectedCard.category as any,
+                      rules: selectedCard.steps?.map(s => s.title) || []
+                    });
+                  }}
+                  className="flex-1 px-6 py-4 rounded-xl border-2 border-[#4b37a4] text-[#4b37a4] font-semibold hover:bg-[#4b37a4]/5 transition-all flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-xl">verified_user</span>
+                  Convertir en Acuerdo
+                </button>
+                <button
                   onClick={handleShareKit}
                   className="flex-1 px-6 py-4 rounded-xl bg-primary text-white font-semibold hover:shadow-lg hover:shadow-primary/30 hover:brightness-110 transition-all flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-xl">share</span>
-                  Compartir con el equipo
+                  Compartir
                 </button>
               </div>
             </div>
