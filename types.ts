@@ -19,6 +19,8 @@ export interface UserProfile {
   role: string;
   about?: string;
   avatar?: string; // Nuevo campo para la foto
+  phone?: string;
+  language?: string;
   settings: AccessibilitySettings;
 }
 

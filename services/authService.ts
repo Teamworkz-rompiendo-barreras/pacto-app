@@ -4,7 +4,7 @@ import { userService } from './userService';
 
 export const authService = {
     // Registrar nuevo usuario
-    async signUp(email: string, password: string, name: string, settings: AccessibilitySettings, companyName?: string): Promise<{ user: UserProfile | null, error: string | null }> {
+    async signUp(email: string, password: string, name: string, settings: AccessibilitySettings, companyName?: string, phone?: string, language?: string): Promise<{ user: UserProfile | null, error: string | null }> {
         try {
             // 1. Crear usuario en Supabase Auth
             const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -13,7 +13,9 @@ export const authService = {
                 options: {
                     data: {
                         full_name: name,
-                        company_name: companyName, // Guardamos la empresa en metadata
+                        company_name: companyName,
+                        phone,
+                        language
                     }
                 }
             });
@@ -26,7 +28,9 @@ export const authService = {
                 id: authData.user.id, // IMPORTANTE: Usar el ID real de Auth
                 name,
                 email: email.trim(),
-                role: name.toLowerCase().includes('admin') ? 'Administrador' : 'Miembro de Equipo', // Lógica básica de roles
+                role: companyName ? 'Administrador' : 'Miembro de Equipo',
+                phone,
+                language,
                 settings: { ...settings, id: crypto.randomUUID() }, // Ajustes nuevos
                 avatar: `https://ui-avatars.com/api/?name=${name}&background=374BA6&color=fff`
             };

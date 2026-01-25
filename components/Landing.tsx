@@ -80,9 +80,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
                 <button onClick={onStart} className="h-14 md:h-16 px-8 md:px-10 bg-primary text-white text-base md:text-lg font-bold rounded-full hover:shadow-xl hover:-translate-y-1 transition-all w-full sm:w-auto">
                   Crear mi cuenta
                 </button>
-                <button onClick={onStart} className="h-14 md:h-16 px-8 md:px-10 bg-white border-2 border-black/10 text-text-n900 font-bold text-base md:text-lg rounded-full hover:bg-white/80 transition-colors w-full sm:w-auto">
-                  Ver demo
-                </button>
+
               </div>
             </div>
             <div className="order-1 lg:order-2">
