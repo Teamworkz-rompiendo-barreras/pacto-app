@@ -350,17 +350,17 @@ const Rituals: React.FC<RitualsProps> = ({ rituals, onCreate, onViewDetails, onT
                     </div>
 
                     <div className="w-full bg-gray-100 rounded-full h-2 mb-4 overflow-hidden">
-                        <div className={`bg-gradient-to-r ${energyColor} h-2 rounded-full`} style={{ width: pendingCount > 3 ? '85%' : '40%' }}></div>
+                        <div className={`bg-gradient-to-r ${energyColor} h-2 rounded-full`} style={{ width: ritualCount > 3 ? '85%' : '40%' }}></div>
                     </div>
 
                     <p className="text-sm text-gray-600 leading-relaxed mb-4 font-medium">
-                        {pendingCount > 3
-                            ? <>Hemos detectado <strong className="text-primary">{pendingCount} rituales</strong>. Tu carga cognitiva está por encima del promedio recomendado.</>
+                        {ritualCount > 3
+                            ? <>Hemos detectado <strong className="text-primary">{ritualCount} rituales</strong>. Tu carga cognitiva está por encima del promedio recomendado.</>
                             : <>Tu carga de rituales está equilibrada. Buen momento para trabajo profundo.</>
                         }
                     </p>
 
-                    {pendingCount > 3 && (
+                    {ritualCount > 3 && (
                         <div className="bg-primary/5 rounded-xl p-3 flex gap-3 items-start border border-primary/10">
                             <span className="material-symbols-outlined text-primary text-[20px] mt-0.5">lightbulb</span>
                             <p className="text-xs text-text-n900 font-bold">Sugerencia: Bloquea 15 min después del almuerzo para desconexión sensorial.</p>
