@@ -21,6 +21,8 @@ export interface UserProfile {
   avatar?: string; // Nuevo campo para la foto
   phone?: string;
   language?: string;
+  plan?: 'SEED' | 'GROWTH' | 'ENTERPRISE';
+  maxMembers?: number;
   settings: AccessibilitySettings;
 }
 

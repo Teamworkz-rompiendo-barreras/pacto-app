@@ -4,8 +4,10 @@ import { userService } from './userService';
 
 export const authService = {
     // Registrar nuevo usuario
-    async signUp(email: string, password: string, name: string, settings: AccessibilitySettings, companyName?: string, phone?: string, language?: string): Promise<{ user: UserProfile | null, error: string | null }> {
+    async signUp(email: string, password: string, name: string, settings: AccessibilitySettings, companyName?: string, phone?: string, language?: string, plan?: 'SEED' | 'GROWTH' | 'ENTERPRISE'): Promise<{ user: UserProfile | null, error: string | null }> {
         try {
+            const maxMembers = plan === 'SEED' ? 5 : (plan === 'GROWTH' ? 50 : 9999);
+
             // 1. Crear usuario en Supabase Auth
             const { data: authData, error: authError } = await supabase.auth.signUp({
                 email: email.trim(),
@@ -15,7 +17,9 @@ export const authService = {
                         full_name: name,
                         company_name: companyName,
                         phone,
-                        language
+                        language,
+                        plan,
+                        max_members: maxMembers
                     }
                 }
             });
@@ -31,6 +35,8 @@ export const authService = {
                 role: companyName ? 'Administrador' : 'Miembro de Equipo',
                 phone,
                 language,
+                plan,
+                maxMembers,
                 settings: { ...settings, id: crypto.randomUUID() }, // Ajustes nuevos
                 avatar: `https://ui-avatars.com/api/?name=${name}&background=374BA6&color=fff`
             };
