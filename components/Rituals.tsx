@@ -42,9 +42,9 @@ const Rituals: React.FC<RitualsProps> = ({ rituals, onCreate, onViewDetails, onT
     };
 
     // Separar rituales pendientes y completados para el cálculo de energía
-    const pendingCount = rituals.filter(r => r.status === 'pending').length;
-    const energyLevel = pendingCount > 3 ? 'Alto' : (pendingCount > 1 ? 'Medio' : 'Óptimo');
-    const energyColor = pendingCount > 3 ? 'from-secondary-s3 to-primary' : (pendingCount > 1 ? 'from-yellow-300 to-yellow-500' : 'from-green-300 to-green-500');
+    const ritualCount = rituals.filter(r => r.status === 'pending').length;
+    const energyLevel = ritualCount > 3 ? 'Alto' : (ritualCount > 1 ? 'Medio' : 'Óptimo');
+    const energyColor = ritualCount > 3 ? 'from-secondary-s3 to-primary' : (ritualCount > 1 ? 'from-yellow-300 to-yellow-500' : 'from-green-300 to-green-500');
 
     const getViewLabel = () => {
         switch (activeView) {
