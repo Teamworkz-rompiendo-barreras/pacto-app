@@ -27,6 +27,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
     const [currentTip, setCurrentTip] = useState(TIPS_DB[0]);
     const [focusModeActive, setFocusModeActive] = useState(false);
 
+    const isAdmin = user?.role === 'Administrador';
+
     // Simular carga de "Tip del Día"
     useEffect(() => {
         const randomIndex = Math.floor(Math.random() * TIPS_DB.length);
@@ -53,6 +55,118 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
         }
     };
 
+    // --- RENDERIZADO VIEW: ADMIN (EMPRESA) ---
+    if (isAdmin) {
+        return (
+            <div className="w-full max-w-7xl mx-auto animate-fade-in font-display pb-12 px-6 md:px-10 pt-6">
+                <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
+                    <div className="flex flex-col gap-2">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
+                            <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
+                            Vista de Administrador
+                        </div>
+                        <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
+                            Panel de Control
+                        </h1>
+                        <p className="text-xl text-gray-600 font-medium">
+                            Gestión global de {user?.name.split(' ')[0] || 'la Organización'}.
+                        </p>
+                    </div>
+                </header>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4">
+                        <div className="flex items-center gap-3 text-gray-500 font-bold text-sm uppercase tracking-wider">
+                            <span className="material-symbols-outlined">health_metrics</span>
+                            Salud Organizacional
+                        </div>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-5xl font-black text-text-n900">92%</span>
+                            <span className="text-green-500 font-bold flex items-center text-sm">+5% <span className="material-symbols-outlined text-sm">trending_up</span></span>
+                        </div>
+                        <p className="text-sm text-gray-500">Basado en adopción de acuerdos y feedback.</p>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4">
+                        <div className="flex items-center gap-3 text-gray-500 font-bold text-sm uppercase tracking-wider">
+                            <span className="material-symbols-outlined">person</span>
+                            Miembros Activos
+                        </div>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-5xl font-black text-text-n900">12</span>
+                            <span className="text-gray-400 font-medium text-sm">/ 20 licencias</span>
+                        </div>
+                        <button onClick={() => onNavigate(View.ORGANIZATION)} className="text-primary font-bold text-sm hover:underline text-left">Gestionar Equipo &rarr;</button>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4">
+                        <div className="flex items-center gap-3 text-gray-500 font-bold text-sm uppercase tracking-wider">
+                            <span className="material-symbols-outlined">handshake</span>
+                            Acuerdos Vigentes
+                        </div>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-5xl font-black text-text-n900">{agreements.length}</span>
+                            <span className="text-gray-400 font-medium text-sm">Total</span>
+                        </div>
+                        <button onClick={onExploreLibrary} className="text-primary font-bold text-sm hover:underline text-left">Ver Biblioteca de Plantillas &rarr;</button>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {/* Accesos Rápidos Admin */}
+                    <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                        <h3 className="text-xl font-bold text-text-n900 mb-6">Acciones Rápidas</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <button onClick={() => onNavigate(View.ORGANIZATION)} className="p-4 rounded-xl bg-gray-50 hover:bg-primary/5 hover:border-primary border border-transparent transition-all text-left flex flex-col gap-3 group">
+                                <div className="size-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-500 group-hover:text-primary group-hover:border-primary transition-colors">
+                                    <span className="material-symbols-outlined">person_add</span>
+                                </div>
+                                <span className="font-bold text-text-n900">Invitar Usuarios</span>
+                            </button>
+                            <button onClick={() => onNavigate(View.ORGANIZATION)} className="p-4 rounded-xl bg-gray-50 hover:bg-primary/5 hover:border-primary border border-transparent transition-all text-left flex flex-col gap-3 group">
+                                <div className="size-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-500 group-hover:text-primary group-hover:border-primary transition-colors">
+                                    <span className="material-symbols-outlined">groups</span>
+                                </div>
+                                <span className="font-bold text-text-n900">Gestionar Equipos</span>
+                            </button>
+                            <button onClick={() => onNavigate(View.REPORTS)} className="p-4 rounded-xl bg-gray-50 hover:bg-primary/5 hover:border-primary border border-transparent transition-all text-left flex flex-col gap-3 group">
+                                <div className="size-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-500 group-hover:text-primary group-hover:border-primary transition-colors">
+                                    <span className="material-symbols-outlined">bar_chart</span>
+                                </div>
+                                <span className="font-bold text-text-n900">Ver Reportes</span>
+                            </button>
+                            <button onClick={() => onNavigate(View.ORGANIZATION)} className="p-4 rounded-xl bg-gray-50 hover:bg-primary/5 hover:border-primary border border-transparent transition-all text-left flex flex-col gap-3 group">
+                                <div className="size-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-500 group-hover:text-primary group-hover:border-primary transition-colors">
+                                    <span className="material-symbols-outlined">settings_suggest</span>
+                                </div>
+                                <span className="font-bold text-text-n900">Configurar Accesibilidad</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Actividad Reciente */}
+                    <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                        <h3 className="text-xl font-bold text-text-n900 mb-6">Actividad de la Organización</h3>
+                        <div className="flex flex-col gap-4">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="flex gap-4 items-start pb-4 border-b border-gray-50 last:border-0 last:pb-0">
+                                    <div className="size-10 rounded-full bg-gray-100 flex items-center justify-center shrink-0 text-gray-500 font-bold text-xs">U{i}</div>
+                                    <div>
+                                        <p className="text-sm font-medium text-text-n900">
+                                            <span className="font-bold">Usuario {i}</span> ha completado el ritual de <span className="font-bold text-primary">Cierre Semanal</span>.
+                                        </p>
+                                        <p className="text-xs text-gray-400 mt-1">Hace {i * 15} minutos</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // --- RENDERIZADO VIEW: EMPLEADO (MIEMBRO) ---
     return (
         <div className="w-full max-w-7xl mx-auto animate-fade-in font-display pb-12 px-6 md:px-10 pt-6">
 
@@ -60,10 +174,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
             <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
                 <div className="flex flex-col gap-2">
                     <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
-                        Hola, {user ? user.name.split(' ')[0] : 'Equipo'}
+                        Hola, {user ? user.name.split(' ')[0] : 'Compañero'}
                     </h1>
                     <p className="text-xl text-gray-600 font-medium">
-                        Aquí tienes el pulso de los acuerdos de tu equipo hoy.
+                        Tu espacio personal de claridad y acuerdos.
                     </p>
                 </div>
                 <div className="flex gap-4 w-full md:w-auto">
@@ -95,34 +209,45 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
                     </div>
 
                     <div className="grid gap-4">
-                        {agreements.map((agreement) => (
-                            <div key={agreement.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group flex flex-col sm:flex-row justify-between gap-4 cursor-pointer" onClick={() => onViewAgreement(agreement)}>
-                                <div className="flex flex-col gap-1">
-                                    <div className="flex items-center gap-3 mb-1">
-                                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${agreement.category === 'Comunicación' ? 'bg-blue-100 text-blue-700' :
-                                            agreement.category === 'Foco' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'
-                                            }`}>
-                                            {agreement.category}
-                                        </span>
-                                        <span className={`text-[10px] font-bold ${agreement.status === 'Activo' ? 'text-green-600' : 'text-amber-600'}`}>• {agreement.status}</span>
-                                    </div>
-                                    <h4 className="text-xl font-bold text-text-n900 group-hover:text-primary transition-colors">{agreement.title}</h4>
-                                    <p className="text-gray-500 font-medium text-sm line-clamp-1">{agreement.description}</p>
+                        {agreements.length === 0 ? (
+                            <div className="bg-white p-10 rounded-2xl border-2 border-dashed border-gray-200 text-center flex flex-col items-center gap-4">
+                                <span className="material-symbols-outlined text-4xl text-gray-300">sentiment_content</span>
+                                <div className="space-y-1">
+                                    <p className="font-bold text-gray-500 text-lg">Aún no tienes acuerdos</p>
+                                    <p className="text-gray-400 text-sm">Crea uno nuevo para mejorar la claridad con tu equipo.</p>
                                 </div>
-                                <div className="flex items-center gap-2 sm:self-center">
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); onEditAgreement(agreement); }}
-                                        className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
-                                        title="Editar"
-                                    >
-                                        <span className="material-symbols-outlined">edit</span>
-                                    </button>
-                                    <button className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors">
-                                        <span className="material-symbols-outlined">arrow_forward</span>
-                                    </button>
-                                </div>
+                                <button onClick={onCreateNew} className="text-primary font-bold hover:underline">Crear mi primer acuerdo</button>
                             </div>
-                        ))}
+                        ) : (
+                            agreements.map((agreement) => (
+                                <div key={agreement.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group flex flex-col sm:flex-row justify-between gap-4 cursor-pointer" onClick={() => onViewAgreement(agreement)}>
+                                    <div className="flex flex-col gap-1">
+                                        <div className="flex items-center gap-3 mb-1">
+                                            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${agreement.category === 'Comunicación' ? 'bg-blue-100 text-blue-700' :
+                                                agreement.category === 'Foco' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'
+                                                }`}>
+                                                {agreement.category}
+                                            </span>
+                                            <span className={`text-[10px] font-bold ${agreement.status === 'Activo' ? 'text-green-600' : 'text-amber-600'}`}>• {agreement.status}</span>
+                                        </div>
+                                        <h4 className="text-xl font-bold text-text-n900 group-hover:text-primary transition-colors">{agreement.title}</h4>
+                                        <p className="text-gray-500 font-medium text-sm line-clamp-1">{agreement.description}</p>
+                                    </div>
+                                    <div className="flex items-center gap-2 sm:self-center">
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); onEditAgreement(agreement); }}
+                                            className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                                            title="Editar"
+                                        >
+                                            <span className="material-symbols-outlined">edit</span>
+                                        </button>
+                                        <button className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors">
+                                            <span className="material-symbols-outlined">arrow_forward</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
                     </div>
                 </div>
 
@@ -135,19 +260,19 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
                                 {agreements.length > 0 ? 'sentiment_satisfied' : 'rocket_launch'}
                             </span>
                         </div>
-                        <h3 className="text-lg font-bold mb-1 opacity-90">Salud del Equipo</h3>
+                        <h3 className="text-lg font-bold mb-1 opacity-90">Mi Bienestar</h3>
 
                         {agreements.length > 0 ? (
                             <>
                                 <div className="flex items-end gap-2 mb-4">
                                     <span className="text-5xl font-black">100%</span>
-                                    <span className="text-sm font-bold mb-2 opacity-80">Inicio</span>
+                                    <span className="text-sm font-bold mb-2 opacity-80">Claridad</span>
                                 </div>
                                 <div className="w-full bg-white/20 h-2 rounded-full overflow-hidden mb-4">
                                     <div className="bg-white h-full w-full rounded-full"></div>
                                 </div>
                                 <p className="text-sm font-medium opacity-90 leading-relaxed">
-                                    ¡Todo listo! Tu equipo está alineado y listo para colaborar.
+                                    ¡Todo listo! Estás alineado y listo para colaborar.
                                 </p>
                             </>
                         ) : (
@@ -160,7 +285,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
                                     <div className="bg-white h-full w-[5%] rounded-full"></div>
                                 </div>
                                 <p className="text-sm font-medium opacity-90 leading-relaxed">
-                                    Aún no hay datos. Crea tu primer <strong>Acuerdo Vivo</strong> para empezar a medir el pulso.
+                                    Aún no hay datos. Crea tu primer <strong>Acuerdo Vivo</strong>.
                                 </p>
                             </>
                         )}
@@ -168,7 +293,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
 
                     {/* Quick Actions */}
                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                        <h3 className="text-lg font-bold text-text-n900 mb-4">Accesos Rápidos</h3>
+                        <h3 className="text-lg font-bold text-text-n900 mb-4">Herramientas Personales</h3>
                         <div className="space-y-3">
                             <button
                                 onClick={toggleFocusMode}
