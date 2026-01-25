@@ -132,28 +132,51 @@ const AgreementDetails: React.FC<AgreementDetailsProps> = ({ agreement, onBack, 
               <div className="bg-white border border-gray-border rounded-xl p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-lg flex items-center gap-2">
-                    <span className="material-symbols-outlined text-primary">schedule</span>
-                    Tiempos de Respuesta
+                    <span className="material-symbols-outlined text-primary">rule</span>
+                    Normas del Acuerdo
                   </h3>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
-                    <div>
-                      <p className="font-bold text-text-n900">Urgencia Alta (Blocker)</p>
-                      <p className="text-xs text-gray-500">Servidor caído, cliente bloqueado.</p>
+                <div className="space-y-3">
+                  {agreement?.rules && agreement.rules.length > 0 ? (
+                    agreement.rules.map((rule, idx) => (
+                      <div key={idx} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
+                        <span className="flex items-center justify-center shrink-0 size-6 bg-primary/10 text-primary rounded-full text-xs font-bold mt-0.5">
+                          {idx + 1}
+                        </span>
+                        <p className="text-text-n900 font-medium leading-relaxed">{rule}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-gray-400 italic bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                      No hay normas definidas aún.
                     </div>
-                    <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold">{urgency}</span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
-                    <div>
-                      <p className="font-bold text-text-n900">Estándar (Slack/Email)</p>
-                      <p className="text-xs text-gray-500">Preguntas generales, actualizaciones.</p>
-                    </div>
-                    <span className="bg-blue-100 text-primary px-3 py-1 rounded-full text-xs font-bold">4 Horas</span>
-                  </div>
+                  )}
                 </div>
+
+                {/* Sección Extra: Urgencia y Deadline si existen */}
+                {(agreement?.urgency || agreement?.deadline) && (
+                  <div className="mt-6 pt-6 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {agreement.urgency && (
+                      <div className="flex items-center gap-3 p-3 bg-red-50 text-red-900 rounded-lg border border-red-100">
+                        <span className="material-symbols-outlined text-red-500">timer</span>
+                        <div>
+                          <p className="text-[10px] uppercase font-bold text-red-400 tracking-wider">Urgencia</p>
+                          <p className="font-bold">{agreement.urgency}</p>
+                        </div>
+                      </div>
+                    )}
+                    {agreement.deadline && (
+                      <div className="flex items-center gap-3 p-3 bg-blue-50 text-blue-900 rounded-lg border border-blue-100">
+                        <span className="material-symbols-outlined text-blue-500">calendar_today</span>
+                        <div>
+                          <p className="text-[10px] uppercase font-bold text-blue-400 tracking-wider">Fecha Límite</p>
+                          <p className="font-bold">{agreement.deadline}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </>
           )}

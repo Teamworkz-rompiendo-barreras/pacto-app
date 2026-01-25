@@ -252,7 +252,7 @@ const AppContent: React.FC = () => {
           <div className="w-full">
             <EditAgreement
               initialData={selectedAgreement}
-              onSave={() => { /* Lógica de guardado dummy */ handleUpdateAgreement({}) }}
+              onSave={(data) => { handleUpdateAgreement(data) }}
               onBack={() => navigateTo(View.DASHBOARD)}
             />
           </div>
