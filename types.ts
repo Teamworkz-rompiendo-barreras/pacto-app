@@ -105,3 +105,12 @@ export enum View {
   SUCCESS_STORIES = 'SUCCESS_STORIES',
   MISSION = 'MISSION'
 }
+
+export const SUPPORTED_LANGUAGES = [
+  "Español (España)", "Español (Latinoamérica)",
+  "English (US)", "English (UK)", "English (EU)",
+  "Português (Brasil)", "Português (Portugal)",
+  "Français", "Deutsch", "Italiano", "Ελληνικά (Greek)",
+  "Nederlands", "Polski", "Svenska", "Dansk", "Suomi",
+  "Čeština", "Magyar", "Română", "Български"
+];
