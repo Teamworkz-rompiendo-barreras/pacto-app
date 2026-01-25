@@ -12,6 +12,8 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [category, setCategory] = useState('Comunicación');
+  const [urgency, setUrgency] = useState('15 Min'); // Default value
+  const [deadline, setDeadline] = useState(''); // Optional deadline
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Pre-fill data if available
@@ -29,7 +31,9 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
       onSave({
         title,
         description: desc,
-        category: category as any
+        category: category as any,
+        urgency, // New field, assuming types.ts will be updated or it accepts partial
+        deadline // New field
       });
     } else {
       alert("Por favor inserta un título para el acuerdo.");
@@ -110,6 +114,39 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
               <option>Social</option>
             </select>
             <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="urgency" className="block text-lg font-bold text-text-n900">Urgencia Esperada</label>
+            <div className="relative">
+              <select
+                id="urgency"
+                value={urgency}
+                onChange={(e) => setUrgency(e.target.value)}
+                className="w-full p-4 border-2 border-gray-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none bg-white appearance-none cursor-pointer font-medium"
+              >
+                <option>Inmediato (Blocker)</option>
+                <option>15 Min</option>
+                <option>4 Horas</option>
+                <option>24 Horas</option>
+                <option>3 días</option>
+                <option>Sin urgencia</option>
+              </select>
+              <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="deadline" className="block text-lg font-bold text-text-n900">Fecha Límite (Opcional)</label>
+            <input
+              id="deadline"
+              type="date"
+              value={deadline}
+              onChange={(e) => setDeadline(e.target.value)}
+              className="w-full p-4 border-2 border-gray-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all bg-gray-50 font-medium"
+            />
           </div>
         </div>
 

@@ -259,7 +259,7 @@ const AppContent: React.FC = () => {
         );
 
       case View.AGREEMENT_DETAILS:
-        return <AgreementDetails onBack={() => navigateTo(View.DASHBOARD)} onEdit={() => navigateTo(View.EDIT_AGREEMENT)} />;
+        return <AgreementDetails agreement={selectedAgreement} onBack={() => navigateTo(View.DASHBOARD)} onEdit={() => navigateTo(View.EDIT_AGREEMENT)} />;
 
       case View.PROFILE:
         if (!user) return null;

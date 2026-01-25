@@ -128,22 +128,42 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
 
                 {/* Sidebar */}
                 <div className="lg:col-span-4 flex flex-col gap-6">
-                    {/* Stats Widget */}
+                    {/* Stats Widget (Dynamic) */}
                     <div className="bg-primary text-white p-8 rounded-2xl shadow-lg shadow-primary/20 relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
-                            <span className="material-symbols-outlined text-8xl">sentiment_satisfied</span>
+                            <span className="material-symbols-outlined text-8xl">
+                                {agreements.length > 0 ? 'sentiment_satisfied' : 'rocket_launch'}
+                            </span>
                         </div>
                         <h3 className="text-lg font-bold mb-1 opacity-90">Salud del Equipo</h3>
-                        <div className="flex items-end gap-2 mb-4">
-                            <span className="text-5xl font-black">94%</span>
-                            <span className="text-sm font-bold mb-2 opacity-80">Satisfacción</span>
-                        </div>
-                        <div className="w-full bg-white/20 h-2 rounded-full overflow-hidden mb-4">
-                            <div className="bg-white h-full w-[94%] rounded-full"></div>
-                        </div>
-                        <p className="text-sm font-medium opacity-90 leading-relaxed">
-                            Tu equipo reporta altos niveles de claridad esta semana. ¡Buen trabajo!
-                        </p>
+
+                        {agreements.length > 0 ? (
+                            <>
+                                <div className="flex items-end gap-2 mb-4">
+                                    <span className="text-5xl font-black">100%</span>
+                                    <span className="text-sm font-bold mb-2 opacity-80">Inicio</span>
+                                </div>
+                                <div className="w-full bg-white/20 h-2 rounded-full overflow-hidden mb-4">
+                                    <div className="bg-white h-full w-full rounded-full"></div>
+                                </div>
+                                <p className="text-sm font-medium opacity-90 leading-relaxed">
+                                    ¡Todo listo! Tu equipo está alineado y listo para colaborar.
+                                </p>
+                            </>
+                        ) : (
+                            <>
+                                <div className="flex items-end gap-2 mb-4">
+                                    <span className="text-5xl font-black">--</span>
+                                    <span className="text-sm font-bold mb-2 opacity-80">Por iniciar</span>
+                                </div>
+                                <div className="w-full bg-white/20 h-2 rounded-full overflow-hidden mb-4">
+                                    <div className="bg-white h-full w-[5%] rounded-full"></div>
+                                </div>
+                                <p className="text-sm font-medium opacity-90 leading-relaxed">
+                                    Aún no hay datos. Crea tu primer <strong>Acuerdo Vivo</strong> para empezar a medir el pulso.
+                                </p>
+                            </>
+                        )}
                     </div>
 
                     {/* Quick Actions */}

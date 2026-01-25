@@ -39,6 +39,8 @@ export interface Agreement {
   status: 'Activo' | 'Borrador' | 'Archivado';
   rules?: string[];
   participants?: string[];
+  urgency?: string;
+  deadline?: string;
 }
 
 export interface Ritual {
