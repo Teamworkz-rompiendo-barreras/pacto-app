@@ -243,7 +243,9 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
 
 
   const t = (key: string): string => {
-    const langDict = translations[language] || translations['es-la'] || {};
+    // Normalize language key to lowercase to match keys in translations object
+    const normalizedLang = language.toLowerCase();
+    const langDict = translations[normalizedLang] || translations['es-la'] || {};
     return langDict[key] || key;
   };
 
