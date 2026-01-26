@@ -228,6 +228,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
                                                 }`}>
                                                 {agreement.category}
                                             </span>
+                                            {agreement.visibility && (
+                                                <span className="text-gray-400 flex items-center" title={agreement.visibility === 'Organization' ? 'Global' : (agreement.visibility === 'Private' ? 'Privado' : 'Equipo')}>
+                                                    <span className="material-symbols-outlined text-[14px]">
+                                                        {agreement.visibility === 'Organization' ? 'public' : (agreement.visibility === 'Private' ? 'lock' : 'group')}
+                                                    </span>
+                                                </span>
+                                            )}
                                             <span className={`text-[10px] font-bold ${agreement.status === 'Activo' ? 'text-green-600' : 'text-amber-600'}`}>• {agreement.status}</span>
                                         </div>
                                         <h4 className="text-xl font-bold text-text-n900 group-hover:text-primary transition-colors">{agreement.title}</h4>

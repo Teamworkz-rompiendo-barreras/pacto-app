@@ -12,6 +12,10 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [category, setCategory] = useState('Comunicación');
+  const [visibility, setVisibility] = useState<'Organization' | 'Team' | 'Private'>('Team');
+
+  // Rules List State
+  const [rules, setRules] = useState<string[]>(['']);
 
   // Granular Urgency State
   const [days, setDays] = useState('');
@@ -20,6 +24,14 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
 
   const [deadline, setDeadline] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const addRule = () => setRules([...rules, '']);
+  const updateRule = (index: number, val: string) => {
+    const newRules = [...rules];
+    newRules[index] = val;
+    setRules(newRules);
+  };
+  const removeRule = (index: number) => setRules(rules.filter((_, i) => i !== index));
 
   // Helper to parse urgency string
   const parseUrgency = (str: string) => {
@@ -51,10 +63,10 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
       if (initialData.category) setCategory(initialData.category);
       if (initialData.urgency) parseUrgency(initialData.urgency);
       if (initialData.deadline) setDeadline(initialData.deadline);
+      if (initialData.visibility) setVisibility(initialData.visibility);
 
       if (initialData.rules && initialData.rules.length > 0) {
-        const rulesText = initialData.rules.join('\n- ');
-        setDesc(prev => (initialData.description || prev) + '\n\nNormas Sugeridas:\n- ' + rulesText);
+        setRules(initialData.rules);
       }
     }
   }, [initialData]);
@@ -77,7 +89,9 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
         description: desc,
         category: category as any,
         urgency: urgencyStr,
-        deadline
+        deadline,
+        visibility,
+        rules: rules.filter(r => r.trim() !== '')
       });
     } else {
       alert("Por favor inserta un título para el acuerdo.");
@@ -88,13 +102,18 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
     setIsGenerating(true);
     setTimeout(() => {
       setTitle("Política de 'Cámaras Opcionales'");
-      setDesc("Para reducir la fatiga por zoom y la ansiedad social, se acuerda que el uso de cámaras es completamente opcional en todas las reuniones internas, excepto en la social mensual.");
+      setDesc("Para reducir la fatiga por zoom y la ansiedad social, se acuerda que el uso de cámaras es completamente opcional.");
+      setRules([
+        "Cámara opcional en reuniones internas.",
+        "Cámara recomendada (no obligatoria) con clientes nuevos.",
+        "Obligatorio: Foto de perfil clara si no hay cámara."
+      ]);
       setIsGenerating(false);
     }, 1500);
   };
 
   return (
-    <div className="max-w-2xl mx-auto animate-fade-in">
+    <div className="max-w-3xl mx-auto animate-fade-in pb-20">
       <header className="mb-8 flex justify-between items-start">
         <div>
           <h2 className="text-3xl font-black text-text-n900">Crear un Nuevo Acuerdo Vivo</h2>
@@ -143,21 +162,40 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
           />
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="category" className="block text-lg font-bold text-text-n900">Categoría</label>
-          <div className="relative">
-            <select
-              id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full p-4 border-2 border-gray-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none bg-white appearance-none cursor-pointer font-medium"
-            >
-              <option>Comunicación</option>
-              <option>Foco</option>
-              <option>Feedback</option>
-              <option>Social</option>
-            </select>
-            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="category" className="block text-lg font-bold text-text-n900">Categoría</label>
+            <div className="relative">
+              <select
+                id="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full p-4 border-2 border-gray-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none bg-white appearance-none cursor-pointer font-medium"
+              >
+                <option>Comunicación</option>
+                <option>Foco</option>
+                <option>Feedback</option>
+                <option>Social</option>
+              </select>
+              <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="visibility" className="block text-lg font-bold text-text-n900">Visibilidad</label>
+            <div className="relative">
+              <select
+                id="visibility"
+                value={visibility}
+                onChange={(e) => setVisibility(e.target.value as any)}
+                className="w-full p-4 border-2 border-gray-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none bg-white appearance-none cursor-pointer font-medium"
+              >
+                <option value="Team">Equipo (Miembros)</option>
+                <option value="Organization">Organización (Global)</option>
+                <option value="Private">Privado (Solo yo)</option>
+              </select>
+              <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">visibility</span>
+            </div>
           </div>
         </div>
 
@@ -219,26 +257,44 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="desc" className="block text-lg font-bold text-text-n900">Descripción del Acuerdo</label>
+          <label htmlFor="desc" className="block text-lg font-bold text-text-n900">Propósito (El "Por Qué")</label>
           <div className="relative">
             <textarea
               id="desc"
-              rows={5}
+              rows={3}
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
               className="w-full p-4 border-2 border-gray-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all bg-gray-50 font-medium resize-none"
-              placeholder="Describe qué se espera de este acuerdo y por qué es importante para el equipo..."
+              placeholder="Describe por qué este acuerdo es importante para el bienestar del equipo..."
             />
-            {isGenerating && (
-              <div className="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center rounded-xl">
-                <span className="text-primary font-bold animate-pulse">Redactando...</span>
-              </div>
-            )}
           </div>
-          <p className="text-sm text-gray-500 flex items-center gap-1">
-            <span className="material-symbols-outlined text-[16px]">info</span>
-            Usa un lenguaje directo, positivo y libre de ambigüedades.
-          </p>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <label className="block text-lg font-bold text-text-n900">Reglas del Juego (El "Cómo")</label>
+            <button type="button" onClick={addRule} className="text-sm font-bold text-primary hover:underline">+ Añadir Regla</button>
+          </div>
+
+          <div className="space-y-3">
+            {rules.map((rule, idx) => (
+              <div key={idx} className="flex gap-2 animate-fade-in">
+                <span className="flex-shrink-0 w-8 h-12 flex items-center justify-center bg-gray-100 rounded-lg text-gray-500 font-bold">{idx + 1}</span>
+                <input
+                  type="text"
+                  value={rule}
+                  onChange={(e) => updateRule(idx, e.target.value)}
+                  placeholder={`Regla nº ${idx + 1}`}
+                  className="flex-grow p-3 border border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none font-medium"
+                />
+                {rules.length > 1 && (
+                  <button type="button" onClick={() => removeRule(idx)} className="text-gray-400 hover:text-red-500 p-2">
+                    <span className="material-symbols-outlined">delete</span>
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-100">

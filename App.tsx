@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { View, UserProfile, AccessibilitySettings, Ritual, Agreement } from './types';
 import { LanguageProvider } from './LanguageContext';
 import { authService } from './services/authService';
+import { agreementService } from './services/agreementService';
 
 // Components
 import Landing from './components/Landing';
@@ -88,11 +89,24 @@ const AppContent: React.FC = () => {
   // 2. ESTADOS DE DATOS (Scopeados por ID de usuario para evitar mezclar datos)
   const userKey = user ? `pacto_data_${user.id}` : 'pacto_data_guest';
 
-  const [agreements, setAgreements] = useStickyState<Agreement[]>(DEFAULT_AGREEMENTS, `${userKey}_agreements`);
+  // AGREEMENTS ahora se cargan del servicio
+  const [agreements, setAgreements] = useState<Agreement[]>([]);
   const [rituals, setRituals] = useStickyState<Ritual[]>(DEFAULT_RITUALS, `${userKey}_rituals`);
 
-  // Estados temporales (UI)
+  // Cargar acuerdos al iniciar o cambiar usuario
+  useEffect(() => {
+    const loadAgreements = async () => {
+      if (user) {
+        const loaded = await agreementService.getAgreements(user.id, user.role);
+        setAgreements(loaded);
+      } else {
+        setAgreements([]);
+      }
+    };
+    loadAgreements();
+  }, [user]);
 
+  // Estados temporales (UI)
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [selectedRitual, setSelectedRitual] = useState<Ritual | null>(null);
@@ -146,27 +160,36 @@ const AppContent: React.FC = () => {
   };
 
   // Lógica funcional para Acuerdos
-  const handleSaveAgreement = (newAgreementData: Partial<Agreement>) => {
-    const newAgreement: Agreement = {
-      id: Date.now().toString(),
+  const handleSaveAgreement = async (newAgreementData: Partial<Agreement>) => {
+    if (!user) return;
+
+    // Completar datos faltantes para el servicio
+    const agreementToCreate = {
       title: newAgreementData.title || 'Sin Título',
       description: newAgreementData.description || '',
       category: newAgreementData.category || 'Comunicación',
-      status: 'Activo',
-      ...newAgreementData
+      status: 'Activo' as const,
+      rules: newAgreementData.rules || [],
+      participants: newAgreementData.participants || [],
+      urgency: newAgreementData.urgency,
+      deadline: newAgreementData.deadline,
+      createdBy: user.id, // Asignar creador actual
+      visibility: newAgreementData.visibility || 'Team' // Default visibility
     };
-    setAgreements([newAgreement, ...agreements]); // Guarda y actualiza la lista real
+
+    const created = await agreementService.createAgreement(agreementToCreate);
+    setAgreements(prev => [created, ...prev]);
     setAgreementTemplate(undefined);
     setShowCelebration(true);
     navigateTo(View.DASHBOARD);
   };
 
-  const handleUpdateAgreement = (updatedData: Partial<Agreement>) => {
+  const handleUpdateAgreement = async (updatedData: Partial<Agreement>) => {
     if (selectedAgreement) {
-      const updatedList = agreements.map(a =>
-        a.id === selectedAgreement.id ? { ...a, ...updatedData } : a
-      );
-      setAgreements(updatedList);
+      const updated = await agreementService.updateAgreement(selectedAgreement.id, updatedData);
+      if (updated) {
+        setAgreements(prev => prev.map(a => a.id === selectedAgreement.id ? updated : a));
+      }
     }
     setSelectedAgreement(undefined);
     navigateTo(View.DASHBOARD);

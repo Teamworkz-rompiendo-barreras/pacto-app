@@ -45,6 +45,10 @@ export interface Agreement {
   participants?: string[];
   urgency?: string;
   deadline?: string;
+  createdBy: string; // User ID
+  updatedAt: string; // ISO String
+  version: number;
+  visibility: 'Organization' | 'Team' | 'Private';
 }
 
 export interface Ritual {

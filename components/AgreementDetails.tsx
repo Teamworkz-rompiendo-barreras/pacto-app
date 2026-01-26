@@ -79,6 +79,12 @@ const AgreementDetails: React.FC<AgreementDetailsProps> = ({ agreement, onBack, 
                 <h1 className="text-3xl font-black text-text-n900">{title}</h1>
                 <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-green-200">Activo</span>
                 <span className="bg-gray-100 text-gray-700 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-gray-200">{category}</span>
+                {agreement?.visibility && (
+                  <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border flex items-center gap-1 ${agreement.visibility === 'Organization' ? 'bg-purple-100 text-purple-700 border-purple-200' : (agreement.visibility === 'Private' ? 'bg-indigo-100 text-indigo-700 border-indigo-200' : 'bg-blue-100 text-blue-700 border-blue-200')}`}>
+                    <span className="material-symbols-outlined text-[12px]">{agreement.visibility === 'Organization' ? 'public' : (agreement.visibility === 'Private' ? 'lock' : 'group')}</span>
+                    {agreement.visibility === 'Organization' ? 'Global' : (agreement.visibility === 'Private' ? 'Privado' : 'Equipo')}
+                  </span>
+                )}
               </div>
               <p className="text-lg text-gray-600 max-w-2xl">
                 {description}
