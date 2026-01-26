@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { wellbeingService } from '../services/wellbeingService';
 
 interface InclusionBoxProps {
   onBack: () => void;
@@ -12,32 +12,42 @@ const InclusionBox: React.FC<InclusionBoxProps> = ({ onBack }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!category || !suggestion.trim() || !impact.trim()) return;
 
     setIsSubmitting(true);
 
-    // Simular envío a API
-    setTimeout(() => {
+    try {
+      await wellbeingService.submitSuggestion({
+        category,
+        suggestion,
+        impact
+      });
+
       setIsSubmitting(false);
       setShowSuccess(true);
-      
-      // Resetear form después de éxito
+
+      // Reset form after success
       setTimeout(() => {
         setCategory('');
         setSuggestion('');
         setImpact('');
         setShowSuccess(false);
       }, 3000);
-    }, 1500);
+
+    } catch (error) {
+      console.error("Submission failed", error);
+      setIsSubmitting(false);
+      alert("Error al enviar la sugerencia. Por favor intenta de nuevo.");
+    }
   };
 
   return (
     <div className="w-full max-w-2xl mx-auto py-8 animate-fade-in relative pb-20">
-      
+
       {/* Botón de volver móvil */}
-      <button 
+      <button
         onClick={onBack}
         className="md:hidden flex items-center gap-2 text-gray-500 hover:text-primary mb-6 font-bold"
       >
@@ -55,7 +65,7 @@ const InclusionBox: React.FC<InclusionBoxProps> = ({ onBack }) => {
       </div>
 
       <div className="bg-white rounded-3xl shadow-xl shadow-primary/5 border border-gray-100 overflow-hidden">
-        
+
         {/* Aviso de Privacidad */}
         <div className="bg-[#EEF2FF] p-6 border-b border-[#E0E7FF] flex gap-4 items-start">
           <div className="size-10 rounded-full bg-[#374BA6] flex items-center justify-center shrink-0 mt-1">
@@ -70,7 +80,7 @@ const InclusionBox: React.FC<InclusionBoxProps> = ({ onBack }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="p-8 space-y-8">
-          
+
           {/* Categoría */}
           <div className="space-y-2">
             <label htmlFor="category" className="block text-sm font-bold text-text-n900">
