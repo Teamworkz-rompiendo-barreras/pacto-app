@@ -5,11 +5,13 @@ interface LayoutProps {
     children: React.ReactNode;
     user: UserProfile | null;
     currentView: View;
+    unreadCount?: number; // New prop
     onNavigate: (view: View) => void;
     onLogout: () => void;
+    onOpenNotifications?: () => void; // New prop
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onNavigate, onLogout }) => {
+const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCount = 0, onNavigate, onLogout, onOpenNotifications }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const menuItems = [
@@ -94,12 +96,24 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onNavigate
                     </div>
                     <span className="text-lg font-black text-primary">PACTO</span>
                 </div>
-                <button
-                    onClick={() => setIsMobileMenuOpen(true)}
-                    className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
-                >
-                    <span className="material-symbols-outlined">menu</span>
-                </button>
+                <div className="flex items-center gap-2">
+                    {/* Notification Bell (Mobile) */}
+                    <button
+                        onClick={onOpenNotifications}
+                        className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg mr-1"
+                    >
+                        <span className="material-symbols-outlined">notifications</span>
+                        {unreadCount > 0 && (
+                            <span className="absolute top-1 right-1 size-2.5 bg-red-500 border border-white rounded-full"></span>
+                        )}
+                    </button>
+                    <button
+                        onClick={() => setIsMobileMenuOpen(true)}
+                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                    >
+                        <span className="material-symbols-outlined">menu</span>
+                    </button>
+                </div>
             </div>
 
             {/* Mobile Menu Overlay */}
@@ -136,7 +150,28 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onNavigate
             )}
 
             {/* Main Content Area */}
-            <main className="flex-1 lg:ml-64 w-full pt-16 lg:pt-0">
+            <main className="flex-1 lg:ml-64 w-full pt-16 lg:pt-0 relative">
+
+                {/* Desktop Top Bar (Notification Bell) - Floating */}
+                <div className="hidden lg:flex absolute top-6 right-6 z-20 gap-3">
+                    <button
+                        onClick={onOpenNotifications}
+                        className="bg-white p-3 rounded-full shadow-md text-gray-500 hover:text-primary hover:shadow-lg transition-all relative border border-gray-100"
+                        title="Notificaciones"
+                    >
+                        <span className="material-symbols-outlined">notifications</span>
+                        {unreadCount > 0 && (
+                            <span className="absolute top-0 right-0 size-3 bg-red-500 border-2 border-white rounded-full"></span>
+                        )}
+                    </button>
+                    <div className="bg-white pl-2 pr-4 py-2 rounded-full shadow-md border border-gray-100 flex items-center gap-3 cursor-pointer hover:shadow-lg transition-all" onClick={() => onNavigate(View.PROFILE)}>
+                        <div className="size-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs overflow-hidden">
+                            {user.avatar ? <img src={user.avatar} className="size-full object-cover" /> : user.name[0]}
+                        </div>
+                        <span className="text-xs font-bold text-gray-700 max-w-[100px] truncate">{user.name.split(' ')[0]}</span>
+                    </div>
+                </div>
+
                 {/* Back Button Context (Optional Breadcrumb-like logic could go here) */}
                 {(currentView !== View.DASHBOARD) && (
                     <div className="lg:hidden px-4 pt-4 pb-2">

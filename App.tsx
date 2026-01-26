@@ -565,7 +565,14 @@ const AppContent: React.FC = () => {
 
       {/* APLICAR LAYOUT SOLO SI HAY USUARIO Y NO ES UNA PÁGINA PÚBLICA */}
       {user && ![View.LANDING, View.LOGIN, View.UPDATE_PASSWORD].includes(view) ? (
-        <Layout user={user} currentView={view} onNavigate={navigateTo} onLogout={() => setShowLogoutModal(true)}>
+        <Layout
+          user={user}
+          currentView={view}
+          onNavigate={navigateTo}
+          onLogout={() => setShowLogoutModal(true)}
+          unreadCount={notifications.filter(n => !n.isRead).length}
+          onOpenNotifications={() => navigateTo(View.NOTIFICATIONS)}
+        >
           {renderContent()}
         </Layout>
       ) : (
