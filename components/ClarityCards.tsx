@@ -311,7 +311,7 @@ Generado por PACTO by Teamworkz.
           onClick={() => setSelectedCard(null)}
         >
           <div
-            className="max-w-6xl w-full bg-[#fffdf8] rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[700px] border border-black/5 animate-bounce-in"
+            className="max-w-6xl w-full bg-[#fffdf8] rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row h-[700px] max-h-[90vh] border border-black/5 animate-bounce-in"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Left Side: Visual Anchor */}
