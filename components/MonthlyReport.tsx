@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { reportService, MonthlyKPI } from '../services/reportService';
 
 interface MonthlyReportProps {
   onBack: () => void;
@@ -9,25 +10,38 @@ interface MonthlyReportProps {
 const MonthlyReport: React.FC<MonthlyReportProps> = ({ onBack, onNavigateToWeekly }) => {
   const [isExporting, setIsExporting] = useState(false);
   const [showAllSuggestions, setShowAllSuggestions] = useState(false);
+  const [kpis, setKpis] = useState<MonthlyKPI[]>([]);
+  const [trendData, setTrendData] = useState<number[]>([]);
+  const [recommendations, setRecommendations] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await reportService.getMonthlyMetrics('current-user');
+      setKpis(data.kpis as any);
+      setTrendData(data.psychologicalSafetyTrend);
+      setRecommendations(data.recommendations);
+    };
+    loadData();
+  }, []);
 
   const handleExportPDF = () => {
-      setIsExporting(true);
-      setTimeout(() => {
-          setIsExporting(false);
-          alert("Reporte descargado correctamente en tu dispositivo.");
-      }, 2000);
+    setIsExporting(true);
+    setTimeout(() => {
+      setIsExporting(false);
+      alert("Reporte descargado correctamente en tu dispositivo.");
+    }, 2000);
   };
 
   return (
     <div className="animate-fade-in pb-10">
       {/* Back Navigation */}
       <div className="mb-6">
-        <button 
-            onClick={onBack}
-            className="flex items-center gap-2 text-gray-500 hover:text-primary transition-colors text-sm font-bold group"
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-gray-500 hover:text-primary transition-colors text-sm font-bold group"
         >
-            <span className="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
-            Volver
+          <span className="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
+          Volver
         </button>
       </div>
 
@@ -43,108 +57,49 @@ const MonthlyReport: React.FC<MonthlyReportProps> = ({ onBack, onNavigateToWeekl
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
-            {onNavigateToWeekly && (
-                <button 
-                    onClick={onNavigateToWeekly}
-                    className="flex items-center justify-center gap-2 bg-white border border-primary/20 text-primary hover:bg-primary/5 px-6 py-3 rounded-xl font-bold transition-all shadow-sm active:scale-95"
-                >
-                    <span className="material-symbols-outlined text-xl">calendar_view_week</span>
-                    <span>Ver Semana Actual</span>
-                </button>
-            )}
-            <button 
-                onClick={handleExportPDF}
-                disabled={isExporting}
-                className="flex items-center justify-center gap-2 bg-primary hover:brightness-110 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 active:scale-95 disabled:opacity-70 disabled:cursor-wait"
+          {onNavigateToWeekly && (
+            <button
+              onClick={onNavigateToWeekly}
+              className="flex items-center justify-center gap-2 bg-white border border-primary/20 text-primary hover:bg-primary/5 px-6 py-3 rounded-xl font-bold transition-all shadow-sm active:scale-95"
             >
+              <span className="material-symbols-outlined text-xl">calendar_view_week</span>
+              <span>Ver Semana Actual</span>
+            </button>
+          )}
+          <button
+            onClick={handleExportPDF}
+            disabled={isExporting}
+            className="flex items-center justify-center gap-2 bg-primary hover:brightness-110 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 active:scale-95 disabled:opacity-70 disabled:cursor-wait"
+          >
             {isExporting ? (
-                <span className="material-symbols-outlined text-xl animate-spin">refresh</span>
+              <span className="material-symbols-outlined text-xl animate-spin">refresh</span>
             ) : (
-                <span className="material-symbols-outlined text-xl">picture_as_pdf</span>
+              <span className="material-symbols-outlined text-xl">picture_as_pdf</span>
             )}
             <span>{isExporting ? 'Generando...' : 'Exportar PDF'}</span>
-            </button>
+          </button>
         </div>
       </div>
 
       {/* Stats Grid (KPI Cards) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        {/* Card 1 */}
-        <div className="bg-white p-6 rounded-xl border border-gray-border shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col gap-3">
-          <div className="flex justify-between items-start">
-            <span className="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">clarify</span>
-            <span className="text-green-600 text-sm font-bold flex items-center gap-1">
-              +5.2% <span className="material-symbols-outlined text-xs">trending_up</span>
-            </span>
+        {kpis.map((kpi) => (
+          <div key={kpi.id} className="bg-white p-6 rounded-xl border border-gray-border shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col gap-3">
+            <div className="flex justify-between items-start">
+              <span className={`material-symbols-outlined ${kpi.color.replace('text-', 'bg-')}/10 ${kpi.color} p-2 rounded-lg`}>{kpi.icon}</span>
+              <span className={`${kpi.trendDirection === 'up' ? 'text-green-600' : 'text-red-600'} text-sm font-bold flex items-center gap-1`}>
+                {kpi.trend > 0 ? '+' : ''}{kpi.trend}% <span className="material-symbols-outlined text-xs">{kpi.trendDirection === 'up' ? 'trending_up' : 'trending_down'}</span>
+              </span>
+            </div>
+            <div>
+              <p className="text-gray-500 text-sm font-bold">{kpi.label}</p>
+              <p className="text-3xl font-black text-text-n900">{kpi.value}</p>
+            </div>
+            <div className="w-full bg-gray-100 h-1.5 rounded-full mt-2 overflow-hidden">
+              <div className={`h-full rounded-full ${kpi.color.replace('text-', 'bg-')}`} style={{ width: typeof kpi.value === 'string' && kpi.value.includes('%') ? kpi.value : '70%' }}></div>
+            </div>
           </div>
-          <div>
-            <p className="text-gray-500 text-sm font-bold">Índice de Claridad Operativa</p>
-            <p className="text-3xl font-black text-text-n900">88%</p>
-          </div>
-          <div className="w-full bg-gray-100 h-1.5 rounded-full mt-2">
-            <div className="bg-primary h-full rounded-full" style={{ width: '88%' }}></div>
-          </div>
-        </div>
-
-        {/* Card 2 */}
-        <div className="bg-white p-6 rounded-xl border border-gray-border shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col gap-3">
-          <div className="flex justify-between items-start">
-            <span className="material-symbols-outlined text-p1 bg-p1/20 p-2 rounded-lg text-yellow-700">event_available</span>
-            <span className="text-red-600 text-sm font-bold flex items-center gap-1">
-              -1.5% <span className="material-symbols-outlined text-xs">trending_down</span>
-            </span>
-          </div>
-          <div>
-            <p className="text-gray-500 text-sm font-bold">Participación en Rituales</p>
-            <p className="text-3xl font-black text-text-n900">92%</p>
-          </div>
-          <div className="w-full bg-gray-100 h-1.5 rounded-full mt-2">
-            <div className="bg-p1 h-full rounded-full" style={{ width: '92%' }}></div>
-          </div>
-        </div>
-
-        {/* Card 3 */}
-        <div className="bg-white p-6 rounded-xl border border-gray-border shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col gap-3">
-          <div className="flex justify-between items-start">
-            <span className="material-symbols-outlined text-secondary-s3 bg-secondary-s3/10 p-2 rounded-lg">handshake</span>
-            <span className="text-green-600 text-sm font-bold flex items-center gap-1">
-              +10% <span className="material-symbols-outlined text-xs">trending_up</span>
-            </span>
-          </div>
-          <div>
-            <p className="text-gray-500 text-sm font-bold">Salud de los Acuerdos</p>
-            <p className="text-3xl font-black text-text-n900">
-              75% <span className="text-sm font-normal text-gray-400 italic">Activos</span>
-            </p>
-          </div>
-          <div className="flex gap-1 mt-2">
-            <div className="bg-secondary-s3 h-1.5 flex-[75] rounded-l-full"></div>
-            <div className="bg-gray-200 h-1.5 flex-[25] rounded-r-full"></div>
-          </div>
-        </div>
-
-        {/* Card 4 */}
-        <div className="bg-white p-6 rounded-xl border border-gray-border shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col gap-3">
-          <div className="flex justify-between items-start">
-            <span className="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">sentiment_satisfied</span>
-            <span className="text-green-600 text-sm font-bold flex items-center gap-1">
-              +0.2 <span className="material-symbols-outlined text-xs">trending_up</span>
-            </span>
-          </div>
-          <div>
-            <p className="text-gray-500 text-sm font-bold">Satisfacción del Equipo</p>
-            <p className="text-3xl font-black text-text-n900">
-              4.8<span className="text-lg text-gray-400">/5</span>
-            </p>
-          </div>
-          <div className="flex gap-1 mt-2 text-p1">
-            <span className="material-symbols-outlined text-sm fill-current">star</span>
-            <span className="material-symbols-outlined text-sm fill-current">star</span>
-            <span className="material-symbols-outlined text-sm fill-current">star</span>
-            <span className="material-symbols-outlined text-sm fill-current">star</span>
-            <span className="material-symbols-outlined text-sm text-gray-300">star</span>
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* Section: Evolución */}
@@ -156,44 +111,21 @@ const MonthlyReport: React.FC<MonthlyReportProps> = ({ onBack, onNavigateToWeekl
               <h2 className="text-2xl font-black text-text-n900 tracking-tight">Evolución de la Seguridad Psicológica</h2>
               <p className="text-gray-500 text-sm font-medium mt-1">Tendencia de los últimos 6 meses basada en pulsos semanales.</p>
             </div>
-            
+
             <div className="flex-1 flex items-end justify-between gap-2 sm:gap-4 px-2 sm:px-4 min-h-[250px]">
-              {/* May */}
-              <div className="flex flex-col items-center gap-3 w-full group">
-                <div className="text-xs font-bold text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">62%</div>
-                <div className="w-full bg-primary/20 rounded-t-lg relative transition-all group-hover:bg-primary/30" style={{ height: '62%' }}></div>
-                <span className="text-sm font-bold text-gray-600">May</span>
-              </div>
-              {/* Jun */}
-              <div className="flex flex-col items-center gap-3 w-full group">
-                <div className="text-xs font-bold text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">58%</div>
-                <div className="w-full bg-secondary-s3/40 rounded-t-lg relative transition-all group-hover:bg-secondary-s3/60" style={{ height: '58%' }}></div>
-                <span className="text-sm font-bold text-gray-600">Jun</span>
-              </div>
-              {/* Jul */}
-              <div className="flex flex-col items-center gap-3 w-full group">
-                <div className="text-xs font-bold text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">71%</div>
-                <div className="w-full bg-p1 rounded-t-lg relative transition-all group-hover:brightness-95" style={{ height: '71%' }}></div>
-                <span className="text-sm font-bold text-gray-600">Jul</span>
-              </div>
-              {/* Ago */}
-              <div className="flex flex-col items-center gap-3 w-full group">
-                <div className="text-xs font-bold text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">68%</div>
-                <div className="w-full bg-primary/20 rounded-t-lg relative transition-all group-hover:bg-primary/30" style={{ height: '68%' }}></div>
-                <span className="text-sm font-bold text-gray-600">Ago</span>
-              </div>
-              {/* Sep */}
-              <div className="flex flex-col items-center gap-3 w-full group">
-                <div className="text-xs font-bold text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">79%</div>
-                <div className="w-full bg-secondary-s3/40 rounded-t-lg relative transition-all group-hover:bg-secondary-s3/60" style={{ height: '79%' }}></div>
-                <span className="text-sm font-bold text-gray-600">Sep</span>
-              </div>
-              {/* Oct */}
-              <div className="flex flex-col items-center gap-3 w-full group">
-                <div className="text-xs font-bold text-primary font-black mb-1">82%</div>
-                <div className="w-full bg-primary rounded-t-lg shadow-lg shadow-primary/30 relative" style={{ height: '82%' }}></div>
-                <span className="text-sm font-black text-primary">Oct</span>
-              </div>
+              {['May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct'].map((month, idx) => {
+                const val = trendData[idx] || 0;
+                return (
+                  <div key={month} className="flex flex-col items-center gap-3 w-full group">
+                    <div className="text-xs font-bold text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">{val}%</div>
+                    <div
+                      className={`w-full rounded-t-lg relative transition-all ${idx === 5 ? 'bg-primary shadow-lg shadow-primary/30' : 'bg-primary/20 group-hover:bg-primary/30'}`}
+                      style={{ height: `${val}%` }}
+                    ></div>
+                    <span className={`text-sm font-bold ${idx === 5 ? 'text-primary font-black' : 'text-gray-600'}`}>{month}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -205,7 +137,7 @@ const MonthlyReport: React.FC<MonthlyReportProps> = ({ onBack, onNavigateToWeekl
               <span className="material-symbols-outlined text-primary animate-pulse">lightbulb</span>
               <h2 className="text-xl font-black text-text-n900 tracking-tight">Recomendaciones</h2>
             </div>
-            
+
             <div className="space-y-4 flex-1 overflow-y-auto max-h-[400px] custom-scrollbar pr-2">
               <div className="p-4 bg-white rounded-xl border-l-4 border-primary shadow-sm hover:shadow-md transition-shadow">
                 <p className="text-sm font-bold text-primary mb-1 uppercase tracking-tighter">Fatiga Cognitiva</p>
@@ -219,26 +151,26 @@ const MonthlyReport: React.FC<MonthlyReportProps> = ({ onBack, onNavigateToWeekl
                 <p className="text-sm font-bold text-secondary-s3 mb-1 uppercase tracking-tighter">Bienestar</p>
                 <p className="text-gray-700 text-sm leading-relaxed font-medium">Alta participación en rituales pero descenso en satisfacción. Programar sesión de feedback.</p>
               </div>
-              
+
               {showAllSuggestions && (
-                  <>
-                    <div className="p-4 bg-white rounded-xl border-l-4 border-gray-400 shadow-sm hover:shadow-md transition-shadow animate-fade-in">
-                        <p className="text-sm font-bold text-gray-600 mb-1 uppercase tracking-tighter">Comunicación</p>
-                        <p className="text-gray-700 text-sm leading-relaxed font-medium">Los canales de Slack de 'Urgencia' están siendo usados para temas no urgentes. Reforzar el acuerdo de comunicación.</p>
-                    </div>
-                    <div className="p-4 bg-white rounded-xl border-l-4 border-primary shadow-sm hover:shadow-md transition-shadow animate-fade-in">
-                        <p className="text-sm font-bold text-primary mb-1 uppercase tracking-tighter">Onboarding</p>
-                        <p className="text-gray-700 text-sm leading-relaxed font-medium">Crear un manual de usuario personal para los 2 nuevos integrantes.</p>
-                    </div>
-                  </>
+                <>
+                  <div className="p-4 bg-white rounded-xl border-l-4 border-gray-400 shadow-sm hover:shadow-md transition-shadow animate-fade-in">
+                    <p className="text-sm font-bold text-gray-600 mb-1 uppercase tracking-tighter">Comunicación</p>
+                    <p className="text-gray-700 text-sm leading-relaxed font-medium">Los canales de Slack de 'Urgencia' están siendo usados para temas no urgentes. Reforzar el acuerdo de comunicación.</p>
+                  </div>
+                  <div className="p-4 bg-white rounded-xl border-l-4 border-primary shadow-sm hover:shadow-md transition-shadow animate-fade-in">
+                    <p className="text-sm font-bold text-primary mb-1 uppercase tracking-tighter">Onboarding</p>
+                    <p className="text-gray-700 text-sm leading-relaxed font-medium">Crear un manual de usuario personal para los 2 nuevos integrantes.</p>
+                  </div>
+                </>
               )}
             </div>
-            
-            <button 
-                onClick={() => setShowAllSuggestions(!showAllSuggestions)}
-                className="w-full mt-6 py-3 border-2 border-primary text-primary font-bold rounded-lg hover:bg-primary hover:text-white transition-all text-sm"
+
+            <button
+              onClick={() => setShowAllSuggestions(!showAllSuggestions)}
+              className="w-full mt-6 py-3 border-2 border-primary text-primary font-bold rounded-lg hover:bg-primary hover:text-white transition-all text-sm"
             >
-                {showAllSuggestions ? 'Ver menos sugerencias' : 'Ver todas las sugerencias'}
+              {showAllSuggestions ? 'Ver menos sugerencias' : 'Ver todas las sugerencias'}
             </button>
           </div>
         </div>
