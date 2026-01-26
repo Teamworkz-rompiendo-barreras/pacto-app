@@ -85,13 +85,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                     <div className="flex flex-col gap-2">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
                             <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
-                            Vista de Administrador
+                            {t('admin.badge')}
                         </div>
                         <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
-                            Panel de Control
+                            {t('admin.title')}
                         </h1>
                         <p className="text-xl text-gray-600 font-medium">
-                            Gestión global de {user?.name.split(' ')[0] || 'la Organización'}.
+                            {t('admin.subtitle').replace('{name}', user?.name.split(' ')[0] || 'la Organización')}
                         </p>
                     </div>
 
@@ -101,7 +101,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                         className="flex items-center gap-3 bg-white border-2 border-primary text-primary px-5 py-2.5 rounded-xl font-bold shadow-sm hover:bg-primary hover:text-white transition-all group"
                     >
                         <span className="material-symbols-outlined group-hover:rotate-180 transition-transform">swap_vert</span>
-                        <span>Ir a mi Perfil Personal</span>
+                        <span>{t('admin.btn.switch')}</span>
                     </button>
                 </header>
 
@@ -109,75 +109,75 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4">
                         <div className="flex items-center gap-3 text-gray-500 font-bold text-sm uppercase tracking-wider">
                             <span className="material-symbols-outlined">health_metrics</span>
-                            Salud Organizacional
+                            {t('admin.metric.health')}
                         </div>
                         <div className="flex items-baseline gap-2">
                             <span className="text-5xl font-black text-text-n900">92%</span>
                             <span className="text-green-500 font-bold flex items-center text-sm">+5% <span className="material-symbols-outlined text-sm">trending_up</span></span>
                         </div>
-                        <p className="text-sm text-gray-500">Basado en adopción de acuerdos y feedback.</p>
+                        <p className="text-sm text-gray-500">{t('admin.metric.health.desc')}</p>
                     </div>
 
                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4">
                         <div className="flex items-center gap-3 text-gray-500 font-bold text-sm uppercase tracking-wider">
                             <span className="material-symbols-outlined">person</span>
-                            Miembros Activos
+                            {t('admin.metric.members')}
                         </div>
                         <div className="flex items-baseline gap-2">
                             <span className="text-5xl font-black text-text-n900">12</span>
-                            <span className="text-gray-400 font-medium text-sm">/ 20 licencias</span>
+                            <span className="text-gray-400 font-medium text-sm">/ 20 {t('admin.metric.members.suffix')}</span>
                         </div>
-                        <button onClick={() => onNavigate(View.ORGANIZATION)} className="text-primary font-bold text-sm hover:underline text-left">Gestionar Equipo &rarr;</button>
+                        <button onClick={() => onNavigate(View.ORGANIZATION)} className="text-primary font-bold text-sm hover:underline text-left">{t('admin.btn.manage_team')} &rarr;</button>
                     </div>
 
                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4">
                         <div className="flex items-center gap-3 text-gray-500 font-bold text-sm uppercase tracking-wider">
                             <span className="material-symbols-outlined">handshake</span>
-                            Acuerdos Vigentes
+                            {t('admin.metric.agreements')}
                         </div>
                         <div className="flex items-baseline gap-2">
                             <span className="text-5xl font-black text-text-n900">{agreements.length}</span>
-                            <span className="text-gray-400 font-medium text-sm">Total</span>
+                            <span className="text-gray-400 font-medium text-sm">{t('admin.metric.agreements.total')}</span>
                         </div>
-                        <button onClick={onExploreLibrary} className="text-primary font-bold text-sm hover:underline text-left">Ver Biblioteca de Plantillas &rarr;</button>
+                        <button onClick={onExploreLibrary} className="text-primary font-bold text-sm hover:underline text-left">{t('admin.btn.templates')} &rarr;</button>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Accesos Rápidos Admin */}
                     <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-                        <h3 className="text-xl font-bold text-text-n900 mb-6">Acciones Rápidas</h3>
+                        <h3 className="text-xl font-bold text-text-n900 mb-6">{t('admin.actions.title')}</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <button onClick={() => onNavigate(View.ORGANIZATION)} className="p-4 rounded-xl bg-gray-50 hover:bg-primary/5 hover:border-primary border border-transparent transition-all text-left flex flex-col gap-3 group">
                                 <div className="size-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-500 group-hover:text-primary group-hover:border-primary transition-colors">
                                     <span className="material-symbols-outlined">person_add</span>
                                 </div>
-                                <span className="font-bold text-text-n900">Invitar Usuarios</span>
+                                <span className="font-bold text-text-n900">{t('admin.action.invite')}</span>
                             </button>
                             <button onClick={() => onNavigate(View.ORGANIZATION)} className="p-4 rounded-xl bg-gray-50 hover:bg-primary/5 hover:border-primary border border-transparent transition-all text-left flex flex-col gap-3 group">
                                 <div className="size-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-500 group-hover:text-primary group-hover:border-primary transition-colors">
                                     <span className="material-symbols-outlined">groups</span>
                                 </div>
-                                <span className="font-bold text-text-n900">Gestionar Equipos</span>
+                                <span className="font-bold text-text-n900">{t('admin.action.teams')}</span>
                             </button>
                             <button onClick={() => onNavigate(View.REPORTS)} className="p-4 rounded-xl bg-gray-50 hover:bg-primary/5 hover:border-primary border border-transparent transition-all text-left flex flex-col gap-3 group">
                                 <div className="size-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-500 group-hover:text-primary group-hover:border-primary transition-colors">
                                     <span className="material-symbols-outlined">bar_chart</span>
                                 </div>
-                                <span className="font-bold text-text-n900">Ver Reportes</span>
+                                <span className="font-bold text-text-n900">{t('admin.action.reports')}</span>
                             </button>
                             <button onClick={() => onNavigate(View.ORGANIZATION)} className="p-4 rounded-xl bg-gray-50 hover:bg-primary/5 hover:border-primary border border-transparent transition-all text-left flex flex-col gap-3 group">
                                 <div className="size-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-500 group-hover:text-primary group-hover:border-primary transition-colors">
                                     <span className="material-symbols-outlined">settings_suggest</span>
                                 </div>
-                                <span className="font-bold text-text-n900">Configurar Accesibilidad</span>
+                                <span className="font-bold text-text-n900">{t('admin.action.accessibility')}</span>
                             </button>
                         </div>
                     </div>
 
                     {/* Actividad Reciente */}
                     <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-                        <h3 className="text-xl font-bold text-text-n900 mb-6">Actividad de la Organización</h3>
+                        <h3 className="text-xl font-bold text-text-n900 mb-6">{t('admin.activity.title')}</h3>
                         <div className="flex flex-col gap-4">
                             {[1, 2, 3].map((i) => (
                                 <div key={i} className="flex gap-4 items-start pb-4 border-b border-gray-50 last:border-0 last:pb-0">
