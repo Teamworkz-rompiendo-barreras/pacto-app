@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Ritual, Agreement } from '../types';
+import { useLanguage } from '../LanguageContext';
 
 interface NewRitualProps {
   activeAgreements: Agreement[];
@@ -9,6 +10,7 @@ interface NewRitualProps {
 }
 
 const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSave }) => {
+  const { t } = useLanguage();
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [date, setDate] = useState('');
@@ -72,11 +74,11 @@ const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSav
         {/* Page Heading */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
           <div className="flex flex-col gap-2">
-            <h1 className="text-text-n900 text-4xl font-black leading-tight tracking-tight">Nuevo Ritual de Replay</h1>
-            <p className="text-text-n900/60 text-lg font-normal">Define los detalles para tu próxima sesión de alineación.</p>
+            <h1 className="text-text-n900 text-4xl font-black leading-tight tracking-tight">{t('new_ritual.title')}</h1>
+            <p className="text-text-n900/60 text-lg font-normal">{t('new_ritual.subtitle')}</p>
           </div>
           <button onClick={onCancel} className="flex items-center justify-center rounded-lg h-10 px-6 bg-white border border-gray-border text-text-n900 text-sm font-bold shadow-sm hover:bg-gray-50 transition-colors">
-            <span className="truncate">Cerrar</span>
+            <span className="truncate">{t('new_ritual.btn.close')}</span>
           </button>
         </div>
 
@@ -88,14 +90,14 @@ const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSav
                 <span className="material-symbols-outlined">lightbulb</span>
               </div>
               <div className="flex flex-col gap-1">
-                <p className="text-text-n900 text-base font-bold leading-tight">Sugerencia de Accesibilidad</p>
+                <p className="text-text-n900 text-base font-bold leading-tight">{t('new_ritual.accessibility.title')}</p>
                 <p className="text-text-n900/70 text-sm font-normal leading-normal">
-                  Enviar la agenda con 24 horas de antelación ayuda a que todos los participantes se preparen mejor y reduce la ansiedad.
+                  {t('new_ritual.accessibility.desc')}
                 </p>
               </div>
             </div>
             <button className="text-sm font-bold leading-normal tracking-wide flex items-center gap-2 text-primary hover:underline whitespace-nowrap">
-              Ver más tips
+              {t('new_ritual.accessibility.link')}
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
             </button>
           </div>
@@ -106,12 +108,12 @@ const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSav
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Título */}
             <div className="flex flex-col gap-2 md:col-span-2">
-              <label className="text-text-n900 text-sm font-semibold tracking-wide">Título del Ritual</label>
+              <label className="text-text-n900 text-sm font-semibold tracking-wide">{t('new_ritual.label.title')}</label>
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 className="w-full rounded-lg text-text-n900 border border-gray-border bg-gray-50 h-14 placeholder:text-gray-400 px-4 text-base font-normal focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
-                placeholder="Ej. Sincronización Semanal de Diseño"
+                placeholder={t('new_ritual.placeholder.title')}
                 type="text"
               />
             </div>
@@ -119,7 +121,7 @@ const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSav
             {/* Fecha y Hora */}
             <div className="flex gap-4">
               <div className="flex flex-col gap-2 flex-1">
-                <label className="text-text-n900 text-sm font-semibold tracking-wide">Fecha</label>
+                <label className="text-text-n900 text-sm font-semibold tracking-wide">{t('new_ritual.label.date')}</label>
                 <div className="relative group">
                   <input
                     value={date}
@@ -135,7 +137,7 @@ const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSav
               </div>
 
               <div className="flex flex-col gap-2 flex-1">
-                <label className="text-text-n900 text-sm font-semibold tracking-wide">Hora</label>
+                <label className="text-text-n900 text-sm font-semibold tracking-wide">{t('new_ritual.label.time')}</label>
                 <div className="relative group">
                   <input
                     value={time}
@@ -152,7 +154,7 @@ const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSav
             </div>
             {/* Participantes */}
             <div className="flex flex-col gap-2">
-              <label className="text-text-n900 text-sm font-semibold tracking-wide">Participantes</label>
+              <label className="text-text-n900 text-sm font-semibold tracking-wide">{t('new_ritual.label.participants')}</label>
               <div className="relative">
                 <div className="flex flex-wrap gap-2 w-full min-h-[56px] items-center rounded-lg border border-gray-border bg-gray-50 px-3 py-2">
                   {participants.map(p => (
@@ -162,7 +164,7 @@ const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSav
                   ))}
                   <input
                     className="bg-transparent border-none focus:ring-0 p-0 text-sm flex-1 min-w-[100px] outline-none"
-                    placeholder="Añadir + Enter..."
+                    placeholder={t('new_ritual.placeholder.participants')}
                     type="text"
                     value={participantText}
                     onChange={(e) => setParticipantText(e.target.value)}
@@ -173,12 +175,12 @@ const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSav
             </div>
             {/* Objetivo */}
             <div className="flex flex-col gap-2 md:col-span-2">
-              <label className="text-text-n900 text-sm font-semibold tracking-wide">Objetivo de la Sesión</label>
+              <label className="text-text-n900 text-sm font-semibold tracking-wide">{t('new_ritual.label.objective')}</label>
               <textarea
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
                 className="w-full rounded-lg text-text-n900 border border-gray-border bg-gray-50 min-h-[120px] placeholder:text-gray-400 p-4 text-base font-normal resize-none focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
-                placeholder="Describe brevemente lo que se espera lograr en esta sesión..."
+                placeholder={t('new_ritual.placeholder.objective')}
               />
             </div>
           </div>
@@ -188,9 +190,9 @@ const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSav
             <div className="flex flex-col gap-3 p-4 bg-primary/5 rounded-xl border border-primary/10">
               <h3 className="text-sm font-bold text-primary uppercase tracking-wider flex items-center gap-2">
                 <span className="material-symbols-outlined text-lg">link</span>
-                Vincular Acuerdos Activos
+                {t('new_ritual.section.agreements')}
               </h3>
-              <p className="text-xs text-gray-600 mb-2">Selecciona un acuerdo para añadirlo automáticamente a la agenda de revisión.</p>
+              <p className="text-xs text-gray-600 mb-2">{t('new_ritual.section.agreements.desc')}</p>
               <div className="flex flex-wrap gap-2">
                 {activeAgreements.map(agreement => (
                   <button
@@ -211,7 +213,7 @@ const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSav
           )}
 
           <div className="flex flex-col gap-4">
-            <h3 className="text-text-n900 text-lg font-bold">Agenda del Ritual</h3>
+            <h3 className="text-text-n900 text-lg font-bold">{t('new_ritual.section.agenda')}</h3>
             <div className="grid grid-cols-1 gap-3">
               {checklist.map((item, index) => (
                 <div key={index} className="flex items-center gap-3 p-4 rounded-lg bg-gray-50 border border-gray-100 transition-all group">
@@ -232,7 +234,7 @@ const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSav
                 className="flex items-center gap-2 text-primary text-sm font-bold mt-2 hover:opacity-80 w-fit group"
               >
                 <span className="material-symbols-outlined text-[18px] group-hover:scale-110 transition-transform">add_circle</span>
-                Añadir otro acuerdo
+                {t('new_ritual.btn.add_agreement')}
               </button>
             </div>
           </div>
@@ -240,10 +242,10 @@ const NewRitual: React.FC<NewRitualProps> = ({ activeAgreements, onCancel, onSav
           {/* Footer Actions */}
           <div className="flex items-center justify-end gap-4 pt-4 border-t border-gray-100">
             <button onClick={onCancel} className="px-6 py-3 text-sm font-bold text-gray-500 hover:text-text-n900 transition-colors">
-              Cancelar
+              {t('new_ritual.btn.cancel')}
             </button>
             <button onClick={handleSubmit} className="px-8 py-3 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
-              Programar Ritual
+              {t('new_ritual.btn.submit')}
             </button>
           </div>
         </div>

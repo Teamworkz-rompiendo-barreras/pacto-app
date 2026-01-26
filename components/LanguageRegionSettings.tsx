@@ -40,7 +40,7 @@ const LanguageRegionSettings: React.FC<LanguageRegionSettingsProps> = ({ onBack,
                     <button
                         onClick={onBack}
                         className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-black/5 transition-colors text-gray-600"
-                        title="Cerrar"
+                        title={t('global.btn.close')}
                     >
                         <span className="material-symbols-outlined">close</span>
                     </button>
@@ -151,10 +151,10 @@ const LanguageRegionSettings: React.FC<LanguageRegionSettingsProps> = ({ onBack,
                                         onChange={(e) => setDateFormat(e.target.value)}
                                         className="w-full bg-gray-50 border border-gray-200 text-text-n900 text-base rounded-lg focus:ring-2 focus:ring-primary focus:border-primary block p-3.5 hover:bg-gray-100 transition-colors cursor-pointer font-medium appearance-none"
                                     >
-                                        <option value="dmy_24">DD/MM/AAAA (24h)</option>
-                                        <option value="dmy_12">DD/MM/AAAA (12h am/pm)</option>
-                                        <option value="mdy_12">MM/DD/AAAA (12h am/pm)</option>
-                                        <option value="ymd_24">AAAA-MM-DD (24h)</option>
+                                        <option value="dmy_24">{t('settings.date_format.dmy_24')}</option>
+                                        <option value="dmy_12">{t('settings.date_format.dmy_12')}</option>
+                                        <option value="mdy_12">{t('settings.date_format.mdy_12')}</option>
+                                        <option value="ymd_24">{t('settings.date_format.ymd_24')}</option>
                                     </select>
                                     <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
                                 </div>
@@ -200,7 +200,7 @@ const LanguageRegionSettings: React.FC<LanguageRegionSettingsProps> = ({ onBack,
             </main>
 
             <footer className="w-full py-6 text-center text-gray-500 text-xs font-medium">
-                <p>© 2026 PACTO. Todos los derechos reservados.</p>
+                <p>© 2026 PACTO {t('global.brand_suffix')}. {t('global.copyright')}</p>
             </footer>
         </div>
     );

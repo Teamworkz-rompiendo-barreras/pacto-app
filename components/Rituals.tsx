@@ -54,7 +54,7 @@ const Rituals: React.FC<RitualsProps> = ({ rituals, onCreate, onViewDetails, onT
             case 'preparacion': return t('ritual.view.prep');
             case 'borradores': return t('ritual.view.drafts');
             case 'archivados': return t('ritual.view.archived');
-            default: return 'Vistas';
+            default: return t('ritual.view.label');
         }
     };
 
@@ -253,8 +253,8 @@ const Rituals: React.FC<RitualsProps> = ({ rituals, onCreate, onViewDetails, onT
                                 </div>
 
                                 <div className="flex-1 z-10">
-                                    <h4 className="text-xl font-bold text-text-n900 mb-2">Replay Semanal</h4>
-                                    <p className="text-gray-600 text-sm font-medium mb-4">Sincronización de equipo. Revisa los acuerdos previos y define el tono de la sesión.</p>
+                                    <h4 className="text-xl font-bold text-text-n900 mb-2">{t('ritual.card.prepare.title')}</h4>
+                                    <p className="text-gray-600 text-sm font-medium mb-4">{t('ritual.card.prepare.desc')}</p>
                                     <div className="flex gap-2">
                                         <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
                                             <span className="material-symbols-outlined text-[14px]">group</span> 4 {t('ritual.prep.participants')}

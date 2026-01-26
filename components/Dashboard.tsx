@@ -207,7 +207,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                     {isAdmin && (
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-xs font-bold uppercase tracking-wider w-fit">
                             <span className="material-symbols-outlined text-sm">person</span>
-                            Vista Personal
+                            {t('dash.view.personal')}
                         </div>
                     )}
                     <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
@@ -224,7 +224,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                             className="flex items-center gap-2 text-gray-500 font-bold text-sm hover:text-primary transition-colors mb-2 sm:mb-0 mr-4"
                         >
                             <span className="material-symbols-outlined">settings_backup_restore</span>
-                            Volver al Panel Admin
+                            {t('dash.return_admin')}
                         </button>
                     )}
                     <button
@@ -386,7 +386,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                         <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                                 <h4 className="font-bold text-text-n900 text-lg">{t('dash.tip.title')}</h4>
-                                <span className="bg-secondary-s3/10 text-secondary-s3 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Inclusión</span>
+                                <span className="bg-secondary-s3/10 text-secondary-s3 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">{t('dash.tag.inclusion')}</span>
                             </div>
                             <p className="text-sm text-gray-600 leading-relaxed font-medium">
                                 {currentTip}

@@ -30,7 +30,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
             </div>
             <div className="flex flex-col">
               <span className="text-xl md:text-2xl font-black text-primary leading-none tracking-tight">PACTO</span>
-              <span className="text-[9px] md:text-[10px] font-bold text-gray-500 font-serif leading-none mt-0.5">by Teamworkz</span>
+              <span className="text-[9px] md:text-[10px] font-bold text-gray-500 font-serif leading-none mt-0.5">{t('global.brand_suffix')}</span>
             </div>
           </div>
           <nav className="hidden md:flex items-center gap-10">
@@ -203,7 +203,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
               <button onClick={onStart} className="bg-white text-primary px-12 py-6 rounded-full font-bold text-xl hover:shadow-2xl transition-all hover:-translate-y-1">
                 {t('landing.cta.btn')}
               </button>
-              <p className="text-base font-medium text-white/60">Preparado para WCAG 2.2 • Diseño Universal</p>
+              <p className="text-base font-medium text-white/60">Preparado para {t('global.rights')}</p>
             </div>
           </div>
         </section>
@@ -221,7 +221,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
                 </div>
                 <div className="flex flex-col">
                   <span className="text-xl font-black text-primary leading-none tracking-tight">PACTO</span>
-                  <span className="text-[10px] font-bold text-gray-400 font-serif leading-none mt-0.5">by Teamworkz</span>
+                  <span className="text-[10px] font-bold text-gray-400 font-serif leading-none mt-0.5">{t('global.brand_suffix')}</span>
                 </div>
               </div>
               <p className="text-gray-500 text-sm leading-relaxed max-w-sm">
@@ -230,33 +230,33 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
             </div>
 
             <div>
-              <h4 className="font-bold text-text-n900 mb-4 text-base">Plataforma</h4>
+              <h4 className="font-bold text-text-n900 mb-4 text-base">{t('landing.footer.platform')}</h4>
               <ul className="space-y-3 text-sm text-gray-600 font-medium">
-                <li><button onClick={() => onNavigate(View.MISSION)} className="hover:text-primary transition-colors text-left">Nuestra Misión</button></li>
-                <li><button onClick={() => onNavigate(View.SUCCESS_STORIES)} className="hover:text-primary transition-colors text-left">Casos de Éxito</button></li>
-                <li><button onClick={() => onNavigate(View.PRICING)} className="hover:text-primary transition-colors text-left">Precios</button></li>
+                <li><button onClick={() => onNavigate(View.MISSION)} className="hover:text-primary transition-colors text-left">{t('landing.footer.mission')}</button></li>
+                <li><button onClick={() => onNavigate(View.SUCCESS_STORIES)} className="hover:text-primary transition-colors text-left">{t('landing.footer.success')}</button></li>
+                <li><button onClick={() => onNavigate(View.PRICING)} className="hover:text-primary transition-colors text-left">{t('landing.footer.pricing')}</button></li>
                 <li className="pt-2 flex flex-col gap-1">
-                  <button onClick={onContact} className="hover:text-primary transition-colors font-bold text-left">Formulario de Contacto</button>
+                  <button onClick={onContact} className="hover:text-primary transition-colors font-bold text-left">{t('landing.footer.contact')}</button>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-text-n900 mb-4 text-base">Legal</h4>
+              <h4 className="font-bold text-text-n900 mb-4 text-base">{t('landing.footer.legal')}</h4>
               <ul className="space-y-3 text-sm text-gray-600 font-medium">
-                <li><button onClick={() => onNavigate(View.ACCESSIBILITY)} className="hover:text-primary transition-colors text-left">Declaración de Accesibilidad</button></li>
-                <li><button onClick={() => onNavigate(View.PRIVACY)} className="hover:text-primary transition-colors text-left">Política de Privacidad</button></li>
-                <li><button onClick={() => onNavigate(View.COOKIES)} className="hover:text-primary transition-colors text-left">Política de Cookies</button></li>
-                <li><button onClick={() => onNavigate(View.LEGAL)} className="hover:text-primary transition-colors text-left">Aviso Legal</button></li>
+                <li><button onClick={() => onNavigate(View.ACCESSIBILITY)} className="hover:text-primary transition-colors text-left">{t('landing.footer.accessibility')}</button></li>
+                <li><button onClick={() => onNavigate(View.PRIVACY)} className="hover:text-primary transition-colors text-left">{t('landing.footer.privacy')}</button></li>
+                <li><button onClick={() => onNavigate(View.COOKIES)} className="hover:text-primary transition-colors text-left">{t('landing.footer.cookies')}</button></li>
+                <li><button onClick={() => onNavigate(View.LEGAL)} className="hover:text-primary transition-colors text-left">{t('landing.footer.legal_notice')}</button></li>
               </ul>
             </div>
           </div>
 
           <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400 font-bold">
-            <p>© 2026 PACTO by Teamworkz. Todos los derechos reservados.</p>
+            <p>© 2026 PACTO {t('global.brand_suffix')}. {t('global.copyright')}</p>
             <div className="flex items-center gap-2 text-primary/80">
               <span className="material-symbols-outlined text-lg">verified</span>
-              <span>WCAG 2.2 Level AAA Compliant</span>
+              <span>{t('global.rights')}</span>
             </div>
           </div>
         </div>

@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { View, UserProfile, AccessibilitySettings, Ritual, Agreement, RitualHistoryItem, Notification } from './types';
-import { LanguageProvider } from './LanguageContext';
+import { useLanguage, LanguageProvider } from './LanguageContext';
 import { ToastProvider } from './context/ToastContext';
 import { authService } from './services/authService';
 import { agreementService } from './services/agreementService';
@@ -85,6 +84,7 @@ const DEFAULT_AGREEMENTS: Agreement[] = [];
 const DEFAULT_RITUALS: Ritual[] = [];
 
 const AppContent: React.FC = () => {
+  const { t } = useLanguage();
   const [view, setView] = useState<View>(View.LANDING);
 
   // 1. ESTADO DE USUARIO (Global)
@@ -517,19 +517,19 @@ const AppContent: React.FC = () => {
 
       // Generic Info Pages
       case View.MISSION:
-        return renderInfoPage("Nuestra Misión", "Empoderar a equipos neurodiversos a través de la claridad y la empatía.");
+        return renderInfoPage(t('page.mission'), t('page.mission.content'));
       case View.SUCCESS_STORIES:
-        return renderInfoPage("Casos de Éxito", "Descubre cómo empresas líderes están transformando su cultura.");
+        return renderInfoPage(t('page.success'), t('page.success.content'));
       case View.PRICING:
-        return renderInfoPage("Precios", "Planes flexibles para equipos de todos los tamaños.");
+        return renderInfoPage(t('page.pricing'), t('page.pricing.content'));
       case View.ACCESSIBILITY:
-        return renderInfoPage("Declaración de Accesibilidad", "Comprometidos con WCAG 2.2 AAA.");
+        return renderInfoPage(t('page.accessibility'), t('page.accessibility.content'));
       case View.PRIVACY:
-        return renderInfoPage("Política de Privacidad", "Tus datos son tuyos. Transparencia total.");
+        return renderInfoPage(t('page.privacy'), t('page.privacy.content'));
       case View.COOKIES:
-        return renderInfoPage("Política de Cookies", "Solo lo esencial para que la plataforma funcione.");
+        return renderInfoPage(t('page.cookies'), t('page.cookies.content'));
       case View.LEGAL:
-        return renderInfoPage("Aviso Legal", "Información legal de Teamworkz.");
+        return renderInfoPage(t('page.legal'), t('page.legal.content'));
 
       default:
         // Si hay usuario y es una vista desconocida, dashboard; si no, landing

@@ -103,6 +103,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCoun
                     <button
                         onClick={onOpenNotifications}
                         className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg mr-1"
+                        title={t('global.notifications')}
                     >
                         <span className="material-symbols-outlined">notifications</span>
                         {unreadCount > 0 && (
@@ -122,7 +123,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCoun
             {isMobileMenuOpen && (
                 <div className="lg:hidden fixed inset-0 z-50 bg-white animate-fade-in flex flex-col">
                     <div className="flex items-center justify-between p-4 border-b border-gray-100">
-                        <span className="font-black text-xl text-text-n900">Menú</span>
+                        <span className="font-black text-xl text-text-n900">{t('global.menu')}</span>
                         <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 bg-gray-100 rounded-full">
                             <span className="material-symbols-outlined">close</span>
                         </button>
@@ -159,7 +160,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCoun
                     <button
                         onClick={onOpenNotifications}
                         className="bg-white p-3 rounded-full shadow-md text-gray-500 hover:text-primary hover:shadow-lg transition-all relative border border-gray-100"
-                        title="Notificaciones"
+                        title={t('global.notifications')}
                     >
                         <span className="material-symbols-outlined">notifications</span>
                         {unreadCount > 0 && (
@@ -182,7 +183,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCoun
                             className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-text-n900"
                         >
                             <span className="material-symbols-outlined text-lg">arrow_back</span>
-                            Volver al Inicio
+                            {t('global.back_home')}
                         </button>
                     </div>
                 )}

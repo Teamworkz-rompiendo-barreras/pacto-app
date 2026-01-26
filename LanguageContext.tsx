@@ -20,6 +20,10 @@ const translations: Record<string, Record<string, string>> = {
     'label.region': 'País/Región',
     'label.timezone': 'Zona Horaria',
     'label.dateformat': 'Formato de Fecha/Hora',
+    'settings.date_format.dmy_24': 'DD/MM/AAAA (24h)',
+    'settings.date_format.dmy_12': 'DD/MM/AAAA (12h am/pm)',
+    'settings.date_format.mdy_12': 'MM/DD/AAAA (12h am/pm)',
+    'settings.date_format.ymd_24': 'AAAA-MM-DD (24h)',
     'tip.title': '¿Por qué es importante esto?',
     'tip.desc': 'Configurar tu zona horaria correcta ayuda a tu equipo a respetar tus horas de "Deep Work" y sincronizar mejor las reuniones.',
     'btn.cancel': 'Cancelar',
@@ -203,7 +207,82 @@ const translations: Record<string, Record<string, string>> = {
     'dash.tip.title': 'Tip del Día',
     'dash.tip.btn.idle': 'Enviar Tip al Equipo',
     'dash.tip.btn.sending': 'Enviando...',
-    'dash.tip.btn.success': '¡Enviado!'
+    'dash.tip.btn.success': '¡Enviado!',
+
+    // --- GLOBAL ---
+    'global.menu': 'Menú',
+    'global.back_home': 'Volver al Inicio',
+    'global.notifications': 'Notificaciones',
+    'global.brand_suffix': 'by Teamworkz',
+    'global.copyright': 'Todos los derechos reservados.',
+    'global.rights': 'WCAG 2.2 Level AAA Compliant',
+    'global.btn.close': 'Cerrar',
+
+    // --- LAYOUT ---
+    'layout.mobile.menu': 'Menú',
+    'layout.mobile.back': 'Volver al Inicio',
+
+    // --- LANDING FOOTER ---
+    'landing.footer.platform': 'Plataforma',
+    'landing.footer.legal': 'Legal',
+    'landing.footer.mission': 'Nuestra Misión',
+    'landing.footer.success': 'Casos de Éxito',
+    'landing.footer.pricing': 'Precios',
+    'landing.footer.contact': 'Formulario de Contacto',
+    'landing.footer.accessibility': 'Declaración de Accesibilidad',
+    'landing.footer.privacy': 'Política de Privacidad',
+    'landing.footer.cookies': 'Política de Cookies',
+    'landing.footer.legal_notice': 'Aviso Legal',
+
+    // --- DASHBOARD ---
+    'dash.view.personal': 'Vista Personal',
+    'dash.view.admin': 'Vista de Admin',
+    'dash.return_admin': 'Volver al Panel Admin',
+    'dash.tag.inclusion': 'Inclusión',
+    'dash.tag.wellbeing': 'Bienestar',
+
+    // --- RITUALS ---
+    'ritual.view.label': 'Vistas',
+    'ritual.card.prepare.title': 'Replay Semanal',
+    'ritual.card.prepare.desc': 'Sincronización de equipo. Revisa los acuerdos previos y define el tono de la sesión.',
+
+    // --- NEW RITUAL ---
+    'new_ritual.title': 'Nuevo Ritual de Replay',
+    'new_ritual.subtitle': 'Define los detalles para tu próxima sesión de alineación.',
+    'new_ritual.btn.close': 'Cerrar',
+    'new_ritual.accessibility.title': 'Sugerencia de Accesibilidad',
+    'new_ritual.accessibility.desc': 'Enviar la agenda con 24 horas de antelación ayuda a que todos los participantes se preparen mejor y reduce la ansiedad.',
+    'new_ritual.accessibility.link': 'Ver más tips',
+    'new_ritual.label.title': 'Título del Ritual',
+    'new_ritual.placeholder.title': 'Ej. Sincronización Semanal de Diseño',
+    'new_ritual.label.date': 'Fecha',
+    'new_ritual.label.time': 'Hora',
+    'new_ritual.label.participants': 'Participantes',
+    'new_ritual.placeholder.participants': 'Añadir + Enter...',
+    'new_ritual.label.objective': 'Objetivo de la Sesión',
+    'new_ritual.placeholder.objective': 'Describe brevemente lo que se espera lograr en esta sesión...',
+    'new_ritual.section.agreements': 'Vincular Acuerdos Activos',
+    'new_ritual.section.agreements.desc': 'Selecciona un acuerdo para añadirlo automáticamente a la agenda de revisión.',
+    'new_ritual.section.agenda': 'Agenda del Ritual',
+    'new_ritual.btn.add_agreement': 'Añadir otro acuerdo',
+    'new_ritual.btn.cancel': 'Cancelar',
+    'new_ritual.btn.submit': 'Programar Ritual',
+
+    // --- APP TITLES ---
+    'page.mission': 'Nuestra Misión',
+    'page.success': 'Casos de Éxito',
+    'page.pricing': 'Precios',
+    'page.accessibility': 'Declaración de Accesibilidad',
+    'page.privacy': 'Política de Privacidad',
+    'page.cookies': 'Política de Cookies',
+    'page.legal': 'Aviso Legal',
+    'page.mission.content': 'Empoderar a equipos neurodiversos a través de la claridad y la empatía.',
+    'page.success.content': 'Descubre cómo empresas líderes están transformando su cultura.',
+    'page.pricing.content': 'Planes flexibles para equipos de todos los tamaños.',
+    'page.accessibility.content': 'Comprometidos con WCAG 2.2 AAA.',
+    'page.privacy.content': 'Tus datos son tuyos. Transparencia total.',
+    'page.cookies.content': 'Solo lo esencial para que la plataforma funcione.',
+    'page.legal.content': 'Información legal de Teamworkz.',
   },
   'en-us': {
     // --- SETTINGS (Existing) ---
@@ -213,6 +292,10 @@ const translations: Record<string, Record<string, string>> = {
     'label.region': 'Country/Region',
     'label.timezone': 'Timezone',
     'label.dateformat': 'Date/Time Format',
+    'settings.date_format.dmy_24': 'DD/MM/YYYY (24h)',
+    'settings.date_format.dmy_12': 'DD/MM/YYYY (12h am/pm)',
+    'settings.date_format.mdy_12': 'MM/DD/YYYY (12h am/pm)',
+    'settings.date_format.ymd_24': 'YYYY-MM-DD (24h)',
     'tip.title': 'Why is this important?',
     'tip.desc': 'Setting your correct timezone helps your team respect your "Deep Work" hours and synchronize meetings better.',
     'btn.cancel': 'Cancel',
@@ -396,7 +479,82 @@ const translations: Record<string, Record<string, string>> = {
     'dash.tip.title': 'Tip of the Day',
     'dash.tip.btn.idle': 'Send Tip to Team',
     'dash.tip.btn.sending': 'Sending...',
-    'dash.tip.btn.success': 'Sent!'
+    'dash.tip.btn.success': 'Sent!',
+
+    // --- GLOBAL ---
+    'global.menu': 'Menu',
+    'global.back_home': 'Back to Home',
+    'global.notifications': 'Notifications',
+    'global.brand_suffix': 'by Teamworkz',
+    'global.copyright': 'All rights reserved.',
+    'global.rights': 'WCAG 2.2 Level AAA Compliant',
+    'global.btn.close': 'Close',
+
+    // --- LAYOUT ---
+    'layout.mobile.menu': 'Menu',
+    'layout.mobile.back': 'Back to Home',
+
+    // --- LANDING FOOTER ---
+    'landing.footer.platform': 'Platform',
+    'landing.footer.legal': 'Legal',
+    'landing.footer.mission': 'Our Mission',
+    'landing.footer.success': 'Success Stories',
+    'landing.footer.pricing': 'Pricing',
+    'landing.footer.contact': 'Contact Form',
+    'landing.footer.accessibility': 'Accessibility Statement',
+    'landing.footer.privacy': 'Privacy Policy',
+    'landing.footer.cookies': 'Cookie Policy',
+    'landing.footer.legal_notice': 'Legal Notice',
+
+    // --- DASHBOARD ---
+    'dash.view.personal': 'Personal View',
+    'dash.view.admin': 'Admin View',
+    'dash.return_admin': 'Back to Admin Panel',
+    'dash.tag.inclusion': 'Inclusion',
+    'dash.tag.wellbeing': 'Wellbeing',
+
+    // --- RITUALS ---
+    'ritual.view.label': 'Views',
+    'ritual.card.prepare.title': 'Weekly Replay',
+    'ritual.card.prepare.desc': 'Team synchronization. Review previous agreements and set the tone for the session.',
+
+    // --- NEW RITUAL ---
+    'new_ritual.title': 'New Replay Ritual',
+    'new_ritual.subtitle': 'Define details for your next alignment session.',
+    'new_ritual.btn.close': 'Close',
+    'new_ritual.accessibility.title': 'Accessibility Tip',
+    'new_ritual.accessibility.desc': 'Sending the agenda 24 hours in advance helps all participants prepare better and reduces anxiety.',
+    'new_ritual.accessibility.link': 'See more tips',
+    'new_ritual.label.title': 'Ritual Title',
+    'new_ritual.placeholder.title': 'E.g. Design Weekly Sync',
+    'new_ritual.label.date': 'Date',
+    'new_ritual.label.time': 'Time',
+    'new_ritual.label.participants': 'Participants',
+    'new_ritual.placeholder.participants': 'Add + Enter...',
+    'new_ritual.label.objective': 'Session Objective',
+    'new_ritual.placeholder.objective': 'Briefly describe what is expected to be achieved in this session...',
+    'new_ritual.section.agreements': 'Link Active Agreements',
+    'new_ritual.section.agreements.desc': 'Select an agreement to automatically add it to the review agenda.',
+    'new_ritual.section.agenda': 'Ritual Agenda',
+    'new_ritual.btn.add_agreement': 'Add another agreement',
+    'new_ritual.btn.cancel': 'Cancel',
+    'new_ritual.btn.submit': 'Schedule Ritual',
+
+    // --- APP TITLES ---
+    'page.mission': 'Our Mission',
+    'page.success': 'Success Stories',
+    'page.pricing': 'Pricing',
+    'page.accessibility': 'Accessibility Statement',
+    'page.privacy': 'Privacy Policy',
+    'page.cookies': 'Cookie Policy',
+    'page.legal': 'Legal Notice',
+    'page.mission.content': 'Empowering neurodiverse teams through clarity and empathy.',
+    'page.success.content': 'Discover how leading companies are transforming their culture.',
+    'page.pricing.content': 'Flexible plans for teams of all sizes.',
+    'page.accessibility.content': 'Committed to WCAG 2.2 AAA.',
+    'page.privacy.content': 'Your data is yours. Total transparency.',
+    'page.cookies.content': 'Only the essentials to make the platform work.',
+    'page.legal.content': 'Teamworkz legal information.',
   },
   'pt-br': {
     // --- SETTINGS (Existing) ---
@@ -406,6 +564,10 @@ const translations: Record<string, Record<string, string>> = {
     'label.region': 'País/Região',
     'label.timezone': 'Fuso Horário',
     'label.dateformat': 'Formato de Data/Hora',
+    'settings.date_format.dmy_24': 'DD/MM/AAAA (24h)',
+    'settings.date_format.dmy_12': 'DD/MM/AAAA (12h am/pm)',
+    'settings.date_format.mdy_12': 'MM/DD/AAAA (12h am/pm)',
+    'settings.date_format.ymd_24': 'AAAA-MM-DD (24h)',
     'tip.title': 'Por que isso é importante?',
     'tip.desc': 'Configurar seu fuso horário correto ajuda sua equipe a respeitar suas horas de "Deep Work" e sincronizar melhor as reuniões.',
     'btn.cancel': 'Cancelar',
@@ -589,7 +751,82 @@ const translations: Record<string, Record<string, string>> = {
     'dash.tip.title': 'Dica do Dia',
     'dash.tip.btn.idle': 'Enviar Dica para Equipe',
     'dash.tip.btn.sending': 'Enviando...',
-    'dash.tip.btn.success': 'Enviado!'
+    'dash.tip.btn.success': 'Enviado!',
+
+    // --- GLOBAL ---
+    'global.menu': 'Menu',
+    'global.back_home': 'Voltar ao Início',
+    'global.notifications': 'Notificações',
+    'global.brand_suffix': 'by Teamworkz',
+    'global.copyright': 'Todos os direitos reservados.',
+    'global.rights': 'Compatível com WCAG 2.2 Nível AAA',
+    'global.btn.close': 'Fechar',
+
+    // --- LAYOUT ---
+    'layout.mobile.menu': 'Menu',
+    'layout.mobile.back': 'Voltar ao Início',
+
+    // --- LANDING FOOTER ---
+    'landing.footer.platform': 'Plataforma',
+    'landing.footer.legal': 'Legal',
+    'landing.footer.mission': 'Nossa Missão',
+    'landing.footer.success': 'Casos de Sucesso',
+    'landing.footer.pricing': 'Preços',
+    'landing.footer.contact': 'Formulário de Contato',
+    'landing.footer.accessibility': 'Declaração de Acessibilidade',
+    'landing.footer.privacy': 'Política de Privacidade',
+    'landing.footer.cookies': 'Política de Cookies',
+    'landing.footer.legal_notice': 'Aviso Legal',
+
+    // --- DASHBOARD ---
+    'dash.view.personal': 'Visão Pessoal',
+    'dash.view.admin': 'Visão de Admin',
+    'dash.return_admin': 'Voltar ao Painel Admin',
+    'dash.tag.inclusion': 'Inclusão',
+    'dash.tag.wellbeing': 'Bem-estar',
+
+    // --- RITUALS ---
+    'ritual.view.label': 'Vistas',
+    'ritual.card.prepare.title': 'Replay Semanal',
+    'ritual.card.prepare.desc': 'Sincronização de equipe. Revise acordos anteriores e defina o tom da sessão.',
+
+    // --- NEW RITUAL ---
+    'new_ritual.title': 'Novo Ritual de Replay',
+    'new_ritual.subtitle': 'Defina os detalhes para sua próxima sessão de alinhamento.',
+    'new_ritual.btn.close': 'Fechar',
+    'new_ritual.accessibility.title': 'Dica de Acessibilidade',
+    'new_ritual.accessibility.desc': 'Enviar a agenda com 24 horas de antecedência ajuda todos os participantes a se prepararem melhor e reduz a ansiedade.',
+    'new_ritual.accessibility.link': 'Ver mais dicas',
+    'new_ritual.label.title': 'Título do Ritual',
+    'new_ritual.placeholder.title': 'Ex. Sincronização Semanal de Design',
+    'new_ritual.label.date': 'Data',
+    'new_ritual.label.time': 'Hora',
+    'new_ritual.label.participants': 'Participantes',
+    'new_ritual.placeholder.participants': 'Adicionar + Enter...',
+    'new_ritual.label.objective': 'Objetivo da Sessão',
+    'new_ritual.placeholder.objective': 'Descreva brevemente o que se espera alcançar nesta sessão...',
+    'new_ritual.section.agreements': 'Vincular Acordos Ativos',
+    'new_ritual.section.agreements.desc': 'Selecione um acordo para adicioná-lo automaticamente à agenda de revisão.',
+    'new_ritual.section.agenda': 'Agenda do Ritual',
+    'new_ritual.btn.add_agreement': 'Adicionar outro acordo',
+    'new_ritual.btn.cancel': 'Cancelar',
+    'new_ritual.btn.submit': 'Programar Ritual',
+
+    // --- APP TITLES ---
+    'page.mission': 'Nossa Missão',
+    'page.success': 'Casos de Sucesso',
+    'page.pricing': 'Preços',
+    'page.accessibility': 'Declaração de Acessibilidade',
+    'page.privacy': 'Política de Privacidade',
+    'page.cookies': 'Política de Cookies',
+    'page.legal': 'Aviso Legal',
+    'page.mission.content': 'Empoderando equipes neurodiversas através da clareza e empatia.',
+    'page.success.content': 'Descubra como empresas líderes estão transformando sua cultura.',
+    'page.pricing.content': 'Planos flexíveis para equipes de todos os tamanhos.',
+    'page.accessibility.content': 'Comprometidos com WCAG 2.2 AAA.',
+    'page.privacy.content': 'Seus dados são seus. Transparência total.',
+    'page.cookies.content': 'Apenas o essencial para que a plataforma funcione.',
+    'page.legal.content': 'Informações legais da Teamworkz.',
   }
 };
 
