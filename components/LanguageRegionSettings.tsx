@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../LanguageContext';
-import { SUPPORTED_LANGUAGES } from '../types';
+import { SUPPORTED_LANGUAGES, SUPPORTED_REGIONS, SUPPORTED_TIMEZONES } from '../types';
 
 interface LanguageRegionSettingsProps {
     onBack: () => void;
@@ -109,13 +109,11 @@ const LanguageRegionSettings: React.FC<LanguageRegionSettingsProps> = ({ onBack,
                                         className="w-full bg-gray-50 border border-gray-200 text-text-n900 text-base rounded-lg focus:ring-2 focus:ring-primary focus:border-primary block p-3.5 hover:bg-gray-100 transition-colors cursor-pointer font-medium appearance-none"
                                     >
                                         <option disabled value="">{t('region.select')}</option>
-                                        <option value="mx">México</option>
-                                        <option value="co">Colombia</option>
-                                        <option value="ar">Argentina</option>
-                                        <option value="cl">Chile</option>
-                                        <option value="es">España</option>
-                                        <option value="br">Brasil</option>
-                                        <option value="us">USA</option>
+                                        {SUPPORTED_REGIONS.map((reg) => (
+                                            <option key={reg.code} value={reg.code}>
+                                                {reg.name}
+                                            </option>
+                                        ))}
                                     </select>
                                     <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
                                 </div>
@@ -134,12 +132,11 @@ const LanguageRegionSettings: React.FC<LanguageRegionSettingsProps> = ({ onBack,
                                         className="w-full bg-gray-50 border border-gray-200 text-text-n900 text-base rounded-lg focus:ring-2 focus:ring-primary focus:border-primary block p-3.5 hover:bg-gray-100 transition-colors cursor-pointer font-medium appearance-none"
                                     >
                                         <option disabled value="">(UTC-05:00) {t('timezone.select')}</option>
-                                        <option value="bogota">(UTC-05:00) Bogotá, Lima, Quito</option>
-                                        <option value="mexico">(UTC-06:00) Ciudad de México</option>
-                                        <option value="buenos_aires">(UTC-03:00) Buenos Aires</option>
-                                        <option value="santiago">(UTC-04:00) Santiago</option>
-                                        <option value="sao_paulo">(UTC-03:00) São Paulo</option>
-                                        <option value="new_york">(UTC-05:00) New York</option>
+                                        {SUPPORTED_TIMEZONES.map((tz) => (
+                                            <option key={tz.value} value={tz.value}>
+                                                {tz.label}
+                                            </option>
+                                        ))}
                                     </select>
                                     <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
                                 </div>
