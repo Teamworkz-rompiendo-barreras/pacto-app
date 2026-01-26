@@ -242,10 +242,18 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [language, setLanguage] = useState<Language>('es-la');
 
 
+  // Helper helper to map display names to internal keys
+  const getLanguageCode = (displayName: string): string => {
+    const lower = displayName.toLowerCase();
+    if (lower.includes('español')) return 'es-la'; // Map all Spanish to es-la for now
+    if (lower.includes('english')) return 'en-us'; // Map all English to en-us
+    if (lower.includes('português')) return 'pt-br'; // Map all Portuguese to pt-br
+    return 'es-la'; // Default fallback
+  };
+
   const t = (key: string): string => {
-    // Normalize language key to lowercase to match keys in translations object
-    const normalizedLang = language.toLowerCase();
-    const langDict = translations[normalizedLang] || translations['es-la'] || {};
+    const code = getLanguageCode(language);
+    const langDict = translations[code] || translations['es-la'] || {};
     return langDict[key] || key;
   };
 
