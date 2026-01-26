@@ -30,6 +30,17 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
     const [focusModeActive, setFocusModeActive] = useState(false);
 
     const isAdmin = user?.role === 'Administrador';
+    // Estado para controlar qué vista ve el admin (Admin vs Personal)
+    const [showAdminPanel, setShowAdminPanel] = useState(isAdmin);
+
+    // Efecto para sincronizar si cambia el usuario
+    useEffect(() => {
+        if (user?.role === 'Administrador') {
+            setShowAdminPanel(true);
+        } else {
+            setShowAdminPanel(false);
+        }
+    }, [user]);
 
     // Simular carga de "Tip del Día"
     useEffect(() => {
@@ -57,8 +68,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
         }
     };
 
-    // --- RENDERIZADO VIEW: ADMIN (EMPRESA) ---
-    if (isAdmin) {
+    // --- RENDERIZADO VIEW: ADMIN (PANEL DE CONTROL) ---
+    if (isAdmin && showAdminPanel) {
         return (
             <div className="w-full max-w-7xl mx-auto animate-fade-in font-display pb-12 px-6 md:px-10 pt-6">
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
@@ -74,6 +85,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
                             Gestión global de {user?.name.split(' ')[0] || 'la Organización'}.
                         </p>
                     </div>
+
+                    {/* TOGGLE VISTA ADMIN / PERSONAL */}
+                    <button
+                        onClick={() => setShowAdminPanel(false)}
+                        className="flex items-center gap-3 bg-white border-2 border-primary text-primary px-5 py-2.5 rounded-xl font-bold shadow-sm hover:bg-primary hover:text-white transition-all group"
+                    >
+                        <span className="material-symbols-outlined group-hover:rotate-180 transition-transform">swap_vert</span>
+                        <span>Ir a mi Perfil Personal</span>
+                    </button>
                 </header>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
@@ -175,6 +195,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
             {/* Header */}
             <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
                 <div className="flex flex-col gap-2">
+                    {isAdmin && (
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-xs font-bold uppercase tracking-wider w-fit">
+                            <span className="material-symbols-outlined text-sm">person</span>
+                            Vista Personal
+                        </div>
+                    )}
                     <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
                         Hola, {user ? user.name.split(' ')[0] : 'Compañero'}
                     </h1>
@@ -182,7 +208,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
                         Tu espacio personal de claridad y acuerdos.
                     </p>
                 </div>
-                <div className="flex gap-4 w-full md:w-auto">
+                <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto items-end md:items-center">
+                    {isAdmin && (
+                        <button
+                            onClick={() => setShowAdminPanel(true)}
+                            className="flex items-center gap-2 text-gray-500 font-bold text-sm hover:text-primary transition-colors mb-2 sm:mb-0 mr-4"
+                        >
+                            <span className="material-symbols-outlined">settings_backup_restore</span>
+                            Volver al Panel Admin
+                        </button>
+                    )}
                     <button
                         onClick={onExploreLibrary}
                         className="hidden sm:flex items-center gap-2 bg-white border-2 border-primary/10 text-primary px-6 py-3 rounded-xl font-bold hover:bg-primary/5 transition-all"

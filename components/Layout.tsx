@@ -20,6 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onNavigate
         { id: View.ACHIEVEMENTS, label: 'Logros', icon: 'emoji_events' },
         { id: View.INCLUSION_BOX, label: 'Buzón', icon: 'mark_email_unread' },
         { id: View.REPORTS, label: 'Reportes', icon: 'bar_chart' },
+        { id: View.CLARITY_CARDS, label: 'Kits de Claridad', icon: 'style' },
     ];
 
     const bottomItems = [
