@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Agreement } from '../types';
+import { useToast } from '../context/ToastContext';
 
 interface AgreementFormProps {
   onSave: (data: Partial<Agreement>) => void;
@@ -9,6 +10,7 @@ interface AgreementFormProps {
 }
 
 const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initialData }) => {
+  const { toast } = useToast();
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [category, setCategory] = useState('Comunicación');
@@ -94,7 +96,7 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
         rules: rules.filter(r => r.trim() !== '')
       });
     } else {
-      alert("Por favor inserta un título para el acuerdo.");
+      toast("Por favor inserta un título para el acuerdo.", 'error');
     }
   };
 

@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Agreement, View, UserProfile } from '../types';
+import { useToast } from '../context/ToastContext';
 
 interface DashboardProps {
     user: UserProfile | null;
@@ -23,6 +24,7 @@ const TIPS_DB = [
 ];
 
 const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, onViewAgreement, onEditAgreement, onExploreLibrary, onNavigate }) => {
+    const { toast } = useToast();
     const [tipStatus, setTipStatus] = useState<'idle' | 'sending' | 'success'>('idle');
     const [currentTip, setCurrentTip] = useState(TIPS_DB[0]);
     const [focusModeActive, setFocusModeActive] = useState(false);
@@ -49,9 +51,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
         const newState = !focusModeActive;
         setFocusModeActive(newState);
         if (newState) {
-            alert("Modo Foco activado. Las notificaciones se han silenciado por 1 hora.");
+            toast("Modo Foco activado. Notificaciones silenciadas por 1h.", 'info');
         } else {
-            alert("Modo Foco desactivado. Has vuelto a recibir notificaciones.");
+            toast("Modo Foco desactivado.", 'info');
         }
     };
 

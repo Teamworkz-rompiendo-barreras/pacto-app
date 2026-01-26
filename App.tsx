@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, UserProfile, AccessibilitySettings, Ritual, Agreement, RitualHistoryItem } from './types';
 import { LanguageProvider } from './LanguageContext';
+import { ToastProvider } from './context/ToastContext';
 import { authService } from './services/authService';
 import { agreementService } from './services/agreementService';
 import { ritualService } from './services/ritualService';
@@ -518,7 +519,9 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <LanguageProvider>
-      <AppContent />
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </LanguageProvider>
   );
 };

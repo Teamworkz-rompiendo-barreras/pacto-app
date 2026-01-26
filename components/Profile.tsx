@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { UserProfile, AccessibilitySettings } from '../types';
+import { useToast } from '../context/ToastContext';
 
 interface ProfileProps {
     user: UserProfile;
@@ -24,6 +25,7 @@ const MOCK_SESSIONS = [
 ];
 
 const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpdateUser, onOpenPublicView, onLogout, onDeleteAccount, onNavigateToLanguage, onBack, initialSection = 'personal' }) => {
+    const { toast } = useToast();
     // Estado local para el formulario de perfil
     const [name, setName] = useState(user.name);
     const [role, setRole] = useState(user.role);
@@ -38,8 +40,10 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
     const [twoFactorActive, setTwoFactorActive] = useState(false);
 
     // Estados para Modales
+    // Estados para Modales
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [show2FAModal, setShow2FAModal] = useState(false);
+    const [showConfirm2FA, setShowConfirm2FA] = useState(false);
 
     // Estados para Modales de Zona de Peligro
     const [showDevicesModal, setShowDevicesModal] = useState(false);
@@ -65,6 +69,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
     const [activeSection, setActiveSection] = useState(initialSection);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
     // Efecto para manejar el scroll inicial si viene definido
     useEffect(() => {
@@ -72,7 +77,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
             setActiveSection(initialSection);
             // Pequeño timeout para asegurar que el DOM está listo
             setTimeout(() => {
-                const element = document.getElementById(initialSection);
+                const element = sectionRefs.current[initialSection];
                 if (element) {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
@@ -101,20 +106,19 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
 
     }, [localSettings]);
 
+    const [saveStatus, setSaveStatus] = useState<'idle' | 'saved'>('idle');
+
     const handleSaveAll = () => {
         onUpdateUser({ name, role, about, avatar });
         onSaveSettings(localSettings);
-        // Feedback visual simple
-        const btn = document.getElementById('save-btn');
-        if (btn) {
-            const originalText = btn.innerText;
-            btn.innerText = '¡Guardado!';
-            btn.classList.add('bg-green-600');
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.classList.remove('bg-green-600');
-            }, 2000);
-        }
+
+        // Feedback visual con estado React
+        setSaveStatus('saved');
+        toast('Configuración guardada correctamente', 'success');
+
+        setTimeout(() => {
+            setSaveStatus('idle');
+        }, 2000);
     };
 
     const handleDiscard = () => {
@@ -124,7 +128,8 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
         setAvatar(user.avatar || '');
         setLocalSettings(settings);
         setActiveSection('personal');
-        const personalSection = document.getElementById('personal');
+        setActiveSection('personal');
+        const personalSection = sectionRefs.current['personal'];
         if (personalSection) personalSection.scrollIntoView({ behavior: 'smooth' });
     };
 
@@ -155,7 +160,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
     const scrollToSection = (e: React.MouseEvent, id: string) => {
         e.preventDefault();
         setActiveSection(id);
-        const element = document.getElementById(id);
+        const element = sectionRefs.current[id];
         if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -180,26 +185,24 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
         setNewPass('');
         setConfirmPass('');
 
-        alert(`[SIMULACIÓN EMAIL]
-      
-      Para: ${user.email}
-      Asunto: Alerta de Seguridad - Cambio de Contraseña
-      
-      Hola ${user.name},
-      Te informamos que tu contraseña ha sido modificada recientemente.`);
+        toast('Contraseña actualizada correctamente. Revisa tu email.', 'success');
     };
 
     // --- Lógica 2FA ---
     const handle2FAToggle = () => {
         if (twoFactorActive) {
-            if (confirm('¿Estás seguro de desactivar la autenticación en dos pasos? Tu cuenta será menos segura.')) {
-                setTwoFactorActive(false);
-            }
+            setShowConfirm2FA(true);
         } else {
             setOtpCode('');
             setIs2FASetupComplete(false);
             setShow2FAModal(true);
         }
+    };
+
+    const confirmDisable2FA = () => {
+        setTwoFactorActive(false);
+        setShowConfirm2FA(false);
+        toast('Autenticación en dos pasos desactivada', 'warning');
     };
 
     const verify2FACode = () => {
@@ -210,7 +213,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                 setShow2FAModal(false);
             }, 1500);
         } else {
-            alert("Código inválido. Por prueba, ingresa cualquier código de 4+ dígitos.");
+            toast("Código inválido. Intenta con '1234'", 'error');
         }
     };
 
@@ -234,7 +237,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
     };
 
     const handleExportData = () => {
-        alert("Se ha solicitado una exportación de tus datos. Recibirás un enlace de descarga en tu correo electrónico en breve.");
+        toast("Solicitud enviada. Recibirás un email con tus datos en breve.", 'success');
     };
 
     // --- Lógica Eliminar Cuenta ---
@@ -310,8 +313,8 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                         href="#personal"
                         onClick={(e) => scrollToSection(e, 'personal')}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all cursor-pointer ${activeSection === 'personal'
-                                ? 'bg-white border-l-4 border-primary shadow-sm text-primary'
-                                : 'hover:bg-white/30 text-text-n900/60 border-l-4 border-transparent'
+                            ? 'bg-white border-l-4 border-primary shadow-sm text-primary'
+                            : 'hover:bg-white/30 text-text-n900/60 border-l-4 border-transparent'
                             }`}
                     >
                         <span className={`material-symbols-outlined ${activeSection === 'personal' ? 'text-primary' : 'opacity-60'}`}>person</span>
@@ -321,8 +324,8 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                         href="#sensorial"
                         onClick={(e) => scrollToSection(e, 'sensorial')}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all cursor-pointer ${activeSection === 'sensorial'
-                                ? 'bg-white border-l-4 border-primary shadow-sm text-primary'
-                                : 'hover:bg-white/30 text-text-n900/60 border-l-4 border-transparent'
+                            ? 'bg-white border-l-4 border-primary shadow-sm text-primary'
+                            : 'hover:bg-white/30 text-text-n900/60 border-l-4 border-transparent'
                             }`}
                     >
                         <span className={`material-symbols-outlined ${activeSection === 'sensorial' ? 'text-primary' : 'opacity-60'}`}>neurology</span>
@@ -332,8 +335,8 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                         href="#comunicacion"
                         onClick={(e) => scrollToSection(e, 'comunicacion')}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all cursor-pointer ${activeSection === 'comunicacion'
-                                ? 'bg-white border-l-4 border-primary shadow-sm text-primary'
-                                : 'hover:bg-white/30 text-text-n900/60 border-l-4 border-transparent'
+                            ? 'bg-white border-l-4 border-primary shadow-sm text-primary'
+                            : 'hover:bg-white/30 text-text-n900/60 border-l-4 border-transparent'
                             }`}
                     >
                         <span className={`material-symbols-outlined ${activeSection === 'comunicacion' ? 'text-primary' : 'opacity-60'}`}>forum</span>
@@ -343,8 +346,8 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                         href="#security"
                         onClick={(e) => scrollToSection(e, 'security')}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all cursor-pointer ${activeSection === 'security'
-                                ? 'bg-white border-l-4 border-primary shadow-sm text-primary'
-                                : 'hover:bg-white/30 text-text-n900/60 border-l-4 border-transparent'
+                            ? 'bg-white border-l-4 border-primary shadow-sm text-primary'
+                            : 'hover:bg-white/30 text-text-n900/60 border-l-4 border-transparent'
                             }`}
                     >
                         <span className={`material-symbols-outlined ${activeSection === 'security' ? 'text-primary' : 'opacity-60'}`}>lock</span>
@@ -366,7 +369,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                 <div className="md:col-span-2 space-y-10">
 
                     {/* Section: Información Personal */}
-                    <section id="personal" className="bg-white rounded-2xl p-8 shadow-sm border border-black/5 scroll-mt-6">
+                    <section id="personal" ref={el => { sectionRefs.current['personal'] = el; }} className="bg-white rounded-2xl p-8 shadow-sm border border-black/5 scroll-mt-6">
                         <div className="flex items-center gap-3 mb-6">
                             <span className="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg">id_card</span>
                             <h2 className="text-2xl font-bold text-text-n900">Información Personal</h2>
@@ -445,7 +448,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                     </section>
 
                     {/* Section: Preferencias Sensoriales */}
-                    <section id="sensorial" className="bg-white rounded-2xl p-8 shadow-sm border border-black/5 scroll-mt-6">
+                    <section id="sensorial" ref={el => { sectionRefs.current['sensorial'] = el; }} className="bg-white rounded-2xl p-8 shadow-sm border border-black/5 scroll-mt-6">
                         <div className="flex items-center gap-3 mb-6">
                             <span className="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg">visibility</span>
                             <h2 className="text-2xl font-bold text-text-n900">Preferencias Sensoriales</h2>
@@ -488,7 +491,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                     </section>
 
                     {/* Section: Modos de Comunicación */}
-                    <section id="comunicacion" className="bg-white rounded-2xl p-8 shadow-sm border border-black/5 scroll-mt-6">
+                    <section id="comunicacion" ref={el => { sectionRefs.current['comunicacion'] = el; }} className="bg-white rounded-2xl p-8 shadow-sm border border-black/5 scroll-mt-6">
                         <div className="flex items-center gap-3 mb-6">
                             <span className="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg">chat_bubble</span>
                             <h2 className="text-2xl font-bold text-text-n900">Modos de Comunicación</h2>
@@ -520,7 +523,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                     </section>
 
                     {/* Section: Seguridad y Privacidad */}
-                    <section id="security" className="scroll-mt-6 flex flex-col gap-6">
+                    <section id="security" ref={el => { sectionRefs.current['security'] = el; }} className="scroll-mt-6 flex flex-col gap-6">
 
                         {/* Header Section */}
                         <div className="flex items-center gap-3 border-b border-black/10 pb-4 mb-2">
@@ -565,7 +568,29 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                                     />
                                 </button>
                             </div>
+
+                            {/* Inline confirmation for disabling 2FA */}
+                            {showConfirm2FA && (
+                                <div className="mt-4 p-4 bg-orange-50 border border-orange-100 rounded-xl animate-fade-in">
+                                    <p className="font-bold text-orange-800 text-sm mb-3">¿Estás seguro de desactivar la seguridad extra?</p>
+                                    <div className="flex gap-3">
+                                        <button
+                                            onClick={confirmDisable2FA}
+                                            className="px-4 py-2 bg-white border border-orange-200 text-orange-700 font-bold rounded-lg text-xs hover:bg-orange-100"
+                                        >
+                                            Sí, desactivar
+                                        </button>
+                                        <button
+                                            onClick={() => setShowConfirm2FA(false)}
+                                            className="px-4 py-2 bg-orange-600 text-white font-bold rounded-lg text-xs hover:bg-orange-700"
+                                        >
+                                            Mantener activada
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
+
 
                         {/* Privacy Section Header */}
                         <div className="flex items-center gap-3 border-b border-black/10 pb-4 pt-4 mb-2">
@@ -584,8 +609,8 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                                         <label
                                             key={option}
                                             className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all ${localSettings.profile_visibility === option
-                                                    ? 'border-primary bg-primary/5'
-                                                    : 'border-gray-100 hover:border-primary/50 hover:bg-gray-50'
+                                                ? 'border-primary bg-primary/5'
+                                                : 'border-gray-100 hover:border-primary/50 hover:bg-gray-50'
                                                 }`}
                                         >
                                             <input
@@ -664,336 +689,345 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                         <button
                             id="save-btn"
                             onClick={handleSaveAll}
-                            className="w-full sm:w-auto px-10 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/30 hover:brightness-110 active:scale-95 transition-all"
+                            className={`w-full sm:w-auto px-10 py-3 text-white rounded-xl font-bold shadow-lg shadow-primary/30 hover:brightness-110 active:scale-95 transition-all ${saveStatus === 'saved' ? 'bg-green-600' : 'bg-primary'
+                                }`}
                         >
-                            Guardar Configuración
+                            {saveStatus === 'saved' ? '¡Guardado!' : 'Guardar Configuración'}
                         </button>
                     </div>
                 </div>
-            </div>
+            </div >
 
             {/* --- MODAL GESTIÓN DE DISPOSITIVOS --- */}
-            {showDevicesModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 relative">
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-bold text-text-n900">Sesiones Activas</h3>
-                            <button
-                                onClick={() => setShowDevicesModal(false)}
-                                className="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
-                            >
-                                <span className="material-symbols-outlined">close</span>
-                            </button>
-                        </div>
-
-                        {isLoadingSessions ? (
-                            <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                                <div className="animate-spin rounded-full h-10 w-10 border-4 border-primary border-t-transparent"></div>
-                                <p className="text-gray-500 text-sm font-medium animate-pulse">Detectando dispositivos...</p>
+            {
+                showDevicesModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+                        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 relative">
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-xl font-bold text-text-n900">Sesiones Activas</h3>
+                                <button
+                                    onClick={() => setShowDevicesModal(false)}
+                                    className="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
+                                >
+                                    <span className="material-symbols-outlined">close</span>
+                                </button>
                             </div>
-                        ) : (
-                            <>
-                                <div className="mb-6 p-4 bg-blue-50 text-blue-800 rounded-lg text-sm border border-blue-100 flex gap-3">
-                                    <span className="material-symbols-outlined">info</span>
-                                    <p>Aquí puedes ver los dispositivos donde has iniciado sesión recientemente. Si no reconoces alguno, ciérralo y cambia tu contraseña.</p>
-                                </div>
 
-                                <div className="space-y-4 max-h-60 overflow-y-auto custom-scrollbar mb-6">
-                                    {activeSessions.length === 0 ? (
-                                        <p className="text-center text-gray-500 py-4">No hay otras sesiones activas.</p>
-                                    ) : (
-                                        activeSessions.map(session => (
-                                            <div key={session.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-xl">
-                                                <div className="flex items-center gap-3">
-                                                    <div className={`size-10 rounded-full flex items-center justify-center bg-gray-100 text-gray-600`}>
-                                                        <span className="material-symbols-outlined">{session.icon}</span>
-                                                    </div>
-                                                    <div>
-                                                        <div className="flex items-center gap-2">
-                                                            <p className="font-bold text-text-n900 text-sm">{session.device}</p>
-                                                            {session.current && <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded">ACTUAL</span>}
+                            {isLoadingSessions ? (
+                                <div className="flex flex-col items-center justify-center py-12 space-y-4">
+                                    <div className="animate-spin rounded-full h-10 w-10 border-4 border-primary border-t-transparent"></div>
+                                    <p className="text-gray-500 text-sm font-medium animate-pulse">Detectando dispositivos...</p>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="mb-6 p-4 bg-blue-50 text-blue-800 rounded-lg text-sm border border-blue-100 flex gap-3">
+                                        <span className="material-symbols-outlined">info</span>
+                                        <p>Aquí puedes ver los dispositivos donde has iniciado sesión recientemente. Si no reconoces alguno, ciérralo y cambia tu contraseña.</p>
+                                    </div>
+
+                                    <div className="space-y-4 max-h-60 overflow-y-auto custom-scrollbar mb-6">
+                                        {activeSessions.length === 0 ? (
+                                            <p className="text-center text-gray-500 py-4">No hay otras sesiones activas.</p>
+                                        ) : (
+                                            activeSessions.map(session => (
+                                                <div key={session.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-xl">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className={`size-10 rounded-full flex items-center justify-center bg-gray-100 text-gray-600`}>
+                                                            <span className="material-symbols-outlined">{session.icon}</span>
                                                         </div>
-                                                        <p className="text-xs text-gray-500">{session.location} • {session.lastActive}</p>
+                                                        <div>
+                                                            <div className="flex items-center gap-2">
+                                                                <p className="font-bold text-text-n900 text-sm">{session.device}</p>
+                                                                {session.current && <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded">ACTUAL</span>}
+                                                            </div>
+                                                            <p className="text-xs text-gray-500">{session.location} • {session.lastActive}</p>
+                                                        </div>
                                                     </div>
+                                                    {!session.current && (
+                                                        <button
+                                                            onClick={() => handleRevokeSession(session.id)}
+                                                            className="text-red-600 text-xs font-bold hover:bg-red-50 px-3 py-1.5 rounded transition-colors"
+                                                        >
+                                                            Cerrar
+                                                        </button>
+                                                    )}
                                                 </div>
-                                                {!session.current && (
-                                                    <button
-                                                        onClick={() => handleRevokeSession(session.id)}
-                                                        className="text-red-600 text-xs font-bold hover:bg-red-50 px-3 py-1.5 rounded transition-colors"
-                                                    >
-                                                        Cerrar
-                                                    </button>
-                                                )}
-                                            </div>
-                                        ))
-                                    )}
-                                </div>
+                                            ))
+                                        )}
+                                    </div>
 
-                                {activeSessions.length > 1 && (
-                                    <button
-                                        onClick={handleRevokeAll}
-                                        className="w-full py-3 border border-gray-300 text-text-n900 font-bold rounded-xl hover:bg-gray-50 transition-colors"
-                                    >
-                                        Cerrar todas las demás sesiones
-                                    </button>
-                                )}
-                            </>
-                        )}
+                                    {activeSessions.length > 1 && (
+                                        <button
+                                            onClick={handleRevokeAll}
+                                            className="w-full py-3 border border-gray-300 text-text-n900 font-bold rounded-xl hover:bg-gray-50 transition-colors"
+                                        >
+                                            Cerrar todas las demás sesiones
+                                        </button>
+                                    )}
+                                </>
+                            )}
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* --- MODAL ELIMINAR CUENTA (Flujo Completo) --- */}
-            {showDeleteModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
-                        {deleteStep !== 3 && !isDeleting && (
+            {
+                showDeleteModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+                        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
+                            {deleteStep !== 3 && !isDeleting && (
+                                <button
+                                    onClick={() => setShowDeleteModal(false)}
+                                    className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
+                                >
+                                    <span className="material-symbols-outlined">close</span>
+                                </button>
+                            )}
+
+                            {isDeleting ? (
+                                <div className="flex flex-col items-center justify-center py-10 space-y-6">
+                                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-red-600 border-t-transparent"></div>
+                                    <div className="text-center">
+                                        <p className="text-lg font-bold text-text-n900">Eliminando cuenta...</p>
+                                        <p className="text-gray-500 text-sm">Por favor espera, no cierres esta ventana.</p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    {deleteStep === 1 && (
+                                        // PASO 1: MOTIVO
+                                        <div className="animate-fade-in">
+                                            <div className="size-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <span className="material-symbols-outlined text-3xl">sentiment_dissatisfied</span>
+                                            </div>
+                                            <h3 className="text-2xl font-black text-center mb-2 text-text-n900">Lamentamos que te vayas</h3>
+                                            <p className="text-center text-gray-600 mb-6 text-sm">Ayúdanos a mejorar contándonos por qué decides eliminar tu cuenta.</p>
+
+                                            <div className="space-y-3 mb-8">
+                                                {['Ya no lo necesito', 'Es muy caro', 'Es difícil de usar', 'Preocupaciones de privacidad', 'Otro'].map(reason => (
+                                                    <label key={reason} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${deleteReason === reason ? 'border-primary bg-primary/5' : 'border-gray-200 hover:bg-gray-50'}`}>
+                                                        <input
+                                                            type="radio"
+                                                            name="deleteReason"
+                                                            className="accent-primary size-4"
+                                                            checked={deleteReason === reason}
+                                                            onChange={() => setDeleteReason(reason)}
+                                                        />
+                                                        <span className="text-sm font-bold text-text-n900">{reason}</span>
+                                                    </label>
+                                                ))}
+                                            </div>
+
+                                            <button
+                                                onClick={() => setDeleteStep(2)}
+                                                disabled={!deleteReason}
+                                                className="w-full py-3 bg-primary text-white font-bold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-110 transition-all shadow-lg"
+                                            >
+                                                Continuar
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {deleteStep === 2 && (
+                                        // PASO 2: CONFIRMACIÓN FINAL
+                                        <div className="animate-fade-in">
+                                            <div className="size-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                                                <span className="material-symbols-outlined text-3xl">warning</span>
+                                            </div>
+                                            <h3 className="text-2xl font-black text-center mb-2 text-red-900">¿Estás absolutamente seguro?</h3>
+                                            <p className="text-center text-text-n900 font-medium mb-6">
+                                                Esta acción <span className="font-bold underline">no se puede deshacer</span>.
+                                            </p>
+
+                                            <div className="bg-red-50 border border-red-100 p-4 rounded-xl mb-6 text-sm text-red-900 space-y-2">
+                                                <p>• Se eliminará tu perfil y datos personales.</p>
+                                                <p>• Perderás acceso a todos los equipos y acuerdos.</p>
+                                                <p>• No podrás recuperar tu historial.</p>
+                                            </div>
+
+                                            <div className="flex flex-col gap-3">
+                                                <button
+                                                    onClick={handleConfirmDelete}
+                                                    className="w-full py-3 bg-red-800 text-white font-bold rounded-xl hover:bg-red-900 transition-all shadow-lg"
+                                                >
+                                                    Sí, eliminar mi cuenta
+                                                </button>
+                                                <button
+                                                    onClick={() => setShowDeleteModal(false)}
+                                                    className="w-full py-3 bg-transparent text-gray-600 font-bold rounded-xl hover:bg-gray-100 transition-all"
+                                                >
+                                                    Cancelar, quiero quedarme
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {deleteStep === 3 && (
+                                        // PASO 3: ÉXITO Y REDIRECCIÓN
+                                        <div className="animate-fade-in text-center py-4">
+                                            <div className="size-20 bg-green-100 text-green-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                <span className="material-symbols-outlined text-4xl">check</span>
+                                            </div>
+                                            <h3 className="text-2xl font-black text-text-n900 mb-2">Cuenta Eliminada</h3>
+                                            <p className="text-gray-600 mb-8">
+                                                Tus datos han sido borrados correctamente.
+                                            </p>
+                                            <div className="flex justify-center gap-2">
+                                                <span className="size-2 bg-primary rounded-full animate-bounce"></span>
+                                                <span className="size-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                                                <span className="size-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                                            </div>
+                                            <p className="text-xs text-gray-400 mt-4 uppercase tracking-widest font-bold">Redirigiendo...</p>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                    </div>
+                )
+            }
+
+            {/* --- MODAL CAMBIAR CONTRASEÑA (Existente) --- */}
+            {
+                showPasswordModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+                        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
                             <button
-                                onClick={() => setShowDeleteModal(false)}
+                                onClick={() => setShowPasswordModal(false)}
                                 className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
                             >
                                 <span className="material-symbols-outlined">close</span>
                             </button>
-                        )}
 
-                        {isDeleting ? (
-                            <div className="flex flex-col items-center justify-center py-10 space-y-6">
-                                <div className="animate-spin rounded-full h-12 w-12 border-4 border-red-600 border-t-transparent"></div>
-                                <div className="text-center">
-                                    <p className="text-lg font-bold text-text-n900">Eliminando cuenta...</p>
-                                    <p className="text-gray-500 text-sm">Por favor espera, no cierres esta ventana.</p>
-                                </div>
-                            </div>
-                        ) : (
-                            <>
-                                {deleteStep === 1 && (
-                                    // PASO 1: MOTIVO
-                                    <div className="animate-fade-in">
-                                        <div className="size-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                            <span className="material-symbols-outlined text-3xl">sentiment_dissatisfied</span>
-                                        </div>
-                                        <h3 className="text-2xl font-black text-center mb-2 text-text-n900">Lamentamos que te vayas</h3>
-                                        <p className="text-center text-gray-600 mb-6 text-sm">Ayúdanos a mejorar contándonos por qué decides eliminar tu cuenta.</p>
+                            <h3 className="text-2xl font-bold mb-6 text-text-n900 flex items-center gap-2">
+                                <span className="material-symbols-outlined text-primary">lock_reset</span>
+                                Cambiar Contraseña
+                            </h3>
 
-                                        <div className="space-y-3 mb-8">
-                                            {['Ya no lo necesito', 'Es muy caro', 'Es difícil de usar', 'Preocupaciones de privacidad', 'Otro'].map(reason => (
-                                                <label key={reason} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${deleteReason === reason ? 'border-primary bg-primary/5' : 'border-gray-200 hover:bg-gray-50'}`}>
-                                                    <input
-                                                        type="radio"
-                                                        name="deleteReason"
-                                                        className="accent-primary size-4"
-                                                        checked={deleteReason === reason}
-                                                        onChange={() => setDeleteReason(reason)}
-                                                    />
-                                                    <span className="text-sm font-bold text-text-n900">{reason}</span>
-                                                </label>
-                                            ))}
-                                        </div>
-
-                                        <button
-                                            onClick={() => setDeleteStep(2)}
-                                            disabled={!deleteReason}
-                                            className="w-full py-3 bg-primary text-white font-bold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-110 transition-all shadow-lg"
-                                        >
-                                            Continuar
-                                        </button>
-                                    </div>
-                                )}
-
-                                {deleteStep === 2 && (
-                                    // PASO 2: CONFIRMACIÓN FINAL
-                                    <div className="animate-fade-in">
-                                        <div className="size-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
-                                            <span className="material-symbols-outlined text-3xl">warning</span>
-                                        </div>
-                                        <h3 className="text-2xl font-black text-center mb-2 text-red-900">¿Estás absolutamente seguro?</h3>
-                                        <p className="text-center text-text-n900 font-medium mb-6">
-                                            Esta acción <span className="font-bold underline">no se puede deshacer</span>.
-                                        </p>
-
-                                        <div className="bg-red-50 border border-red-100 p-4 rounded-xl mb-6 text-sm text-red-900 space-y-2">
-                                            <p>• Se eliminará tu perfil y datos personales.</p>
-                                            <p>• Perderás acceso a todos los equipos y acuerdos.</p>
-                                            <p>• No podrás recuperar tu historial.</p>
-                                        </div>
-
-                                        <div className="flex flex-col gap-3">
-                                            <button
-                                                onClick={handleConfirmDelete}
-                                                className="w-full py-3 bg-red-800 text-white font-bold rounded-xl hover:bg-red-900 transition-all shadow-lg"
-                                            >
-                                                Sí, eliminar mi cuenta
-                                            </button>
-                                            <button
-                                                onClick={() => setShowDeleteModal(false)}
-                                                className="w-full py-3 bg-transparent text-gray-600 font-bold rounded-xl hover:bg-gray-100 transition-all"
-                                            >
-                                                Cancelar, quiero quedarme
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {deleteStep === 3 && (
-                                    // PASO 3: ÉXITO Y REDIRECCIÓN
-                                    <div className="animate-fade-in text-center py-4">
-                                        <div className="size-20 bg-green-100 text-green-700 rounded-full flex items-center justify-center mx-auto mb-6">
-                                            <span className="material-symbols-outlined text-4xl">check</span>
-                                        </div>
-                                        <h3 className="text-2xl font-black text-text-n900 mb-2">Cuenta Eliminada</h3>
-                                        <p className="text-gray-600 mb-8">
-                                            Tus datos han sido borrados correctamente.
-                                        </p>
-                                        <div className="flex justify-center gap-2">
-                                            <span className="size-2 bg-primary rounded-full animate-bounce"></span>
-                                            <span className="size-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                                            <span className="size-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                                        </div>
-                                        <p className="text-xs text-gray-400 mt-4 uppercase tracking-widest font-bold">Redirigiendo...</p>
-                                    </div>
-                                )}
-                            </>
-                        )}
-                    </div>
-                </div>
-            )}
-
-            {/* --- MODAL CAMBIAR CONTRASEÑA (Existente) --- */}
-            {showPasswordModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
-                        <button
-                            onClick={() => setShowPasswordModal(false)}
-                            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
-                        >
-                            <span className="material-symbols-outlined">close</span>
-                        </button>
-
-                        <h3 className="text-2xl font-bold mb-6 text-text-n900 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-primary">lock_reset</span>
-                            Cambiar Contraseña
-                        </h3>
-
-                        <form onSubmit={handleChangePasswordSubmit} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-bold mb-1">Contraseña Actual</label>
-                                <input
-                                    type="password"
-                                    required
-                                    value={currentPass}
-                                    onChange={(e) => setCurrentPass(e.target.value)}
-                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
-                                    placeholder="••••••••"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold mb-1">Nueva Contraseña</label>
-                                <input
-                                    type="password"
-                                    required
-                                    value={newPass}
-                                    onChange={(e) => setNewPass(e.target.value)}
-                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
-                                    placeholder="Mínimo 6 caracteres"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold mb-1">Confirmar Nueva Contraseña</label>
-                                <input
-                                    type="password"
-                                    required
-                                    value={confirmPass}
-                                    onChange={(e) => setConfirmPass(e.target.value)}
-                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
-                                    placeholder="••••••••"
-                                />
-                            </div>
-
-                            {passMessage && (
-                                <div className="text-red-600 text-sm font-bold bg-red-50 p-2 rounded">
-                                    {passMessage}
-                                </div>
-                            )}
-
-                            <div className="pt-4 flex justify-end gap-3">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPasswordModal(false)}
-                                    className="px-4 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded-lg transition-colors"
-                                >
-                                    Cancelar
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-6 py-2 bg-primary text-white font-bold rounded-lg hover:brightness-110 shadow-md transition-all"
-                                >
-                                    Actualizar
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-
-            {/* --- MODAL CONFIGURACIÓN 2FA (Existente) --- */}
-            {show2FAModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
-                        <button
-                            onClick={() => setShow2FAModal(false)}
-                            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
-                        >
-                            <span className="material-symbols-outlined">close</span>
-                        </button>
-
-                        {!is2FASetupComplete ? (
-                            <div className="space-y-6 text-center">
-                                <div className="size-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto">
-                                    <span className="material-symbols-outlined text-3xl">qr_code_scanner</span>
+                            <form onSubmit={handleChangePasswordSubmit} className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-bold mb-1">Contraseña Actual</label>
+                                    <input
+                                        type="password"
+                                        required
+                                        value={currentPass}
+                                        onChange={(e) => setCurrentPass(e.target.value)}
+                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                                        placeholder="••••••••"
+                                    />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-bold text-text-n900 mb-2">Configurar 2FA</h3>
-                                    <p className="text-gray-600 text-sm">Escanea este código QR con tu aplicación de autenticación (Google Auth, Authy, etc).</p>
-                                </div>
-
-                                <div className="size-48 bg-gray-900 mx-auto rounded-xl flex items-center justify-center relative overflow-hidden group">
-                                    <div className="absolute inset-0 bg-white opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #000 2px, transparent 2.5px)', backgroundSize: '10px 10px' }}></div>
-                                    <span className="material-symbols-outlined text-white text-6xl relative z-10">qr_code_2</span>
-                                </div>
-
-                                <div className="space-y-3">
-                                    <label className="block text-sm font-bold text-left">Ingresa el código de 6 dígitos</label>
+                                    <label className="block text-sm font-bold mb-1">Nueva Contraseña</label>
                                     <input
-                                        type="text"
-                                        value={otpCode}
-                                        onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                                        className="w-full text-center text-2xl tracking-widest p-3 border-2 border-gray-300 rounded-xl focus:border-primary outline-none font-mono"
-                                        placeholder="000 000"
+                                        type="password"
+                                        required
+                                        value={newPass}
+                                        onChange={(e) => setNewPass(e.target.value)}
+                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                                        placeholder="Mínimo 6 caracteres"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold mb-1">Confirmar Nueva Contraseña</label>
+                                    <input
+                                        type="password"
+                                        required
+                                        value={confirmPass}
+                                        onChange={(e) => setConfirmPass(e.target.value)}
+                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                                        placeholder="••••••••"
                                     />
                                 </div>
 
-                                <button
-                                    onClick={verify2FACode}
-                                    disabled={otpCode.length < 4}
-                                    className="w-full py-3 bg-primary text-white font-bold rounded-xl hover:brightness-110 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                                >
-                                    Verificar y Activar
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="text-center py-8 space-y-4 animate-fade-in">
-                                <div className="size-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto animate-bounce-in">
-                                    <span className="material-symbols-outlined text-4xl">check_circle</span>
-                                </div>
-                                <h3 className="text-2xl font-bold text-text-n900">¡Activado!</h3>
-                                <p className="text-gray-600">Tu cuenta ahora tiene una capa extra de seguridad.</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
+                                {passMessage && (
+                                    <div className="text-red-600 text-sm font-bold bg-red-50 p-2 rounded">
+                                        {passMessage}
+                                    </div>
+                                )}
 
-        </div>
+                                <div className="pt-4 flex justify-end gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPasswordModal(false)}
+                                        className="px-4 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded-lg transition-colors"
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-6 py-2 bg-primary text-white font-bold rounded-lg hover:brightness-110 shadow-md transition-all"
+                                    >
+                                        Actualizar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )
+            }
+
+            {/* --- MODAL CONFIGURACIÓN 2FA (Existente) --- */}
+            {
+                show2FAModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+                        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
+                            <button
+                                onClick={() => setShow2FAModal(false)}
+                                className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
+                            >
+                                <span className="material-symbols-outlined">close</span>
+                            </button>
+
+                            {!is2FASetupComplete ? (
+                                <div className="space-y-6 text-center">
+                                    <div className="size-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto">
+                                        <span className="material-symbols-outlined text-3xl">qr_code_scanner</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-bold text-text-n900 mb-2">Configurar 2FA</h3>
+                                        <p className="text-gray-600 text-sm">Escanea este código QR con tu aplicación de autenticación (Google Auth, Authy, etc).</p>
+                                    </div>
+
+                                    <div className="size-48 bg-gray-900 mx-auto rounded-xl flex items-center justify-center relative overflow-hidden group">
+                                        <div className="absolute inset-0 bg-white opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #000 2px, transparent 2.5px)', backgroundSize: '10px 10px' }}></div>
+                                        <span className="material-symbols-outlined text-white text-6xl relative z-10">qr_code_2</span>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        <label className="block text-sm font-bold text-left">Ingresa el código de 6 dígitos</label>
+                                        <input
+                                            type="text"
+                                            value={otpCode}
+                                            onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                            className="w-full text-center text-2xl tracking-widest p-3 border-2 border-gray-300 rounded-xl focus:border-primary outline-none font-mono"
+                                            placeholder="000 000"
+                                        />
+                                    </div>
+
+                                    <button
+                                        onClick={verify2FACode}
+                                        disabled={otpCode.length < 4}
+                                        className="w-full py-3 bg-primary text-white font-bold rounded-xl hover:brightness-110 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                    >
+                                        Verificar y Activar
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="text-center py-8 space-y-4 animate-fade-in">
+                                    <div className="size-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto animate-bounce-in">
+                                        <span className="material-symbols-outlined text-4xl">check_circle</span>
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-text-n900">¡Activado!</h3>
+                                    <p className="text-gray-600">Tu cuenta ahora tiene una capa extra de seguridad.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )
+            }
+
+        </div >
     );
 };
 
