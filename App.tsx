@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, UserProfile, AccessibilitySettings, Ritual, Agreement } from './types';
+import { View, UserProfile, AccessibilitySettings, Ritual, Agreement, RitualHistoryItem } from './types';
 import { LanguageProvider } from './LanguageContext';
 import { authService } from './services/authService';
 import { agreementService } from './services/agreementService';
+import { ritualService } from './services/ritualService';
 
 // Components
 import Landing from './components/Landing';
@@ -89,21 +90,27 @@ const AppContent: React.FC = () => {
   // 2. ESTADOS DE DATOS (Scopeados por ID de usuario para evitar mezclar datos)
   const userKey = user ? `pacto_data_${user.id}` : 'pacto_data_guest';
 
-  // AGREEMENTS ahora se cargan del servicio
+  // Agreements & Rituals State
   const [agreements, setAgreements] = useState<Agreement[]>([]);
   const [rituals, setRituals] = useStickyState<Ritual[]>(DEFAULT_RITUALS, `${userKey}_rituals`);
+  const [ritualHistory, setRitualHistory] = useState<RitualHistoryItem[]>([]);
 
-  // Cargar acuerdos al iniciar o cambiar usuario
+  // Load Initial Data
   useEffect(() => {
-    const loadAgreements = async () => {
+    const loadData = async () => {
       if (user) {
-        const loaded = await agreementService.getAgreements(user.id, user.role);
-        setAgreements(loaded);
+        const [loadedAgreements, loadedHistory] = await Promise.all([
+          agreementService.getAgreements(user.id, user.role),
+          ritualService.getHistory(user.id)
+        ]);
+        setAgreements(loadedAgreements);
+        setRitualHistory(loadedHistory);
       } else {
         setAgreements([]);
+        setRitualHistory([]);
       }
     };
-    loadAgreements();
+    loadData();
   }, [user]);
 
   // Estados temporales (UI)
@@ -381,7 +388,7 @@ const AppContent: React.FC = () => {
         return <div className="p-6 md:p-10 w-full"><RitualDetails ritual={selectedRitual} onBack={() => navigateTo(View.RITUALS)} /></div>;
 
       case View.RITUAL_HISTORY:
-        return <div className="p-6 md:p-10 w-full"><RitualHistory onBack={() => navigateTo(View.RITUALS)} onViewDetails={(item) => {/* Logic for history details */ }} /></div>;
+        return <div className="p-6 md:p-10 w-full"><RitualHistory history={ritualHistory} onBack={() => navigateTo(View.RITUALS)} onViewDetails={(item) => {/* Logic for history details */ }} /></div>;
 
       case View.RITUAL_REMINDER:
         return <RitualReminder onJoin={() => navigateTo(View.RITUAL_PREPARATION)} onSnooze={() => navigateTo(View.DASHBOARD)} />;

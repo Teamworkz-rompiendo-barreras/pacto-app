@@ -1,103 +1,23 @@
-
 import React, { useState, useEffect, useRef } from 'react';
+import { RitualHistoryItem } from '../types';
 
 interface RitualHistoryProps {
+    history: RitualHistoryItem[];
     onBack?: () => void;
-    onViewDetails?: (item: any) => void;
+    onViewDetails?: (item: RitualHistoryItem) => void;
 }
 
-// Datos Mock con categorías añadidas
-const INITIAL_HISTORY_DATA = [
-    {
-        id: 1,
-        title: "Sincronización Semanal",
-        category: "Sincronización",
-        date: "12 de Octubre, 2023 • 09:30 AM",
-        timestamp: new Date('2023-10-12T09:30:00').getTime(),
-        summary: "Se establecieron 3 nuevos protocolos para comunicación asincrónica durante bloques de trabajo profundo.",
-        satisfaction: "very_satisfied",
-        icon: "sync",
-        iconColor: "text-primary",
-        iconBg: "bg-primary/10",
-        satisfactionColor: "text-primary"
-    },
-    {
-        id: 2,
-        title: "Feedback Retrospectivo",
-        category: "Feedback",
-        date: "08 de Octubre, 2023 • 11:15 AM",
-        timestamp: new Date('2023-10-08T11:15:00').getTime(),
-        summary: "Ajuste de tiempos de entrega para el proyecto 'Zigma' considerando las necesidades de procesamiento cognitivo.",
-        satisfaction: "satisfied",
-        icon: "feedback",
-        iconColor: "text-amber-600",
-        iconBg: "bg-amber-100",
-        satisfactionColor: "text-amber-500"
-    },
-    {
-        id: 3,
-        title: "Chequeo de Bienestar",
-        category: "Bienestar",
-        date: "01 de Octubre, 2023 • 04:00 PM",
-        timestamp: new Date('2023-10-01T16:00:00').getTime(),
-        summary: "Implementación de 'Luces de Estado' físicas y digitales para indicar disponibilidad sensorial.",
-        satisfaction: "very_satisfied",
-        icon: "diversity_3",
-        iconColor: "text-emerald-600",
-        iconBg: "bg-emerald-100",
-        satisfactionColor: "text-emerald-500"
-    },
-    {
-        id: 4,
-        title: "Taller de Herramientas",
-        category: "Taller",
-        date: "25 de Septiembre, 2023 • 10:00 AM",
-        timestamp: new Date('2023-09-25T10:00:00').getTime(),
-        summary: "Definición de tags estándar en Slack para diferenciar urgencia vs. importancia.",
-        satisfaction: "satisfied",
-        icon: "auto_fix_high",
-        iconColor: "text-purple-600",
-        iconBg: "bg-purple-100",
-        satisfactionColor: "text-primary"
-    }
-];
-
-// Datos adicionales para "Cargar anteriores"
-const OLDER_DATA = [
-    {
-        id: 5,
-        title: "Revisión Q3",
-        category: "Revisión",
-        date: "15 de Septiembre, 2023 • 09:00 AM",
-        timestamp: new Date('2023-09-15T09:00:00').getTime(),
-        summary: "Análisis completo del trimestre. Se acordó reducir las reuniones de los viernes a cero.",
-        satisfaction: "very_satisfied",
-        icon: "assessment",
-        iconColor: "text-blue-600",
-        iconBg: "bg-blue-100",
-        satisfactionColor: "text-blue-500"
-    },
-    {
-        id: 6,
-        title: "Onboarding Grupal",
-        category: "Onboarding",
-        date: "10 de Septiembre, 2023 • 11:00 AM",
-        timestamp: new Date('2023-09-10T11:00:00').getTime(),
-        summary: "Bienvenida a nuevos miembros con énfasis en la cultura de documentación asíncrona.",
-        satisfaction: "neutral",
-        icon: "group_add",
-        iconColor: "text-indigo-600",
-        iconBg: "bg-indigo-100",
-        satisfactionColor: "text-gray-400"
-    }
-];
-
-const RitualHistory: React.FC<RitualHistoryProps> = ({ onBack, onViewDetails }) => {
+const RitualHistory: React.FC<RitualHistoryProps> = ({ history, onBack, onViewDetails }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [displayedItems, setDisplayedItems] = useState(INITIAL_HISTORY_DATA);
+    const [displayedItems, setDisplayedItems] = useState<RitualHistoryItem[]>([]);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
+    const [hasMore, setHasMore] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
+
+    // Initial load
+    useEffect(() => {
+        setDisplayedItems(history);
+    }, [history]);
 
     // Estados para filtros visuales
     const [dateOrder, setDateOrder] = useState<'desc' | 'asc'>('desc');
@@ -136,20 +56,14 @@ const RitualHistory: React.FC<RitualHistoryProps> = ({ onBack, onViewDetails }) 
     const filteredHistory = getFilteredAndSortedHistory();
 
     // Obtener categorías únicas disponibles en los datos mostrados
-    const availableCategories = ['Todos', ...Array.from(new Set([...INITIAL_HISTORY_DATA, ...OLDER_DATA].map(i => i.category)))];
+    const availableCategories = ['Todos', ...Array.from(new Set(history.map(i => i.category)))];
 
     const handleLoadMore = () => {
         setIsLoadingMore(true);
-        // Simular petición al servidor
+        // Simular petición al servidor (Mock)
         setTimeout(() => {
-            setDisplayedItems(prev => {
-                // Evitar duplicados si ya se cargaron (por si acaso)
-                const existingIds = new Set(prev.map(i => i.id));
-                const newItems = OLDER_DATA.filter(i => !existingIds.has(i.id));
-                return [...prev, ...newItems];
-            });
             setIsLoadingMore(false);
-            setHasMore(false); // En este mock solo hay una página extra
+            setHasMore(false);
         }, 1200);
     };
 
@@ -163,6 +77,29 @@ const RitualHistory: React.FC<RitualHistoryProps> = ({ onBack, onViewDetails }) 
             setIsExporting(false);
             alert("Reporte histórico descargado correctamente (PDF).");
         }, 2000);
+    };
+
+    // Style helpers
+    const getIconStyle = (icon: string) => {
+        switch (icon) {
+            case 'sync': return { bg: 'bg-primary/10', text: 'text-primary' };
+            case 'feedback': return { bg: 'bg-amber-100', text: 'text-amber-600' };
+            case 'diversity_3': return { bg: 'bg-emerald-100', text: 'text-emerald-600' };
+            case 'auto_fix_high': return { bg: 'bg-purple-100', text: 'text-purple-600' };
+            case 'assessment': return { bg: 'bg-blue-100', text: 'text-blue-600' };
+            default: return { bg: 'bg-gray-100', text: 'text-gray-600' };
+        }
+    };
+
+    const getSatisfactionColor = (level: string) => {
+        switch (level) {
+            case 'very_satisfied': return 'text-emerald-500';
+            case 'satisfied': return 'text-primary';
+            case 'neutral': return 'text-amber-500';
+            case 'dissatisfied': return 'text-orange-500';
+            case 'very_dissatisfied': return 'text-red-500';
+            default: return 'text-gray-400';
+        }
     };
 
     return (
@@ -253,44 +190,49 @@ const RitualHistory: React.FC<RitualHistoryProps> = ({ onBack, onViewDetails }) 
             {/* Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-8">
                 {filteredHistory.length > 0 ? (
-                    filteredHistory.map(item => (
-                        <div key={item.id} className="bg-white rounded-3xl border border-gray-border p-6 flex flex-col shadow-sm hover:shadow-md hover:border-primary/50 transition-all group animate-fade-in">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className={`${item.iconBg} ${item.iconColor} p-2 rounded-xl`}>
-                                    <span className="material-symbols-outlined">{item.icon}</span>
-                                </div>
-                                <div className="flex flex-col items-end">
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Satisfacción</span>
-                                    <div className={`flex ${item.satisfactionColor}`}>
-                                        <span className="material-symbols-outlined text-lg fill-current">{item.satisfaction}</span>
+                    filteredHistory.map(item => {
+                        const style = getIconStyle(item.icon);
+                        const satisfactionColor = getSatisfactionColor(item.satisfaction);
+
+                        return (
+                            <div key={item.id} className="bg-white rounded-3xl border border-gray-border p-6 flex flex-col shadow-sm hover:shadow-md hover:border-primary/50 transition-all group animate-fade-in">
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className={`${style.bg} ${style.text} p-2 rounded-xl`}>
+                                        <span className="material-symbols-outlined">{item.icon}</span>
+                                    </div>
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Satisfacción</span>
+                                        <div className={`flex ${satisfactionColor}`}>
+                                            <span className="material-symbols-outlined text-lg fill-current">{item.satisfaction}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="mb-4">
-                                <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-500 mb-2">
-                                    {item.category}
-                                </span>
-                                <h3 className="text-xl font-bold mb-1 text-text-n900 group-hover:text-primary transition-colors">{item.title}</h3>
-                                <p className="text-sm text-gray-500 font-medium">{item.date}</p>
-                            </div>
+                                <div className="mb-4">
+                                    <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-500 mb-2">
+                                        {item.category}
+                                    </span>
+                                    <h3 className="text-xl font-bold mb-1 text-text-n900 group-hover:text-primary transition-colors">{item.title}</h3>
+                                    <p className="text-sm text-gray-500 font-medium">{item.date}</p>
+                                </div>
 
-                            <div className="bg-bg-s1/50 p-4 rounded-2xl mb-6 flex-1">
-                                <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-2">Resumen de Acuerdos</p>
-                                <p className="text-sm leading-relaxed text-text-n900/80">
-                                    {item.summary}
-                                </p>
-                            </div>
+                                <div className="bg-bg-s1/50 p-4 rounded-2xl mb-6 flex-1">
+                                    <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-2">Resumen de Acuerdos</p>
+                                    <p className="text-sm leading-relaxed text-text-n900/80">
+                                        {item.summary}
+                                    </p>
+                                </div>
 
-                            <button
-                                onClick={() => onViewDetails && onViewDetails(item)}
-                                className="w-full py-3 border-2 border-primary/20 hover:border-primary hover:bg-primary/5 text-primary font-bold rounded-xl transition-all flex items-center justify-center gap-2 group-active:scale-[0.98]"
-                            >
-                                <span>Ver detalles</span>
-                                <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                            </button>
-                        </div>
-                    ))
+                                <button
+                                    onClick={() => onViewDetails && onViewDetails(item)}
+                                    className="w-full py-3 border-2 border-primary/20 hover:border-primary hover:bg-primary/5 text-primary font-bold rounded-xl transition-all flex items-center justify-center gap-2 group-active:scale-[0.98]"
+                                >
+                                    <span>Ver detalles</span>
+                                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                                </button>
+                            </div>
+                        );
+                    })
                 ) : (
                     <div className="col-span-full py-20 flex flex-col items-center justify-center opacity-50">
                         <span className="material-symbols-outlined text-6xl text-gray-300 mb-4">search_off</span>

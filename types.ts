@@ -63,6 +63,19 @@ export interface Ritual {
   agenda?: string[];
 }
 
+export interface RitualHistoryItem {
+  id: number;
+  ritualId: number;
+  title: string;
+  category: string;
+  date: string;
+  timestamp: number;
+  summary: string;
+  satisfaction: 'very_satisfied' | 'satisfied' | 'neutral' | 'dissatisfied' | 'very_dissatisfied';
+  icon: string;
+  participants: string[];
+}
+
 export enum View {
   LANDING = 'LANDING',
   LOGIN = 'LOGIN',
