@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Agreement, View, UserProfile, Notification } from '../types';
 import { useToast } from '../context/ToastContext';
+import { useLanguage } from '../LanguageContext';
 
 interface DashboardProps {
     user: UserProfile | null;
@@ -26,6 +27,7 @@ const TIPS_DB = [
 
 const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, onCreateNew, onViewAgreement, onEditAgreement, onExploreLibrary, onNavigate, onSendTip }) => {
     const { toast } = useToast();
+    const { t } = useLanguage();
     const [tipStatus, setTipStatus] = useState<'idle' | 'sending' | 'success'>('idle');
     const [currentTip, setCurrentTip] = useState(TIPS_DB[0]);
     const [focusModeActive, setFocusModeActive] = useState(false);
@@ -209,10 +211,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                         </div>
                     )}
                     <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
-                        Hola, {user ? user.name.split(' ')[0] : 'Compañero'}
+                        {t('dash.welcome').replace('{name}', user ? user.name.split(' ')[0] : 'Compañero')}
                     </h1>
                     <p className="text-xl text-gray-600 font-medium">
-                        Tu espacio personal de claridad y acuerdos.
+                        {t('dash.subtitle')}
                     </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto items-end md:items-center">
@@ -230,14 +232,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                         className="hidden sm:flex items-center gap-2 bg-white border-2 border-primary/10 text-primary px-6 py-3 rounded-xl font-bold hover:bg-primary/5 transition-all"
                     >
                         <span className="material-symbols-outlined">library_books</span>
-                        <span>Explorar Biblioteca</span>
+                        <span>{t('dash.btn.library')}</span>
                     </button>
                     <button
                         onClick={onCreateNew}
                         className="flex-1 md:flex-none justify-center items-center gap-2 bg-primary hover:brightness-110 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex"
                     >
                         <span className="material-symbols-outlined">add</span>
-                        <span>Nuevo Acuerdo</span>
+                        <span>{t('dash.btn.new')}</span>
                     </button>
                 </div>
             </header>
@@ -248,8 +250,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                 {/* Main Content (Acuerdos) */}
                 <div className="lg:col-span-8 flex flex-col gap-6">
                     <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-2xl font-bold text-text-n900">Mis Acuerdos Vivos</h3>
-                        <button className="text-sm font-bold text-primary hover:underline">Ver todos</button>
+                        <h3 className="text-2xl font-bold text-text-n900">{t('dash.section.agreements')}</h3>
+                        <button className="text-sm font-bold text-primary hover:underline">{t('dash.link.viewall')}</button>
                     </div>
 
                     <div className="grid gap-4">
@@ -257,10 +259,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                             <div className="bg-white p-10 rounded-2xl border-2 border-dashed border-gray-200 text-center flex flex-col items-center gap-4">
                                 <span className="material-symbols-outlined text-4xl text-gray-300">sentiment_content</span>
                                 <div className="space-y-1">
-                                    <p className="font-bold text-gray-500 text-lg">Aún no tienes acuerdos</p>
-                                    <p className="text-gray-400 text-sm">Crea uno nuevo para mejorar la claridad con tu equipo.</p>
+                                    <p className="font-bold text-gray-500 text-lg">{t('dash.empty.title')}</p>
+                                    <p className="text-gray-400 text-sm">{t('dash.empty.desc')}</p>
                                 </div>
-                                <button onClick={onCreateNew} className="text-primary font-bold hover:underline">Crear mi primer acuerdo</button>
+                                <button onClick={onCreateNew} className="text-primary font-bold hover:underline">{t('dash.empty.btn')}</button>
                             </div>
                         ) : (
                             agreements.map((agreement) => (
@@ -311,32 +313,32 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                                 {agreements.length > 0 ? 'sentiment_satisfied' : 'rocket_launch'}
                             </span>
                         </div>
-                        <h3 className="text-lg font-bold mb-1 opacity-90">Mi Bienestar</h3>
+                        <h3 className="text-lg font-bold mb-1 opacity-90">{t('dash.widget.wellbeing')}</h3>
 
                         {agreements.length > 0 ? (
                             <>
                                 <div className="flex items-end gap-2 mb-4">
                                     <span className="text-5xl font-black">100%</span>
-                                    <span className="text-sm font-bold mb-2 opacity-80">Claridad</span>
+                                    <span className="text-sm font-bold mb-2 opacity-80">{t('dash.widget.clarity')}</span>
                                 </div>
                                 <div className="w-full bg-white/20 h-2 rounded-full overflow-hidden mb-4">
                                     <div className="bg-white h-full w-full rounded-full"></div>
                                 </div>
                                 <p className="text-sm font-medium opacity-90 leading-relaxed">
-                                    ¡Todo listo! Estás alineado y listo para colaborar.
+                                    {t('dash.widget.ready')}
                                 </p>
                             </>
                         ) : (
                             <>
                                 <div className="flex items-end gap-2 mb-4">
                                     <span className="text-5xl font-black">--</span>
-                                    <span className="text-sm font-bold mb-2 opacity-80">Por iniciar</span>
+                                    <span className="text-sm font-bold mb-2 opacity-80">{t('dash.widget.tostart')}</span>
                                 </div>
                                 <div className="w-full bg-white/20 h-2 rounded-full overflow-hidden mb-4">
                                     <div className="bg-white h-full w-[5%] rounded-full"></div>
                                 </div>
                                 <p className="text-sm font-medium opacity-90 leading-relaxed">
-                                    Aún no hay datos. Crea tu primer <strong>Acuerdo Vivo</strong>.
+                                    {t('dash.widget.nodata')}
                                 </p>
                             </>
                         )}
@@ -344,7 +346,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
 
                     {/* Quick Actions */}
                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                        <h3 className="text-lg font-bold text-text-n900 mb-4">Herramientas Personales</h3>
+                        <h3 className="text-lg font-bold text-text-n900 mb-4">{t('dash.tools.title')}</h3>
                         <div className="space-y-3">
                             <button
                                 onClick={toggleFocusMode}
@@ -355,10 +357,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                                 </div>
                                 <div>
                                     <span className="block font-bold text-text-n900 text-sm">
-                                        {focusModeActive ? 'Foco Activo (59:00)' : 'Iniciar Modo Foco'}
+                                        {focusModeActive ? t('dash.tools.focus.active') : t('dash.tools.focus.start')}
                                     </span>
                                     <span className="block text-xs text-gray-500">
-                                        {focusModeActive ? 'Silenciando notificaciones' : 'Silenciar notificaciones por 1h'}
+                                        {focusModeActive ? t('dash.tools.focus.muting') : t('dash.tools.focus.desc')}
                                     </span>
                                 </div>
                             </button>
@@ -367,8 +369,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                                     <span className="material-symbols-outlined">psychology</span>
                                 </div>
                                 <div>
-                                    <span className="block font-bold text-text-n900 text-sm">Consultar Clarity Cards</span>
-                                    <span className="block text-xs text-gray-500">Guías visuales de comunicación</span>
+                                    <span className="block font-bold text-text-n900 text-sm">{t('dash.tools.clarity.title')}</span>
+                                    <span className="block text-xs text-gray-500">{t('dash.tools.clarity.desc')}</span>
                                 </div>
                             </button>
                         </div>
@@ -383,7 +385,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                         </div>
                         <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
-                                <h4 className="font-bold text-text-n900 text-lg">Tip del Día</h4>
+                                <h4 className="font-bold text-text-n900 text-lg">{t('dash.tip.title')}</h4>
                                 <span className="bg-secondary-s3/10 text-secondary-s3 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Inclusión</span>
                             </div>
                             <p className="text-sm text-gray-600 leading-relaxed font-medium">
@@ -403,16 +405,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                         {tipStatus === 'sending' ? (
                             <>
                                 <span className="material-symbols-outlined text-sm animate-spin">refresh</span>
-                                <span>Enviando...</span>
+                                <span>{t('dash.tip.btn.sending')}</span>
                             </>
                         ) : tipStatus === 'success' ? (
                             <>
                                 <span className="material-symbols-outlined text-lg">check_circle</span>
-                                <span>¡Enviado!</span>
+                                <span>{t('dash.tip.btn.success')}</span>
                             </>
                         ) : (
                             <>
-                                <span>Enviar Tip al Equipo</span>
+                                <span>{t('dash.tip.btn.idle')}</span>
                                 <span className="material-symbols-outlined text-lg">send</span>
                             </>
                         )}

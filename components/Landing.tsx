@@ -10,7 +10,7 @@ interface LandingProps {
 }
 
 const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -38,19 +38,19 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
               onClick={() => onNavigate(View.MISSION)}
               className="text-base font-bold hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary underline-offset-4 bg-transparent border-none p-0 cursor-pointer"
             >
-              Misión
+              {t('landing.nav.mission')}
             </button>
             <button
               onClick={() => scrollToSection('pilares')}
               className="text-base font-bold hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary underline-offset-4 bg-transparent border-none p-0 cursor-pointer"
             >
-              Pilares
+              {t('landing.nav.pillars')}
             </button>
             <button
               onClick={() => scrollToSection('herramientas')}
               className="text-base font-bold hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary underline-offset-4 bg-transparent border-none p-0 cursor-pointer"
             >
-              Herramientas
+              {t('landing.nav.tools')}
             </button>
           </nav>
           <div className="flex items-center gap-4 shrink-0">
@@ -73,7 +73,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
               </div>
             </div>
             <button onClick={onStart} className="bg-primary text-white px-5 py-2 md:px-8 md:py-2.5 text-sm md:text-base font-bold rounded-full hover:shadow-lg transition-all active:scale-95 whitespace-nowrap">
-              Empezar
+              {t('landing.nav.start')}
             </button>
           </div>
         </div>
@@ -88,17 +88,17 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                 </span>
-                Innovación Neurodiversa
+                {t('landing.hero.badge')}
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.05] tracking-tight text-text-n900 text-balance">
-                De la intención a la práctica
+                {t('landing.hero.title')}
               </h2>
               <p className="text-lg md:text-2xl text-text-n900/80 leading-relaxed max-w-xl text-balance">
-                Una plataforma digital diseñada para la inclusión neurodiversa y acuerdos operativos reales. Accesible, clara y construida para humanos.
+                {t('landing.hero.subtitle')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 md:gap-5">
                 <button onClick={onStart} className="h-14 md:h-16 px-8 md:px-10 bg-primary text-white text-base md:text-lg font-bold rounded-full hover:shadow-xl hover:-translate-y-1 transition-all w-full sm:w-auto">
-                  Crear mi cuenta
+                  {t('landing.hero.cta')}
                 </button>
 
               </div>
@@ -117,9 +117,9 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
 
         <section className="py-24 scroll-mt-28" id="pilares">
           <div className="flex flex-col gap-6 mb-16">
-            <h3 className="text-4xl font-bold tracking-tight">Nuestros Pilares</h3>
+            <h3 className="text-4xl font-bold tracking-tight">{t('landing.pillars.title')}</h3>
             <p className="text-text-n900/70 max-w-2xl text-xl leading-relaxed">
-              PACTO reduce la carga cognitiva priorizando la estructura visual y la seguridad psicológica.
+              {t('landing.pillars.subtitle')}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -128,9 +128,9 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
                 <span className="material-symbols-outlined text-4xl">shield_with_heart</span>
               </div>
               <div>
-                <h4 className="text-2xl font-bold mb-4 text-text-n900">Seguridad Psicológica</h4>
+                <h4 className="text-2xl font-bold mb-4 text-text-n900">{t('landing.pillars.1.title')}</h4>
                 <p className="text-text-n900/70 text-lg leading-relaxed">
-                  Creamos ciclos de retroalimentación seguros donde cada miembro comparte sus necesidades cognitivas.
+                  {t('landing.pillars.1.desc')}
                 </p>
               </div>
             </div>
@@ -139,9 +139,9 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
                 <span className="material-symbols-outlined text-4xl">account_tree</span>
               </div>
               <div>
-                <h4 className="text-2xl font-bold mb-4 text-text-n900">Claridad Operativa</h4>
+                <h4 className="text-2xl font-bold mb-4 text-text-n900">{t('landing.pillars.2.title')}</h4>
                 <p className="text-text-n900/70 text-lg leading-relaxed">
-                  Eliminamos la ambigüedad. Definimos expectativas claras y canales efectivos para todos.
+                  {t('landing.pillars.2.desc')}
                 </p>
               </div>
             </div>
@@ -150,9 +150,9 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
                 <span className="material-symbols-outlined text-4xl">neurology</span>
               </div>
               <div>
-                <h4 className="text-2xl font-bold mb-4 text-text-n900">Neuro-Inclusión</h4>
+                <h4 className="text-2xl font-bold mb-4 text-text-n900">{t('landing.pillars.3.title')}</h4>
                 <p className="text-text-n900/70 text-lg leading-relaxed">
-                  Herramientas creadas para acomodar TDAH, Autismo y diversos estilos de procesamiento.
+                  {t('landing.pillars.3.desc')}
                 </p>
               </div>
             </div>
@@ -161,9 +161,9 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
 
         <section className="py-20 scroll-mt-28" id="herramientas">
           <div className="flex flex-col gap-4 mb-12 text-center">
-            <h3 className="text-4xl font-bold tracking-tight">Herramientas Visuales</h3>
+            <h3 className="text-4xl font-bold tracking-tight">{t('landing.tools.title')}</h3>
             <p className="text-text-n900/70 text-xl leading-relaxed max-w-3xl mx-auto">
-              Diseñamos interfaces que reducen el ruido y maximizan la claridad.
+              {t('landing.tools.subtitle')}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -172,24 +172,24 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
                 <div className="absolute inset-0 bg-primary/5"></div>
                 <span className="material-symbols-outlined text-6xl text-primary/20">dashboard</span>
               </div>
-              <h4 className="font-bold text-xl mb-2">Canvas de Acuerdos</h4>
-              <p className="text-gray-600 text-sm">Visualiza todas las normas operativas en un solo lugar accesible.</p>
+              <h4 className="font-bold text-xl mb-2">{t('landing.tools.1.title')}</h4>
+              <p className="text-gray-600 text-sm">{t('landing.tools.1.desc')}</p>
             </div>
             <div className="bg-card-bg border border-gray-border rounded-2xl p-6 hover:-translate-y-1 transition-transform">
               <div className="h-40 bg-white rounded-xl mb-6 border border-gray-200 flex items-center justify-center overflow-hidden relative">
                 <div className="absolute inset-0 bg-p1/10"></div>
                 <span className="material-symbols-outlined text-6xl text-p1/40">style</span>
               </div>
-              <h4 className="font-bold text-xl mb-2">Kits de Claridad</h4>
-              <p className="text-gray-600 text-sm">Tarjetas pre-diseñadas para resolver conflictos comunes de comunicación.</p>
+              <h4 className="font-bold text-xl mb-2">{t('landing.tools.2.title')}</h4>
+              <p className="text-gray-600 text-sm">{t('landing.tools.2.desc')}</p>
             </div>
             <div className="bg-card-bg border border-gray-border rounded-2xl p-6 hover:-translate-y-1 transition-transform">
               <div className="h-40 bg-white rounded-xl mb-6 border border-gray-200 flex items-center justify-center overflow-hidden relative">
                 <div className="absolute inset-0 bg-accent-warm/5"></div>
                 <span className="material-symbols-outlined text-6xl text-accent-warm/20">replay</span>
               </div>
-              <h4 className="font-bold text-xl mb-2">Rituales de Replay</h4>
-              <p className="text-gray-600 text-sm">Estructuras para reuniones que aseguran que todos estén alineados.</p>
+              <h4 className="font-bold text-xl mb-2">{t('landing.tools.3.title')}</h4>
+              <p className="text-gray-600 text-sm">{t('landing.tools.3.desc')}</p>
             </div>
           </div>
         </section>
@@ -198,10 +198,10 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
           <div className="relative bg-primary rounded-[3rem] p-12 md:p-24 overflow-hidden text-center text-white shadow-2xl">
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)", backgroundSize: '60px 60px' }}></div>
             <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center gap-10">
-              <h3 className="text-4xl md:text-6xl font-bold leading-tight">¿Listo para construir una cultura verdaderamente inclusiva?</h3>
-              <p className="text-white/80 text-2xl">Únete a empresas que ya usan PACTO para mejorar la claridad y la empatía operativa.</p>
+              <h3 className="text-4xl md:text-6xl font-bold leading-tight">{t('landing.cta.title')}</h3>
+              <p className="text-white/80 text-2xl">{t('landing.cta.subtitle')}</p>
               <button onClick={onStart} className="bg-white text-primary px-12 py-6 rounded-full font-bold text-xl hover:shadow-2xl transition-all hover:-translate-y-1">
-                Empezar gratis hoy
+                {t('landing.cta.btn')}
               </button>
               <p className="text-base font-medium text-white/60">Preparado para WCAG 2.2 • Diseño Universal</p>
             </div>
@@ -225,7 +225,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
                 </div>
               </div>
               <p className="text-gray-500 text-sm leading-relaxed max-w-sm">
-                Plataforma de acuerdos vivos para la inclusión laboral neurodiversa. Diseñamos estructuras que permiten a cada mente trabajar mejor.
+                {t('landing.footer.desc')}
               </p>
             </div>
 
