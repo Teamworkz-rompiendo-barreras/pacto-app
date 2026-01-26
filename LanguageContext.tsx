@@ -1,6 +1,9 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-type Language = 'es-la' | 'en-us' | 'pt-br';
+
+// Allow any string to support the full list from SUPPORTED_LANGUAGES, 
+// allows 'es-la', 'en-us' as legacy or full names.
+type Language = string;
 
 interface LanguageContextType {
   language: Language;
@@ -8,7 +11,7 @@ interface LanguageContextType {
   t: (key: string) => string;
 }
 
-const translations: Record<Language, Record<string, string>> = {
+const translations: Record<string, Record<string, string>> = {
   'es-la': {
     'settings.title': 'Ajustes de Idioma y Región',
     'settings.desc': 'Personaliza tu experiencia en PACTO para que se adapte a tu ubicación y preferencias de trabajo.',
@@ -64,8 +67,10 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('es-la');
 
+
   const t = (key: string): string => {
-    return translations[language][key] || key;
+    const langDict = translations[language] || translations['es-la'] || {};
+    return langDict[key] || key;
   };
 
   return (

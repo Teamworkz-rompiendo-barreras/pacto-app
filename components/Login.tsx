@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AccessibilitySettings } from '../types';
 import { authService } from '../services/authService';
-import { SUPPORTED_LANGUAGES } from '../types';
+import { useLanguage } from '../LanguageContext';
 
 interface LoginProps {
     onLogin: (name: string, settings: AccessibilitySettings) => void;
@@ -18,7 +18,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
     const [companyName, setCompanyName] = useState('');
     const [invitationCode, setInvitationCode] = useState('');
     const [phone, setPhone] = useState('');
-    const [language, setLanguage] = useState(SUPPORTED_LANGUAGES[0]);
+    const { language } = useLanguage();
 
     // Pricing States
     const [selectedPlanTier, setSelectedPlanTier] = useState<'SEED' | 'GROWTH' | 'ENTERPRISE'>('SEED');
@@ -284,18 +284,6 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                                             placeholder="+34 600..."
                                         />
                                     </div>
-                                    <div className="space-y-1">
-                                        <label className="text-sm font-bold text-text-n900">Idioma</label>
-                                        <select
-                                            value={language}
-                                            onChange={(e) => setLanguage(e.target.value)}
-                                            className="w-full p-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium bg-white"
-                                        >
-                                            {SUPPORTED_LANGUAGES.map(lang => (
-                                                <option key={lang} value={lang}>{lang}</option>
-                                            ))}
-                                        </select>
-                                    </div>
                                 </div>
                             </>
                         )}
@@ -489,7 +477,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
             <div className="mt-8 text-center px-8">
                 <p className="text-sm italic opacity-60">"De la intención a la práctica: Acuerdos vivos para equipos humanos."</p>
             </div>
-        </div>
+        </div >
     );
 };
 

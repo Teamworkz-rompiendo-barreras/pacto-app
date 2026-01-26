@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { View } from '../types';
+import { View, SUPPORTED_LANGUAGES } from '../types';
+import { useLanguage } from '../LanguageContext';
 
 interface LandingProps {
   onStart: () => void;
@@ -9,6 +10,7 @@ interface LandingProps {
 }
 
 const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => {
+  const { language, setLanguage } = useLanguage();
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -52,6 +54,24 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
             </button>
           </nav>
           <div className="flex items-center gap-4 shrink-0">
+            <div className="hidden md:block relative group">
+              <button className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-primary transition-colors">
+                <span className="material-symbols-outlined text-[20px]">language</span>
+                <span className="max-w-[100px] truncate">{language}</span>
+                <span className="material-symbols-outlined text-[16px]">expand_more</span>
+              </button>
+              <div className="absolute top-full right-0 mt-2 w-56 max-h-80 overflow-y-auto bg-white rounded-xl shadow-xl border border-gray-100 hidden group-hover:block p-2 z-50">
+                {SUPPORTED_LANGUAGES.map(lang => (
+                  <button
+                    key={lang}
+                    onClick={() => setLanguage(lang)}
+                    className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${language === lang ? 'bg-primary/10 text-primary' : 'hover:bg-gray-50 text-gray-600'}`}
+                  >
+                    {lang}
+                  </button>
+                ))}
+              </div>
+            </div>
             <button onClick={onStart} className="bg-primary text-white px-5 py-2 md:px-8 md:py-2.5 text-sm md:text-base font-bold rounded-full hover:shadow-lg transition-all active:scale-95 whitespace-nowrap">
               Empezar
             </button>
