@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, UserProfile } from '../types';
+import { useLanguage } from '../LanguageContext';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -12,23 +13,24 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCount = 0, onNavigate, onLogout, onOpenNotifications }) => {
+    const { t } = useLanguage();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const menuItems = [
-        { id: View.DASHBOARD, label: 'Inicio', icon: 'dashboard' },
-        { id: View.MY_AGREEMENTS, label: 'Mis Acuerdos', icon: 'handshake' },
-        { id: View.MY_COMMITMENTS, label: 'Mis Compromisos', icon: 'task_alt' },
-        { id: View.TEAM, label: 'Mi Equipo', icon: 'groups' },
-        { id: View.RITUALS, label: 'Rituales', icon: 'event_repeat' },
-        { id: View.ACHIEVEMENTS, label: 'Logros', icon: 'emoji_events' },
-        { id: View.INCLUSION_BOX, label: 'Buzón', icon: 'mark_email_unread' },
-        { id: View.REPORTS, label: 'Reportes', icon: 'bar_chart' },
-        { id: View.CLARITY_CARDS, label: 'Kits de Claridad', icon: 'style' },
+        { id: View.DASHBOARD, label: t('nav.dashboard'), icon: 'dashboard' },
+        { id: View.MY_AGREEMENTS, label: t('nav.my_agreements'), icon: 'handshake' },
+        { id: View.MY_COMMITMENTS, label: t('nav.my_commitments'), icon: 'task_alt' },
+        { id: View.TEAM, label: t('nav.team'), icon: 'groups' },
+        { id: View.RITUALS, label: t('nav.rituals'), icon: 'event_repeat' },
+        { id: View.ACHIEVEMENTS, label: t('nav.achievements'), icon: 'emoji_events' },
+        { id: View.INCLUSION_BOX, label: t('nav.inbox'), icon: 'mark_email_unread' },
+        { id: View.REPORTS, label: t('nav.reports'), icon: 'bar_chart' },
+        { id: View.CLARITY_CARDS, label: t('nav.clarity_kits'), icon: 'style' },
     ];
 
     const bottomItems = [
-        { id: View.PROFILE, label: 'Mi Perfil', icon: 'person' },
-        { id: View.HELP_CENTER, label: 'Ayuda', icon: 'help' },
+        { id: View.PROFILE, label: t('nav.profile'), icon: 'person' },
+        { id: View.HELP_CENTER, label: t('nav.help'), icon: 'help' },
     ];
 
     if (!user) return <>{children}</>;
@@ -81,7 +83,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCoun
                         className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 font-bold text-sm transition-all"
                     >
                         <span className="material-symbols-outlined text-[20px]">logout</span>
-                        Cerrar Sesión
+                        {t('nav.logout')}
                     </button>
                 </div>
             </aside>
@@ -143,7 +145,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCoun
                             className="w-full flex items-center gap-3 p-4 rounded-xl bg-red-50 text-red-600 font-bold justify-center"
                         >
                             <span className="material-symbols-outlined">logout</span>
-                            Cerrar Sesión
+                            {t('nav.logout')}
                         </button>
                     </div>
                 </div>

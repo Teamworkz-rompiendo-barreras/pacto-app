@@ -134,7 +134,7 @@ const LanguageRegionSettings: React.FC<LanguageRegionSettingsProps> = ({ onBack,
                                         <option disabled value="">(UTC-05:00) {t('timezone.select')}</option>
                                         {SUPPORTED_TIMEZONES.map((tz) => (
                                             <option key={tz.value} value={tz.value}>
-                                                {tz.label}
+                                                ({tz.value.replace('utc', 'UTC').replace('-', '-').replace('+', '+')}:00) {t(`timezone.${tz.value}`)}
                                             </option>
                                         ))}
                                     </select>
