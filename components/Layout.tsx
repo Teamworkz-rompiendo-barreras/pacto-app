@@ -14,6 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onNavigate
 
     const menuItems = [
         { id: View.DASHBOARD, label: 'Inicio', icon: 'dashboard' },
+        { id: View.MY_AGREEMENTS, label: 'Mis Acuerdos', icon: 'handshake' },
         { id: View.MY_COMMITMENTS, label: 'Mis Compromisos', icon: 'task_alt' },
         { id: View.TEAM, label: 'Mi Equipo', icon: 'groups' },
         { id: View.RITUALS, label: 'Rituales', icon: 'event_repeat' },

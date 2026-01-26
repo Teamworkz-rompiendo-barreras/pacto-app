@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, UserProfile, AccessibilitySettings, Ritual, Agreement, RitualHistoryItem } from './types';
+import { View, UserProfile, AccessibilitySettings, Ritual, Agreement, RitualHistoryItem, Notification } from './types';
 import { LanguageProvider } from './LanguageContext';
 import { ToastProvider } from './context/ToastContext';
 import { authService } from './services/authService';
 import { agreementService } from './services/agreementService';
 import { ritualService } from './services/ritualService';
+import { notificationService } from './services/notificationService';
 
 // Components
 import Landing from './components/Landing';
@@ -17,6 +18,7 @@ import MyCommitments from './components/MyCommitments';
 import AgreementForm from './components/AgreementForm';
 import AgreementDetails from './components/AgreementDetails';
 import EditAgreement from './components/EditAgreement';
+import MyAgreements from './components/MyAgreements';
 import Profile from './components/Profile';
 import PublicProfile from './components/PublicProfile';
 import TeamDirectory from './components/TeamDirectory';
@@ -96,22 +98,37 @@ const AppContent: React.FC = () => {
   const [rituals, setRituals] = useStickyState<Ritual[]>(DEFAULT_RITUALS, `${userKey}_rituals`);
   const [ritualHistory, setRitualHistory] = useState<RitualHistoryItem[]>([]);
 
+  // Notifications State (New)
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
   // Load Initial Data
   useEffect(() => {
     const loadData = async () => {
       if (user) {
-        const [loadedAgreements, loadedHistory] = await Promise.all([
+        const [loadedAgreements, loadedHistory, loadedNotifications] = await Promise.all([
           agreementService.getAgreements(user.id, user.role),
-          ritualService.getHistory(user.id)
+          ritualService.getHistory(user.id),
+          notificationService.getNotifications(user.id)
         ]);
         setAgreements(loadedAgreements);
         setRitualHistory(loadedHistory);
+        setNotifications(loadedNotifications);
       } else {
         setAgreements([]);
         setRitualHistory([]);
+        setNotifications([]);
       }
     };
     loadData();
+
+    // Poll for new notifications every 10 seconds (Simple real-time sim)
+    const interval = setInterval(() => {
+      if (user) {
+        notificationService.getNotifications(user.id).then(setNotifications);
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, [user]);
 
   // Estados temporales (UI)
@@ -264,6 +281,37 @@ const AppContent: React.FC = () => {
             }}
             onExploreLibrary={() => navigateTo(View.LIBRARY)}
             onNavigate={navigateTo}
+            // NEW: Notification Props
+            notifications={notifications}
+            onSendTip={async (tip) => {
+              if (user) {
+                await notificationService.sendNotification(
+                  { name: user.name, avatar: user.avatar },
+                  'tip',
+                  'Nuevo Tip de Inclusión',
+                  `${user.name.split(' ')[0]} compartió: "${tip}"`,
+                  'ALL'
+                );
+                // Refresh instantly
+                notificationService.getNotifications(user.id).then(setNotifications);
+              }
+            }}
+          />
+        );
+
+      case View.MY_AGREEMENTS:
+        return (
+          <MyAgreements
+            agreements={agreements}
+            onCreateNew={() => { setAgreementTemplate(undefined); navigateTo(View.NEW_AGREEMENT); }}
+            onViewAgreement={(agreement) => {
+              setSelectedAgreement(agreement);
+              navigateTo(View.AGREEMENT_DETAILS);
+            }}
+            onEditAgreement={(agreement) => {
+              setSelectedAgreement(agreement);
+              navigateTo(View.EDIT_AGREEMENT);
+            }}
           />
         );
 
@@ -417,7 +465,17 @@ const AppContent: React.FC = () => {
         return <WeeklySummary onBack={() => navigateTo(View.REPORTS)} onNavigateToCards={() => navigateTo(View.CLARITY_CARDS)} />;
 
       case View.NOTIFICATIONS:
-        return <div className="p-6 md:p-10 w-full"><Notifications onBack={() => navigateTo(View.DASHBOARD)} onConfigure={() => navigateTo(View.NOTIFICATION_SETTINGS)} onViewItem={(type) => navigateTo(type === 'weekly' ? View.WEEKLY_SUMMARY : View.DASHBOARD)} /></div>;
+        return (
+          <div className="p-6 md:p-10 w-full">
+            <Notifications
+              notifications={notifications}
+              onBack={() => navigateTo(View.DASHBOARD)}
+              onConfigure={() => navigateTo(View.NOTIFICATION_SETTINGS)}
+              onViewItem={(type) => navigateTo(type === 'weekly' ? View.WEEKLY_SUMMARY : View.DASHBOARD)}
+              onMarkRead={() => user && notificationService.markAsRead(user.id).then(() => notificationService.getNotifications(user.id).then(setNotifications))}
+            />
+          </div>
+        );
 
       case View.NOTIFICATION_SETTINGS:
         return <NotificationPreferences onBack={() => navigateTo(View.NOTIFICATIONS)} onSave={() => navigateTo(View.NOTIFICATIONS)} />;
@@ -484,6 +542,8 @@ const AppContent: React.FC = () => {
             onEditAgreement={() => navigateTo(View.EDIT_AGREEMENT)}
             onExploreLibrary={() => navigateTo(View.LIBRARY)}
             onNavigate={navigateTo}
+            notifications={notifications}
+            onSendTip={() => { }}
           />
         ) : <Landing onStart={() => navigateTo(View.LOGIN)} onContact={() => navigateTo(View.CONTACT)} onNavigate={navigateTo} />;
     }

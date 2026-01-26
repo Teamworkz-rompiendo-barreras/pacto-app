@@ -1,5 +1,7 @@
 
 import React, { useState } from 'react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 import { Agreement } from '../types';
 
@@ -106,6 +108,7 @@ const ClarityCards: React.FC<ClarityCardsProps> = ({ onGoDashboard, onCreateNew,
   const [selectedCard, setSelectedCard] = useState<typeof CARDS[0] | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('Todas');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const handleCardClick = (card: typeof CARDS[0]) => {
     setSelectedCard(card);
@@ -115,220 +118,135 @@ const ClarityCards: React.FC<ClarityCardsProps> = ({ onGoDashboard, onCreateNew,
     alert("Enlace al Kit de Claridad copiado al portapapeles.");
   };
 
-  const handleDownload = (card: typeof CARDS[0]) => {
-    // Generar contenido HTML profesional
-    const content = `<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PACTO - ${card.title}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <style>
-        :root {
-            --primary: #4b37a4;
-            --text: #111827;
-            --gray-light: #f3f4f6;
-            --gray-text: #4b5563;
-        }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: var(--text);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #fff;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px;
-        }
-        header {
-            border-bottom: 2px solid var(--gray-light);
-            padding-bottom: 30px;
-            margin-bottom: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-        .logo {
-            color: var(--primary);
-            font-weight: 900;
-            font-size: 24px;
-            letter-spacing: -1px;
-            text-transform: uppercase;
-        }
-        .meta-tag {
-            background: #eee;
-            padding: 4px 12px;
-            border-radius: 99px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--gray-text);
-        }
-        h1 {
-            font-size: 42px;
-            font-weight: 800;
-            margin: 20px 0 10px 0;
-            color: var(--text);
-            line-height: 1.1;
-        }
-        .lead {
-            font-size: 18px;
-            color: var(--gray-text);
-            font-weight: 500;
-            margin-bottom: 0;
-        }
-        section {
-            margin-bottom: 50px;
-        }
-        .section-title {
-            color: var(--primary);
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .description-box {
-            font-size: 18px;
-            line-height: 1.8;
-        }
-        .step {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-        .step-number {
-            width: 32px;
-            height: 32px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-        .step-content h4 {
-            margin: 0 0 5px 0;
-            font-size: 16px;
-            font-weight: 700;
-        }
-        .step-content p {
-            margin: 0;
-            font-size: 15px;
-            color: var(--gray-text);
-        }
-        .tip-box {
-            background: #fdf2f8; /* Pink-ish for PACTO accent vibe or keep purple light */
-            background-color: rgba(75, 55, 164, 0.05);
-            border-left: 4px solid var(--primary);
-            padding: 24px;
-            border-radius: 0 12px 12px 0;
-            display: flex;
-            gap: 16px;
-        }
-        .footer {
-            margin-top: 60px;
-            border-top: 1px solid var(--gray-light);
-            padding-top: 30px;
-            text-align: center;
-            font-size: 12px;
-            color: #9ca3af;
-        }
-        @media print {
-            body { -webkit-print-color-adjust: exact; }
-            .no-print { display: none; }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
+  const handleDownload = async (card: typeof CARDS[0]) => {
+    setIsDownloading(true);
+
+    // 1. Crear el elemento temporal para el PDF
+    const printContainer = document.createElement('div');
+    // Estilos inline críticos para asegurar que html2canvas capture todo correctamente
+    printContainer.style.width = '800px';
+    printContainer.style.padding = '40px';
+    printContainer.style.backgroundColor = '#ffffff';
+    printContainer.style.position = 'absolute';
+    printContainer.style.top = '-9999px';
+    printContainer.style.left = '-9999px';
+
+    // Contenido HTML (Sin <html>/<body> tags externos, solo el contenido del body y estilos)
+    printContainer.innerHTML = `
+      <style>
+        .pdf-container { font-family: sans-serif; color: #111827; line-height: 1.6; }
+        .pdf-header { border-bottom: 2px solid #f3f4f6; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .pdf-logo { color: #4b37a4; font-weight: 900; font-size: 24px; text-transform: uppercase; }
+        .pdf-meta { display: flex; gap: 10px; margin-top: 5px; }
+        .pdf-tag { background: #eee; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #4b5563; }
+        .pdf-title { font-size: 36px; font-weight: 800; margin: 10px 0; color: #111827; line-height: 1.1; }
+        .pdf-lead { font-size: 16px; color: #4b5563; font-weight: 500; margin-bottom: 0; }
+        .pdf-divider { height: 4px; width: 60px; background: #4b37a4; border-radius: 2px; margin-top: 20px; }
+        .pdf-section { margin-top: 40px; }
+        .pdf-section-title { color: #4b37a4; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .pdf-box { font-size: 16px; line-height: 1.8; }
+        .pdf-step { display: flex; gap: 15px; margin-bottom: 20px; }
+        .pdf-step-num { width: 28px; height: 28px; background: #4b37a4; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; font-size: 14px; }
+        .pdf-step-content h4 { margin: 0 0 4px 0; font-size: 15px; font-weight: 700; }
+        .pdf-step-content p { margin: 0; font-size: 14px; color: #4b5563; }
+        .pdf-tip { background: #fdf2f8; border-left: 4px solid #4b37a4; padding: 20px; border-radius: 0 10px 10px 0; display: flex; gap: 15px; margin-top: 40px; }
+        .pdf-footer { margin-top: 50px; border-top: 1px solid #f3f4f6; padding-top: 20px; text-align: center; font-size: 10px; color: #9ca3af; }
+      </style>
+      
+      <div class="pdf-container">
+        <div class="pdf-header">
             <div>
-                <div class="logo">PACTO</div>
-                <div style="margin-top: 10px; display: flex; gap: 10px;">
-                    <span class="meta-tag">${card.category}</span>
-                    <span class="meta-tag" style="background: rgba(75, 55, 164, 0.1); color: var(--primary);">${card.type}</span>
+                <div class="pdf-logo">PACTO</div>
+                <div class="pdf-meta">
+                    <span class="pdf-tag">${card.category}</span>
+                    <span class="pdf-tag" style="background: rgba(75, 55, 164, 0.1); color: #4b37a4;">${card.type}</span>
                 </div>
             </div>
-            <div style="text-align: right;">
-                <span class="material-symbols-outlined" style="font-size: 48px; color: var(--primary); opacity: 0.2;">${card.icon}</span>
-            </div>
-        </header>
+        </div>
 
-        <h1>${card.title}</h1>
-        <p class="lead">${card.desc}</p>
-        <div style="height: 4px; width: 60px; background: var(--primary); border-radius: 2px; margin-top: 30px;"></div>
+        <div class="pdf-title">${card.title}</div>
+        <div class="pdf-lead">${card.desc}</div>
+        <div class="pdf-divider"></div>
 
-        <div style="margin-top: 50px;"></div>
+        <div class="pdf-section">
+            <div class="pdf-section-title">OBJETIVO</div>
+            <div class="pdf-box">${card.fullDesc}</div>
+        </div>
 
-        <section>
-            <div class="section-title">
-                <span class="material-symbols-outlined" style="font-size: 18px;">flag</span>
-                Objetivo
-            </div>
-            <div class="description-box">
-                ${card.fullDesc}
-            </div>
-        </section>
-
-        <section>
-            <div class="section-title">
-                <span class="material-symbols-outlined" style="font-size: 18px;">format_list_numbered</span>
-                Cómo usar esta herramienta
-            </div>
+        <div class="pdf-section">
+            <div class="pdf-section-title">CÓMO USAR ESTA HERRAMIENTA</div>
             <div>
                 ${card.steps?.map((step, i) => `
-                <div class="step">
-                    <div class="step-number">${i + 1}</div>
-                    <div class="step-content">
+                <div class="pdf-step">
+                    <div class="pdf-step-num">${i + 1}</div>
+                    <div class="pdf-step-content">
                         <h4>${step.title}</h4>
                         <p>${step.desc}</p>
                     </div>
                 </div>
                 `).join('')}
             </div>
-        </section>
+        </div>
 
-        <section>
-            <div class="tip-box">
-                <span class="material-symbols-outlined" style="color: var(--primary);">lightbulb</span>
-                <div>
-                    <strong style="color: var(--primary); display: block; margin-bottom: 5px;">Tip de Inclusión</strong>
-                    <em style="color: var(--text); font-size: 14px;">"${card.tip}"</em>
-                </div>
+        <div class="pdf-tip">
+            <div>
+                <strong style="color: #4b37a4; display: block; margin-bottom: 5px;">TIP DE INCLUSIÓN</strong>
+                <em style="color: #111827; font-size: 14px;">"${card.tip}"</em>
             </div>
-        </section>
+        </div>
 
-        <div class="footer">
+        <div class="pdf-footer">
             <p>Generado por PACTO · Herramientas para equipos neurodiversos · ${new Date().getFullYear()}</p>
         </div>
-    </div>
-    <script>
-        // Auto-open print dialog for convenience
-        // window.print();
-    </script>
-</body>
-</html>`;
+      </div>
+    `;
 
-    // Crear Blob y descargar
-    const element = document.createElement("a");
-    const file = new Blob([content], { type: 'text/html' });
-    element.href = URL.createObjectURL(file);
-    element.download = `PACTO_Guia_${card.title.replace(/\s+/g, '_')}.html`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+    document.body.appendChild(printContainer);
+
+    try {
+      // 2. Generar el Canvas desde el HTML
+      const canvas = await html2canvas(printContainer, {
+        scale: 2, // Mayor calidad
+        useCORS: true, // Para imágenes si las hubiera
+        logging: false
+      });
+
+      // 3. Crear PDF con jsPDF
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Primera página
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      // Páginas adicionales si el contenido es muy largo (aunque las tarjetas suelen ser cortas)
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save(`PACTO_Guia_${card.title.replace(/\s+/g, '_')}.pdf`);
+
+    } catch (error) {
+      console.error("Error generando PDF:", error);
+      alert("Hubo un error al generar el PDF. Por favor intenta de nuevo.");
+    } finally {
+      document.body.removeChild(printContainer);
+      setIsDownloading(false);
+    }
   };
 
   // Lógica de filtrado combinada (Categoría + Búsqueda)
@@ -522,6 +440,7 @@ const ClarityCards: React.FC<ClarityCardsProps> = ({ onGoDashboard, onCreateNew,
               <button
                 onClick={() => setSelectedCard(null)}
                 className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors"
+                disabled={isDownloading}
               >
                 <span className="material-symbols-outlined text-3xl">close</span>
               </button>
@@ -589,10 +508,20 @@ const ClarityCards: React.FC<ClarityCardsProps> = ({ onGoDashboard, onCreateNew,
               <div className="flex flex-col sm:flex-row gap-4 mt-auto pt-8 border-t border-gray-100">
                 <button
                   onClick={() => handleDownload(selectedCard)}
-                  className="flex-1 px-6 py-4 rounded-xl border-2 border-gray-200 text-gray-600 font-semibold hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
+                  disabled={isDownloading}
+                  className="flex-1 px-6 py-4 rounded-xl border-2 border-gray-200 text-gray-600 font-semibold hover:bg-gray-50 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-wait"
                 >
-                  <span className="material-symbols-outlined text-xl">download</span>
-                  Descargar Guía
+                  {isDownloading ? (
+                    <>
+                      <span className="animate-spin material-symbols-outlined text-xl">progress_activity</span>
+                      Generando PDF...
+                    </>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined text-xl">file_download</span>
+                      Descargar PDF
+                    </>
+                  )}
                 </button>
                 <button
                   onClick={() => {

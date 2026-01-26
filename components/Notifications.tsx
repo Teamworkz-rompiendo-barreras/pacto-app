@@ -1,48 +1,47 @@
 
 import React, { useState } from 'react';
+import { Notification } from '../types';
 
 interface NotificationsProps {
+  notifications: Notification[];
   onBack: () => void;
   onMarkRead?: () => void;
   onConfigure: () => void;
-  onViewItem: (type: 'agreement' | 'ritual' | 'report' | 'accessibility' | 'weekly') => void;
+  onViewItem: (type: 'agreement' | 'ritual' | 'report' | 'accessibility' | 'weekly' | 'tip') => void;
 }
 
-const Notifications: React.FC<NotificationsProps> = ({ onBack, onMarkRead, onConfigure, onViewItem }) => {
+const Notifications: React.FC<NotificationsProps> = ({ notifications, onBack, onMarkRead, onConfigure, onViewItem }) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
 
   const handleMarkAllAsRead = () => {
     if (onMarkRead) onMarkRead();
-    const btn = document.getElementById('mark-read-btn');
-    if (btn) {
-        const originalText = btn.innerText;
-        btn.innerText = '¡Leídas!';
-        setTimeout(() => {
-            btn.innerText = originalText;
-        }, 1500);
-    }
   };
 
-  const handleLoadMore = () => {
-    setIsLoadingMore(true);
-    setTimeout(() => {
-      setIsLoadingMore(false);
-      setHasMore(false);
-    }, 1500);
+  // Helper to format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const isToday = date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+
+    if (isToday) {
+      return `Hoy, ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
+    return date.toLocaleDateString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
   };
+
+  // Group notifications by Today / Earlier could be done here, but simple list for now is better than hardcoded.
 
   return (
     <div className="flex flex-col flex-1 max-w-[800px] mx-auto w-full animate-fade-in pb-12">
-      
+
       {/* Breadcrumb / Back Navigation */}
       <div className="mb-6 md:hidden">
-        <button 
-            onClick={onBack}
-            className="flex items-center gap-2 text-gray-500 hover:text-primary transition-colors text-sm font-bold"
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-gray-500 hover:text-primary transition-colors text-sm font-bold"
         >
-            <span className="material-symbols-outlined text-lg">arrow_back</span>
-            Volver
+          <span className="material-symbols-outlined text-lg">arrow_back</span>
+          Volver
         </button>
       </div>
 
@@ -53,14 +52,13 @@ const Notifications: React.FC<NotificationsProps> = ({ onBack, onMarkRead, onCon
           <p className="text-gray-600 text-base font-normal">Gestiona tus actualizaciones y recordatorios de inclusión.</p>
         </div>
         <div className="flex flex-col items-end gap-3">
-          <button 
-            id="mark-read-btn"
+          <button
             onClick={handleMarkAllAsRead}
             className="flex items-center justify-center rounded-xl h-11 px-6 bg-primary text-white text-sm font-bold shadow-md hover:brightness-110 active:scale-95 transition-all"
           >
             Marcar todas como leídas
           </button>
-          <button 
+          <button
             onClick={onConfigure}
             className="text-primary text-sm font-bold hover:underline flex items-center gap-1 group"
           >
@@ -71,137 +69,54 @@ const Notifications: React.FC<NotificationsProps> = ({ onBack, onMarkRead, onCon
       </div>
 
       {/* Notification Content Area */}
-      <div className="flex flex-col gap-8">
-        
-        {/* Section: Hoy */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-4">
-            <h3 className="text-text-n900 text-lg font-bold tracking-tight">Hoy</h3>
-            <div className="h-px flex-1 bg-gray-200"></div>
-          </div>
+      <div className="flex flex-col gap-4">
 
-          {/* Item 0 - Weekly Summary (NEW) */}
-          <div 
-            onClick={() => onViewItem('weekly')}
-            className="group relative flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-gradient-to-r from-primary/5 to-white border border-primary/20 rounded-xl p-5 shadow-sm hover:shadow-md transition-all overflow-hidden cursor-pointer"
-          >
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-secondary-s3"></div>
-            <div className="flex items-center justify-center rounded-lg bg-secondary-s3 text-white shrink-0 size-12 group-hover:scale-110 transition-transform shadow-sm">
-              <span className="material-symbols-outlined">auto_awesome</span>
-            </div>
-            <div className="flex flex-col flex-1 gap-1 w-full">
-              <div className="flex justify-between items-center w-full">
-                <p className="text-text-n900 font-bold text-base group-hover:text-primary transition-colors">Tu Resumen Semanal está listo</p>
-                <p className="text-primary font-bold text-xs bg-primary/10 px-2 py-1 rounded">¡Nuevo!</p>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed">Descubre tus logros de la semana y tips personalizados de bienestar.</p>
-            </div>
+        {notifications.length === 0 ? (
+          <div className="text-center py-12 bg-white rounded-2xl border border-gray-100">
+            <span className="material-symbols-outlined text-6xl text-gray-200 mb-4">notifications_off</span>
+            <p className="text-gray-500 font-medium">No tienes notificaciones nuevas.</p>
           </div>
-
-          {/* Item 1 - Acuerdo */}
-          <div 
-            onClick={() => onViewItem('agreement')}
-            className="group relative flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white border border-gray-border rounded-xl p-5 shadow-sm hover:shadow-md hover:border-primary/30 transition-all overflow-hidden cursor-pointer"
-          >
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
-            <div className="flex items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0 size-12 group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined">handshake</span>
-            </div>
-            <div className="flex flex-col flex-1 gap-1 w-full">
-              <div className="flex justify-between items-center w-full">
-                <p className="text-text-n900 font-bold text-base group-hover:text-primary transition-colors">Nuevo Acuerdo Creado</p>
-                <p className="text-gray-400 text-xs font-medium">Hace 10 min</p>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed">Se ha formalizado el acuerdo de flexibilidad horaria con el equipo de diseño.</p>
-            </div>
-          </div>
-
-          {/* Item 2 - Ritual */}
-          <div 
-            onClick={() => onViewItem('ritual')}
-            className="group relative flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-blue-50/50 border border-primary/20 rounded-xl p-5 shadow-sm hover:shadow-md hover:border-primary transition-all overflow-hidden cursor-pointer"
-          >
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
-            <div className="flex items-center justify-center rounded-lg bg-primary text-white shrink-0 size-12 group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined">timer</span>
-            </div>
-            <div className="flex flex-col flex-1 gap-1 w-full">
-              <div className="flex justify-between items-center w-full">
-                <p className="text-text-n900 font-bold text-base group-hover:text-primary transition-colors">Próximo Ritual: Replay Semanal</p>
-                <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">En 15 min</span>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed">Prepara tus notas y revisa los logros de la semana. Haz clic para ver detalles.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Section: Ayer */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-4">
-            <h3 className="text-text-n900 text-lg font-bold tracking-tight">Ayer</h3>
-            <div className="h-px flex-1 bg-gray-200"></div>
-          </div>
-
-          {/* Item 3 - Reports */}
-          <div 
-            onClick={() => onViewItem('report')}
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white/60 border border-gray-200 rounded-xl p-5 hover:bg-white hover:shadow-sm transition-all cursor-pointer group"
-          >
-            <div className="flex items-center justify-center rounded-lg bg-green-100 text-green-700 shrink-0 size-12 group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined">insights</span>
-            </div>
-            <div className="flex flex-col flex-1 gap-1 w-full">
-              <div className="flex justify-between items-center w-full">
-                <p className="text-text-n900 font-bold text-base group-hover:text-primary transition-colors">Métrica Actualizada</p>
-                <p className="text-gray-400 text-xs font-medium">Ayer, 14:20</p>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed">El índice de bienestar del departamento ha subido un 5% este mes.</p>
-            </div>
-          </div>
-
-          {/* Item 4 - Accessibility */}
-          <div 
-            onClick={() => onViewItem('accessibility')}
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white/60 border border-gray-200 rounded-xl p-5 hover:bg-white hover:shadow-sm transition-all cursor-pointer group"
-          >
-            <div className="flex items-center justify-center rounded-lg bg-orange-100 text-orange-600 shrink-0 size-12 group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined">accessibility_new</span>
-            </div>
-            <div className="flex flex-col flex-1 gap-1 w-full">
-              <div className="flex justify-between items-center w-full">
-                <p className="text-text-n900 font-bold text-base group-hover:text-primary transition-colors">Recordatorio de Accesibilidad</p>
-                <p className="text-gray-400 text-xs font-medium">Ayer, 09:15</p>
-              </div>
-              <p className="text-gray-600 text-sm leading-relaxed">Recuerda añadir texto alternativo a las imágenes de tu última presentación para asegurar la inclusión de todo el equipo.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Pagination / Footer */}
-        {hasMore && (
-            <div className="mt-4 flex justify-center">
-            <button 
-                onClick={handleLoadMore}
-                disabled={isLoadingMore}
-                className="text-primary font-bold text-sm flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-primary/10 hover:bg-primary/5 transition-all disabled:opacity-50"
+        ) : (
+          notifications.map((notif) => (
+            <div
+              key={notif.id}
+              onClick={() => onViewItem(notif.type)}
+              className={`group relative flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white border ${notif.isRead ? 'border-gray-100 opacity-80' : 'border-primary/30 shadow-sm'} rounded-xl p-5 hover:shadow-md transition-all overflow-hidden cursor-pointer`}
             >
-                {isLoadingMore ? (
-                    <>
-                        <span className="material-symbols-outlined animate-spin text-lg">refresh</span>
-                        Cargando...
-                    </>
-                ) : (
-                    <>
-                        Cargar notificaciones anteriores
-                        <span className="material-symbols-outlined text-lg">expand_more</span>
-                    </>
+              {!notif.isRead && (
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+              )}
+
+              <div className={`flex items-center justify-center rounded-lg shrink-0 size-12 group-hover:scale-110 transition-transform ${notif.type === 'tip' ? 'bg-secondary-s3/10 text-secondary-s3' :
+                  notif.type === 'weekly' ? 'bg-purple-100 text-purple-600' :
+                    'bg-blue-50 text-blue-600'
+                }`}>
+                <span className="material-symbols-outlined">
+                  {notif.type === 'tip' ? 'lightbulb' :
+                    notif.type === 'weekly' ? 'auto_awesome' :
+                      notif.type === 'agreement' ? 'handshake' : 'notifications'}
+                </span>
+              </div>
+
+              <div className="flex flex-col flex-1 gap-1 w-full">
+                <div className="flex justify-between items-center w-full">
+                  <p className={`text-text-n900 font-bold text-base group-hover:text-primary transition-colors ${!notif.isRead ? 'text-black' : 'text-gray-600'}`}>
+                    {notif.title}
+                  </p>
+                  <p className="text-gray-400 text-xs font-medium whitespace-nowrap ml-2">{formatDate(notif.date)}</p>
+                </div>
+                <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">{notif.message}</p>
+                {notif.sender && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="size-5 rounded-full bg-gray-200 flex items-center justify-center text-[10px] overflow-hidden">
+                      {notif.sender.avatar ? <img src={notif.sender.avatar} alt={notif.sender.name} className="size-full object-cover" /> : notif.sender.name[0]}
+                    </div>
+                    <span className="text-xs text-gray-500 font-bold">Enviado por {notif.sender.name}</span>
+                  </div>
                 )}
-            </button>
+              </div>
             </div>
-        )}
-        
-        {!hasMore && (
-            <p className="text-center text-gray-400 text-sm font-medium mt-4">No tienes más notificaciones.</p>
+          ))
         )}
 
       </div>

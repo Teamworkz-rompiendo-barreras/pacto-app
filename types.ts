@@ -80,6 +80,7 @@ export enum View {
   LANDING = 'LANDING',
   LOGIN = 'LOGIN',
   DASHBOARD = 'DASHBOARD',
+  MY_AGREEMENTS = 'MY_AGREEMENTS',
   UPDATE_PASSWORD = 'UPDATE_PASSWORD', // Nueva vista para recuperación
   MY_COMMITMENTS = 'MY_COMMITMENTS',
   NEW_AGREEMENT = 'NEW_AGREEMENT',
@@ -123,6 +124,21 @@ export enum View {
   PRICING = 'PRICING',
   SUCCESS_STORIES = 'SUCCESS_STORIES',
   MISSION = 'MISSION'
+}
+
+export interface Notification {
+  id: string;
+  userId: string; // The recipient
+  type: 'agreement' | 'ritual' | 'report' | 'accessibility' | 'weekly' | 'tip';
+  title: string;
+  message: string;
+  isRead: boolean;
+  date: string; // ISO string
+  actionUrl?: string;
+  sender?: {
+    name: string;
+    avatar?: string;
+  };
 }
 
 export const SUPPORTED_LANGUAGES = [

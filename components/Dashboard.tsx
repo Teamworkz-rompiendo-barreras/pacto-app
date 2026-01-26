@@ -1,16 +1,17 @@
-
 import React, { useState, useEffect } from 'react';
-import { Agreement, View, UserProfile } from '../types';
+import { Agreement, View, UserProfile, Notification } from '../types';
 import { useToast } from '../context/ToastContext';
 
 interface DashboardProps {
     user: UserProfile | null;
     agreements: Agreement[];
+    notifications?: Notification[]; // Added
     onCreateNew: () => void;
     onViewAgreement: (agreement: Agreement) => void;
     onEditAgreement: (agreement: Agreement) => void;
     onExploreLibrary: () => void;
     onNavigate: (view: View) => void;
+    onSendTip?: (tip: string) => void; // Added
 }
 
 const TIPS_DB = [
@@ -23,7 +24,7 @@ const TIPS_DB = [
     "Graba las reuniones importantes. Para personas con TDAH, poder revisar la grabación a 1.5x velocidad es una herramienta vital."
 ];
 
-const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, onViewAgreement, onEditAgreement, onExploreLibrary, onNavigate }) => {
+const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, onCreateNew, onViewAgreement, onEditAgreement, onExploreLibrary, onNavigate, onSendTip }) => {
     const { toast } = useToast();
     const [tipStatus, setTipStatus] = useState<'idle' | 'sending' | 'success'>('idle');
     const [currentTip, setCurrentTip] = useState(TIPS_DB[0]);
@@ -50,6 +51,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, onCreateNew, on
 
     const handleApplyTip = () => {
         setTipStatus('sending');
+
+        // Use the new prop to send real notification
+        if (onSendTip) {
+            onSendTip(currentTip);
+        }
+
         setTimeout(() => {
             setTipStatus('success');
             setTimeout(() => {
