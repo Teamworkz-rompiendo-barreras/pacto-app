@@ -1,0 +1,22 @@
+PACTO - KIT DE CLARIDAD
+--------------------------------------------------
+TÍTULO: Preferencias de Comunicación
+CATEGORÍA: Comunicación | TIPO: Sugerencia
+--------------------------------------------------
+
+DESCRIPCIÓN GENERAL:
+Define cómo prefieren los miembros del equipo recibir feedback o actualizaciones urgentes.
+
+GUÍA DE IMPLEMENTACIÓN:
+Esta herramienta ayuda a establecer canales claros (Slack, Email, Llamada) dependiendo de la urgencia y el tipo de información. Incluye plantillas para establecer estados de "No molestar" y tiempos de respuesta esperados.
+
+PASOS CLAVE:
+1. Audita tus canales actuales: Lista todas las formas en que os comunicáis hoy (Slack, WhatsApp, Email, Jira).
+2. Define la urgencia: Acuerda qué canal corresponde a cada nivel de urgencia. Ejemplo: Teléfono = Fuego.
+3. Documenta y comparte: Publica la tabla de preferencias donde todos puedan consultarla antes de enviar un mensaje.
+
+TIP DE INCLUSIÓN:
+Recuerda que "Urgente" es subjetivo. Sé explícito con los tiempos de respuesta esperados (ej. "en 4 horas").
+
+--------------------------------------------------
+Generado por PACTO by Teamworkz.
