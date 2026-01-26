@@ -54,7 +54,8 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
             </button>
           </nav>
           <div className="flex items-center gap-4 shrink-0">
-            <div className="hidden md:block relative group">
+            {/* Language Selector Disabled by User Request */}
+            {/* <div className="hidden md:block relative group">
               <button className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-primary transition-colors">
                 <span className="material-symbols-outlined text-[20px]">language</span>
                 <span className="max-w-[100px] truncate">{language}</span>
@@ -71,7 +72,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
                   </button>
                 ))}
               </div>
-            </div>
+            </div> */}
             <button onClick={onStart} className="bg-primary text-white px-5 py-2 md:px-8 md:py-2.5 text-sm md:text-base font-bold rounded-full hover:shadow-lg transition-all active:scale-95 whitespace-nowrap">
               {t('landing.nav.start')}
             </button>

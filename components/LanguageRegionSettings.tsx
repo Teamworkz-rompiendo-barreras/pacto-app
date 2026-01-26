@@ -83,7 +83,7 @@ const LanguageRegionSettings: React.FC<LanguageRegionSettingsProps> = ({ onBack,
                             <div className="flex flex-col gap-2">
                                 <label className="text-sm font-bold text-text-n900 uppercase tracking-wide opacity-80" htmlFor="language">{t('label.language')}</label>
                                 <div className="relative">
-                                    <select
+                                    {/* <select
                                         id="language"
                                         value={language}
                                         onChange={(e) => setLanguage(e.target.value as any)}
@@ -95,7 +95,11 @@ const LanguageRegionSettings: React.FC<LanguageRegionSettingsProps> = ({ onBack,
                                             </option>
                                         ))}
                                     </select>
-                                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
+                                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span> */}
+                                    <div className="w-full bg-gray-50 border border-gray-200 text-gray-400 text-base rounded-lg block p-3.5 font-medium cursor-not-allowed flex justify-between items-center">
+                                        <span>Español (Latinoamérica)</span>
+                                        <span className="text-xs bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Default</span>
+                                    </div>
                                 </div>
                             </div>
                             {/* Region Field */}
