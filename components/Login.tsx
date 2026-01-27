@@ -18,7 +18,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
     const [companyName, setCompanyName] = useState('');
     const [invitationCode, setInvitationCode] = useState('');
     const [phone, setPhone] = useState('');
-    const { language } = useLanguage();
+    const { language = 'es-la' } = useLanguage(); // Default safe value
 
     // Pricing States
     const [selectedPlanTier, setSelectedPlanTier] = useState<'SEED' | 'GROWTH' | 'ENTERPRISE'>('SEED');
@@ -71,7 +71,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                 }
 
                 // Validación final
-                if (!name || !email || !password || !phone || !language) {
+                if (!name || !email || !password || !phone) {
                     setNotification("Por favor completa todos los campos obligatorios.");
                     setLoading(false);
                     return;
@@ -84,7 +84,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                 }
 
                 // Validación Codigo Invitación
-                if (mode === 'SIGNUP_EMPLOYEE' && invitationCode !== 'PACTO2026') {
+                if (mode === 'SIGNUP_EMPLOYEE' && invitationCode !== (import.meta.env.VITE_INVITATION_CODE || 'PACTO2026')) {
                     // Demo validation
                     if (invitationCode.length < 4) {
                         setNotification("Código de invitación inválido.");
@@ -96,7 +96,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                 const finalCompanyName = mode === 'SIGNUP_COMPANY' ? companyName : undefined;
                 const finalPlan = mode === 'SIGNUP_COMPANY' ? selectedPlanTier : undefined;
 
-                const { user, error } = await authService.signUp(email, password, name, settings, finalCompanyName, phone, language, finalPlan);
+                const { user, error } = await authService.signUp(email, password, name, settings, finalCompanyName, phone, language || 'es-la', finalPlan);
 
                 if (error) {
                     let msg = error;

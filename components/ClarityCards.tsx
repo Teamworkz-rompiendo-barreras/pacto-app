@@ -257,6 +257,17 @@ const ClarityCards: React.FC<ClarityCardsProps> = ({ onGoDashboard, onCreateNew,
     return matchesCategory && matchesSearch;
   });
 
+  const getTagStyles = (type: string) => {
+    switch (type) {
+      case 'Sugerencia': return 'bg-blue-50 text-blue-700 border-blue-200';
+      case 'Protocolo': return 'bg-purple-50 text-purple-700 border-purple-200';
+      case 'Acuerdo': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+      case 'Herramienta': return 'bg-amber-50 text-amber-700 border-amber-200';
+      case 'Crítico': return 'bg-rose-50 text-rose-700 border-rose-200';
+      default: return 'bg-bg-s1 text-primary border-gray-border';
+    }
+  };
+
   return (
     <div className="flex gap-6 h-full relative animate-fade-in">
       {/* Contenido Principal */}
@@ -309,7 +320,7 @@ const ClarityCards: React.FC<ClarityCardsProps> = ({ onGoDashboard, onCreateNew,
               <div
                 key={card.id}
                 onClick={() => handleCardClick(card)}
-                className={`p-6 rounded-2xl transition-all cursor-pointer flex flex-col justify-between h-[280px] border border-gray-border hover:shadow-lg hover:-translate-y-1 bg-white animate-fade-in`}
+                className={`p-6 rounded-2xl transition-all cursor-pointer flex flex-col justify-between h-[340px] border border-gray-border hover:shadow-lg hover:-translate-y-1 bg-white animate-fade-in`}
               >
                 <div>
                   <div className={`size-12 rounded-xl flex items-center justify-center mb-5 bg-p1/30 text-primary`}>
@@ -319,7 +330,7 @@ const ClarityCards: React.FC<ClarityCardsProps> = ({ onGoDashboard, onCreateNew,
                   <p className="text-sm text-gray-600 line-clamp-3 font-medium">{card.desc}</p>
                 </div>
                 <div className={`flex items-center justify-between mt-4 pt-4 border-t border-gray-border`}>
-                  <span className={`text-[10px] uppercase font-bold tracking-widest px-2 py-1 rounded border bg-bg-s1 text-primary border-gray-border`}>
+                  <span className={`text-[10px] uppercase font-bold tracking-widest px-2 py-1 rounded border ${getTagStyles(card.type)}`}>
                     {card.type}
                   </span>
                   <button
@@ -350,7 +361,7 @@ const ClarityCards: React.FC<ClarityCardsProps> = ({ onGoDashboard, onCreateNew,
 
           <button
             onClick={onCreateNew}
-            className="p-6 rounded-2xl border-2 border-dashed border-gray-400 bg-white/30 hover:bg-white/50 hover:border-primary transition-all cursor-pointer flex flex-col items-center justify-center h-[280px] text-center group"
+            className="p-6 rounded-2xl border-2 border-dashed border-gray-400 bg-white/30 hover:bg-white/50 hover:border-primary transition-all cursor-pointer flex flex-col items-center justify-center h-[340px] text-center group"
           >
             <div className="size-14 rounded-full bg-white border border-gray-border flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
               <span className="material-symbols-outlined text-2xl">add</span>

@@ -354,15 +354,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                         Seguridad y Privacidad
                     </a>
 
-                    <div className="h-px bg-black/10 my-4"></div>
 
-                    <button
-                        onClick={onNavigateToLanguage}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all cursor-pointer hover:bg-white/30 text-text-n900/60 border-l-4 border-transparent text-left"
-                    >
-                        <span className="material-symbols-outlined opacity-60">language</span>
-                        Idioma y Región
-                    </button>
                 </aside>
 
                 {/* Main Settings Content */}

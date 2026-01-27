@@ -54,7 +54,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
             </button>
           </nav>
           <div className="flex items-center gap-4 shrink-0">
-            {/* Language Selector Disabled by User Request */}
+            {/* Language Selector Disabled */}
             {/* <div className="hidden md:block relative group">
               <button className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-primary transition-colors">
                 <span className="material-symbols-outlined text-[20px]">language</span>

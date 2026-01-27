@@ -38,19 +38,16 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
   // Helper to parse urgency string
   const parseUrgency = (str: string) => {
     if (!str) return;
-    // Simple heuristic parsing for legacy and new formats
-    if (str.includes('Min') || str.includes('m')) {
-      const m = str.match(/(\d+)/);
-      if (m) setMinutes(m[1]);
-    }
-    if (str.includes('Hora') || str.includes('h')) {
-      const h = str.match(/(\d+)/);
-      if (h) setHours(h[1]);
-    }
-    if (str.includes('día') || str.includes('d')) {
-      const d = str.match(/(\d+)/);
-      if (d) setDays(d[1]);
-    }
+
+    // Robust parsing for "Xd Xh Xm" format
+    const daysMatch = str.match(/(\d+)\s*d/i);
+    const hoursMatch = str.match(/(\d+)\s*h/i);
+    const minsMatch = str.match(/(\d+)\s*m/i);
+
+    if (daysMatch) setDays(daysMatch[1]);
+    if (hoursMatch) setHours(hoursMatch[1]);
+    if (minsMatch) setMinutes(minsMatch[1]);
+
     // Blockers
     if (str.includes('Inmediato')) {
       setMinutes('0'); setHours('0'); setDays('0');
