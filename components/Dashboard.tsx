@@ -81,7 +81,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
     // --- RENDERIZADO VIEW: ADMIN (PANEL DE CONTROL) ---
     if (isAdmin && showAdminPanel) {
         return (
-            <div className="w-full max-w-7xl mx-auto animate-fade-in font-display pb-12 px-6 md:px-10 pt-6">
+            <div className="w-full max-w-7xl mx-auto animate-fade-in font-display pb-12 px-6 md:px-10 pt-12">
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
                     <div className="flex flex-col gap-2">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
@@ -200,7 +200,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
 
     // --- RENDERIZADO VIEW: EMPLEADO (MIEMBRO) ---
     return (
-        <div className="w-full max-w-7xl mx-auto animate-fade-in font-display pb-12 px-6 md:px-10 pt-6">
+        <div className="w-full max-w-7xl mx-auto animate-fade-in font-display pb-12 px-6 md:px-10 pt-12">
 
             {/* Header */}
             <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
