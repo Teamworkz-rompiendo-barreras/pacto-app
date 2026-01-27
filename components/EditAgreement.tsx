@@ -55,24 +55,8 @@ const EditAgreement: React.FC<EditAgreementProps> = ({ onBack, onSave, onArchive
                 initialData={initialData}
                 onSave={handleSave}
                 onCancel={onBack}
+                onArchive={onArchive}
             />
-
-            {onArchive && (
-                <div className="max-w-3xl mx-auto mt-12 mb-20 pt-8 border-t border-gray-200">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-xl hover:bg-red-50 transition-colors group">
-                        <div className="text-left">
-                            <h4 className="text-gray-900 font-bold text-sm">Zona de Peligro</h4>
-                            <p className="text-gray-500 text-xs mt-1">Si archivas este acuerdo, dejará de ser visible para el equipo.</p>
-                        </div>
-                        <button
-                            onClick={onArchive}
-                            className="text-red-500 hover:text-red-700 font-bold text-sm border border-gray-200 bg-white hover:border-red-200 hover:bg-red-50 px-5 py-2.5 rounded-lg transition-all"
-                        >
-                            Archivar
-                        </button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

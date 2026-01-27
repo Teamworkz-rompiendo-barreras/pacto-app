@@ -6,10 +6,11 @@ import { useToast } from '../context/ToastContext';
 interface AgreementFormProps {
   onSave: (data: Partial<Agreement>) => void;
   onCancel: () => void;
+  onArchive?: () => void;
   initialData?: Partial<Agreement>; // Allow pre-filling
 }
 
-const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initialData }) => {
+const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, onArchive, initialData }) => {
   const { toast } = useToast();
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
@@ -304,12 +305,35 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, initial
           >
             Cancelar
           </button>
-          <button
-            type="submit"
-            className="flex-[2] bg-primary text-white py-4 rounded-xl font-bold text-lg hover:brightness-110 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
-          >
-            Publicar Acuerdo
-          </button>
+
+          {onArchive ? (
+            <>
+              <button
+                type="button"
+                onClick={() => {
+                  if (confirm("¿Estás seguro de que quieres archivar este acuerdo?")) {
+                    onArchive();
+                  }
+                }}
+                className="flex-1 bg-red-50 text-red-600 border-2 border-red-100 py-4 rounded-xl font-bold text-lg hover:bg-red-100 hover:border-red-200 transition-colors"
+              >
+                Archivar
+              </button>
+              <button
+                type="submit"
+                className="flex-[2] bg-primary text-white py-4 rounded-xl font-bold text-lg hover:brightness-110 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              >
+                Guardar Cambios
+              </button>
+            </>
+          ) : (
+            <button
+              type="submit"
+              className="flex-[2] bg-primary text-white py-4 rounded-xl font-bold text-lg hover:brightness-110 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+            >
+              Publicar Acuerdo
+            </button>
+          )}
         </div>
       </form>
     </div>
