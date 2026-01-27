@@ -40,43 +40,43 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ user, onCancel, onConfirm }) 
             </header>
 
             {/* Main Content */}
-            <main className="flex-1 flex items-center justify-center px-4 py-12 overflow-y-auto w-full">
+            <main className="flex-1 flex items-center justify-center px-4 py-6 overflow-y-auto w-full">
                 <div className="max-w-[560px] w-full bg-[#fdfbf7] rounded-xl shadow-2xl shadow-primary/5 overflow-hidden border border-primary/5 shrink-0 my-auto">
                     {/* Visual Section */}
-                    <div className="w-full h-64 relative bg-gradient-to-b from-primary/5 to-[#fdfbf7] flex items-center justify-center overflow-hidden">
+                    <div className="w-full h-40 relative bg-gradient-to-b from-primary/5 to-[#fdfbf7] flex items-center justify-center overflow-hidden">
                         <div className="relative w-48 h-48 flex items-center justify-center">
                             <div className="absolute inset-0 bg-primary/10 rounded-full blur-3xl opacity-50"></div>
                             <div className="z-10 flex flex-col items-center">
-                                <span className="material-symbols-outlined text-[120px] text-primary/40 leading-none select-none">potted_plant</span>
+                                <span className="material-symbols-outlined text-[100px] text-primary/40 leading-none select-none">potted_plant</span>
                                 <div className="w-24 h-2 bg-primary/10 rounded-full mt-4 blur-sm"></div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="p-8 md:p-12 text-center">
-                        <h1 className="text-text-n900 text-3xl font-bold leading-tight tracking-tight mb-4">
+                    <div className="p-8 text-center">
+                        <h1 className="text-text-n900 text-3xl font-bold leading-tight tracking-tight mb-2">
                             ¿Quieres tomarte un descanso?
                         </h1>
-                        <p className="text-gray-500 text-lg font-normal leading-relaxed max-w-sm mx-auto mb-10">
+                        <p className="text-gray-500 text-lg font-normal leading-relaxed max-w-sm mx-auto mb-6">
                             Tu progreso ha sido guardado de forma segura. PACTO estará aquí cuando decidas volver.
                         </p>
 
-                        <div className="flex flex-col gap-4 max-w-sm mx-auto">
+                        <div className="flex flex-col gap-3 max-w-sm mx-auto">
                             <button
                                 onClick={onCancel}
-                                className="flex items-center justify-center w-full h-14 bg-primary text-white text-lg font-bold rounded-xl shadow-lg shadow-primary/20 hover:brightness-110 transition-all active:scale-[0.98]"
+                                className="flex items-center justify-center w-full h-12 bg-primary text-white text-lg font-bold rounded-xl shadow-lg shadow-primary/20 hover:brightness-110 transition-all active:scale-[0.98]"
                             >
                                 <span>Seguir en PACTO</span>
                             </button>
                             <button
                                 onClick={onConfirm}
-                                className="flex items-center justify-center w-full h-14 border-2 border-primary/30 text-primary text-lg font-bold rounded-xl hover:bg-primary/5 transition-all"
+                                className="flex items-center justify-center w-full h-12 border-2 border-primary/30 text-primary text-lg font-bold rounded-xl hover:bg-primary/5 transition-all"
                             >
                                 <span>Cerrar Sesión</span>
                             </button>
                         </div>
 
-                        <div className="mt-8">
+                        <div className="mt-6">
                             <p className="text-gray-400 text-sm font-normal opacity-70">
                                 © 2026 PACTO. Tu espacio de inclusión laboral.
                             </p>
