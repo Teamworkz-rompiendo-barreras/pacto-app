@@ -310,11 +310,7 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, onArchi
             <>
               <button
                 type="button"
-                onClick={() => {
-                  if (confirm("¿Estás seguro de que quieres archivar este acuerdo?")) {
-                    onArchive();
-                  }
-                }}
+                onClick={onArchive}
                 className="flex-1 bg-red-50 text-red-600 border-2 border-red-100 py-4 rounded-xl font-bold text-lg hover:bg-red-100 hover:border-red-200 transition-colors"
               >
                 Archivar

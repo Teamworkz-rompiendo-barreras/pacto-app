@@ -40,24 +40,24 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ user, onCancel, onConfirm }) 
             </header>
 
             {/* Main Content */}
-            <main className="flex-1 flex items-center justify-center px-4 py-6 overflow-y-auto w-full">
+            <main className="flex-1 flex items-center justify-center px-4 py-2 overflow-y-auto w-full">
                 <div className="max-w-[560px] w-full bg-[#fdfbf7] rounded-xl shadow-2xl shadow-primary/5 overflow-hidden border border-primary/5 shrink-0 my-auto">
                     {/* Visual Section */}
-                    <div className="w-full h-40 relative bg-gradient-to-b from-primary/5 to-[#fdfbf7] flex items-center justify-center overflow-hidden">
-                        <div className="relative w-48 h-48 flex items-center justify-center">
+                    <div className="w-full h-28 relative bg-gradient-to-b from-primary/5 to-[#fdfbf7] flex items-center justify-center overflow-hidden">
+                        <div className="relative w-32 h-32 flex items-center justify-center">
                             <div className="absolute inset-0 bg-primary/10 rounded-full blur-3xl opacity-50"></div>
                             <div className="z-10 flex flex-col items-center">
-                                <span className="material-symbols-outlined text-[100px] text-primary/40 leading-none select-none">potted_plant</span>
+                                <span className="material-symbols-outlined text-[72px] text-primary/40 leading-none select-none">potted_plant</span>
                                 <div className="w-24 h-2 bg-primary/10 rounded-full mt-4 blur-sm"></div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="p-8 text-center">
-                        <h1 className="text-text-n900 text-3xl font-bold leading-tight tracking-tight mb-2">
+                    <div className="p-6 text-center">
+                        <h1 className="text-text-n900 text-2xl font-bold leading-tight tracking-tight mb-1.5">
                             ¿Quieres tomarte un descanso?
                         </h1>
-                        <p className="text-gray-500 text-lg font-normal leading-relaxed max-w-sm mx-auto mb-6">
+                        <p className="text-gray-500 text-base font-normal leading-relaxed max-w-sm mx-auto mb-4">
                             Tu progreso ha sido guardado de forma segura. PACTO estará aquí cuando decidas volver.
                         </p>
 
@@ -76,7 +76,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ user, onCancel, onConfirm }) 
                             </button>
                         </div>
 
-                        <div className="mt-6">
+                        <div className="mt-4">
                             <p className="text-gray-400 text-sm font-normal opacity-70">
                                 © 2026 PACTO. Tu espacio de inclusión laboral.
                             </p>
@@ -86,7 +86,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ user, onCancel, onConfirm }) 
             </main>
 
             {/* Footer */}
-            <footer className="flex flex-col gap-4 px-5 py-8 text-center bg-bg-s1/30">
+            <footer className="flex flex-col gap-3 px-5 py-4 text-center bg-bg-s1/30">
                 <div className="flex flex-wrap items-center justify-center gap-8">
                     <button className="text-gray-500 text-sm font-medium hover:text-primary transition-colors">Privacidad</button>
                     <button className="text-gray-500 text-sm font-medium hover:text-primary transition-colors">Términos</button>
