@@ -68,7 +68,7 @@ const Library: React.FC<LibraryProps> = ({ onBack, onUseTemplate }) => {
     return (
         <div className="w-full animate-fade-in font-display">
             {/* Top Header Inside Component */}
-            <div className="sticky top-0 z-20 w-full bg-bg-s1/95 backdrop-blur-md border-b border-[#D1C8B1] px-6 lg:px-12 py-4 mb-8 -mt-4 -mx-4 lg:-mt-8 lg:-mx-8">
+            <div className="sticky top-0 z-35 w-full bg-bg-s1/95 backdrop-blur-md border-b border-[#D1C8B1] px-6 lg:px-12 py-4 mb-8 -mt-4 -mx-4 lg:-mt-8 lg:-mx-8">
                 <div className="max-w-[1200px] mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <button onClick={onBack} className="p-2 rounded-full hover:bg-black/5 transition-colors">
