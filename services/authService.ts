@@ -9,20 +9,29 @@ export const authService = {
             const maxMembers = plan === 'SEED' ? 5 : (plan === 'GROWTH' ? 50 : 9999);
 
             // 1. Crear usuario en Supabase Auth
-            const { data: authData, error: authError } = await supabase.auth.signUp({
-                email: email.trim(),
-                password,
-                options: {
-                    data: {
-                        full_name: name,
-                        company_name: companyName,
-                        phone,
-                        language,
-                        plan,
-                        max_members: maxMembers
+            let authData = { user: { id: crypto.randomUUID() } } as any;
+            let authError = null;
+
+            if (import.meta.env.VITE_SUPABASE_URL?.includes('placeholder')) {
+                console.warn("⚠️ DEMO MODE: Bypassing Supabase SignUp");
+            } else {
+                const response = await supabase.auth.signUp({
+                    email: email.trim(),
+                    password,
+                    options: {
+                        data: {
+                            full_name: name,
+                            company_name: companyName,
+                            phone,
+                            language,
+                            plan,
+                            max_members: maxMembers
+                        }
                     }
-                }
-            });
+                });
+                authData = response.data;
+                authError = response.error;
+            }
 
             if (authError) return { user: null, error: authError.message };
             if (!authData.user) return { user: null, error: "No se pudo crear el usuario." };
@@ -45,8 +54,6 @@ export const authService = {
             const createdUser = await userService.createUserProfile(newUser);
 
             if (!createdUser) {
-                // Si falla guardar el perfil, podríamos querer deshacer el auth.signUp, 
-                // pero por simplicidad retornamos error.
                 return { user: null, error: "Usuario creado pero falló al guardar perfil." };
             }
 
@@ -61,27 +68,45 @@ export const authService = {
     // Iniciar sesión
     async signIn(email: string, password: string): Promise<{ user: UserProfile | null, error: string | null }> {
         try {
+            // --- DEMO MODE BYPASS ---
+            if (import.meta.env.VITE_SUPABASE_URL?.includes('placeholder')) {
+                console.warn("⚠️ DEMO MODE: Bypassing Supabase Auth");
+                let mockProfile = await userService.getUserProfileByEmail(email);
+                if (!mockProfile) {
+                    mockProfile = {
+                        id: 'demo-user-id',
+                        name: 'Usuario Demo',
+                        email: email,
+                        role: 'Administrador',
+                        settings: {
+                            id: 'demo-settings',
+                            low_stimulus: false,
+                            dyslexia_font: false,
+                            high_contrast: false,
+                            comm_preference: 'Visual'
+                        },
+                        avatar: `https://ui-avatars.com/api/?name=Usuario+Demo&background=random`
+                    };
+                }
+                return { user: mockProfile, error: null };
+            }
+
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: email.trim(),
                 password
             });
 
-            if (error) return { user: null, error: "Credenciales incorrectas" }; // Mensaje amigable
+            if (error) return { user: null, error: "Credenciales incorrectas" };
             if (!data.user) return { user: null, error: "Error de inicio de sesión." };
 
-            // Obtener el perfil completo de la base de datos
             let userProfile = await userService.getUserProfileByEmail(email);
 
             if (!userProfile) {
                 console.warn("⚠️ Usuario autenticado pero sin perfil. Intentando autorrecuperación...");
-
-                // Intento de autocuración (Self-healing)
-                // Usamos los metadatos del usuario o valores por defecto
                 const meta = data.user.user_metadata || {};
-
                 const recoveredUser: UserProfile = {
                     id: data.user.id,
-                    name: meta.full_name || email.split('@')[0], // Fallback al nombre del email
+                    name: meta.full_name || email.split('@')[0],
                     email: email,
                     role: 'Miembro de Equipo',
                     settings: {
@@ -93,15 +118,9 @@ export const authService = {
                     },
                     avatar: `https://ui-avatars.com/api/?name=${meta.full_name || 'User'}&background=random`
                 };
-
                 const savedProfile = await userService.createUserProfile(recoveredUser);
-
-                if (savedProfile) {
-                    userProfile = savedProfile;
-                    console.log("✅ Perfil recuperado exitosamente.");
-                } else {
-                    return { user: null, error: "Error crítico: Tu cuenta existe pero no se pudo generar tu perfil. Contacta soporte." };
-                }
+                if (savedProfile) userProfile = savedProfile;
+                else return { user: null, error: "Error crítico: Tu cuenta existe pero no se pudo generar tu perfil." };
             }
 
             return { user: userProfile, error: null };
@@ -120,22 +139,15 @@ export const authService = {
     // Recuperar contraseña
     async resetPassword(email: string): Promise<{ success: boolean; error: string | null }> {
         try {
-            // 1. Verificar si el usuario existe en nuestra base de datos (requisito explícito del usuario)
             const profile = await userService.getUserProfileByEmail(email);
+            if (!profile) return { success: false, error: "No existe ninguna cuenta con este correo electrónico." };
 
-            if (!profile) {
-                return { success: false, error: "No existe ninguna cuenta con este correo electrónico." };
-            }
-
-            // 2. Enviar correo de recuperación real de Supabase
             const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: window.location.origin + '/update-password', // URL a la que volverá el usuario (habría que crear esta vista si se quiere flujo completo, pero el email llega igual)
+                redirectTo: window.location.origin + '/update-password',
             });
 
             if (error) return { success: false, error: error.message };
-
             return { success: true, error: null };
-
         } catch (error) {
             console.error("Error recuperación:", error);
             return { success: false, error: "Error al procesar la solicitud." };
@@ -144,9 +156,12 @@ export const authService = {
 
     // Obtener usuario actual (sesión activa)
     async getCurrentUser(): Promise<UserProfile | null> {
+        if (import.meta.env.VITE_SUPABASE_URL?.includes('placeholder')) {
+            return null;
+        }
+
         const { data: { session } } = await supabase.auth.getSession();
         if (!session?.user?.email) return null;
-
         return await userService.getUserProfileByEmail(session.user.email);
     }
 };

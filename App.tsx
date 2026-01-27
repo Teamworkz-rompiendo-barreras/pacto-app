@@ -218,6 +218,21 @@ const AppContent: React.FC = () => {
     }
     setSelectedAgreement(undefined);
     navigateTo(View.DASHBOARD);
+    setSelectedAgreement(undefined);
+    navigateTo(View.DASHBOARD);
+  };
+
+  const handleArchiveAgreement = async () => {
+    if (selectedAgreement) {
+      if (confirm("¿Estás seguro de que quieres archivar este acuerdo? Dejará de ser visible en el Dashboard.")) {
+        const updated = await agreementService.updateAgreement(selectedAgreement.id, { status: 'Archivado' });
+        if (updated) {
+          setAgreements(prev => prev.map(a => a.id === selectedAgreement.id ? updated : a));
+        }
+        setSelectedAgreement(undefined);
+        navigateTo(View.DASHBOARD);
+      }
+    }
   };
 
   // Lógica funcional para Rituales
@@ -269,7 +284,7 @@ const AppContent: React.FC = () => {
         return (
           <Dashboard
             user={user}
-            agreements={agreements}
+            agreements={agreements.filter(a => a.status !== 'Archivado')}
             onCreateNew={() => { setAgreementTemplate(undefined); navigateTo(View.NEW_AGREEMENT); }}
             onViewAgreement={(agreement) => {
               setSelectedAgreement(agreement);
@@ -302,7 +317,7 @@ const AppContent: React.FC = () => {
       case View.MY_AGREEMENTS:
         return (
           <MyAgreements
-            agreements={agreements}
+            agreements={agreements.filter(a => a.status !== 'Archivado')}
             onCreateNew={() => { setAgreementTemplate(undefined); navigateTo(View.NEW_AGREEMENT); }}
             onViewAgreement={(agreement) => {
               setSelectedAgreement(agreement);
@@ -341,7 +356,7 @@ const AppContent: React.FC = () => {
         );
 
       case View.AGREEMENT_DETAILS:
-        return <AgreementDetails agreement={selectedAgreement} onBack={() => navigateTo(View.DASHBOARD)} onEdit={() => navigateTo(View.EDIT_AGREEMENT)} />;
+        return <AgreementDetails agreement={selectedAgreement} onBack={() => navigateTo(View.DASHBOARD)} onEdit={() => navigateTo(View.EDIT_AGREEMENT)} onArchive={handleArchiveAgreement} />;
 
       case View.PROFILE:
         if (!user) return null;

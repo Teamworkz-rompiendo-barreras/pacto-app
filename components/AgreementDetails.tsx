@@ -7,6 +7,7 @@ interface AgreementDetailsProps {
   agreement?: Agreement; // Now accepting the actual data
   onBack: () => void;
   onEdit?: () => void;
+  onArchive?: () => void;
 }
 
 interface Comment {
@@ -19,7 +20,7 @@ interface Comment {
   color: string;
 }
 
-const AgreementDetails: React.FC<AgreementDetailsProps> = ({ agreement, onBack, onEdit }) => {
+const AgreementDetails: React.FC<AgreementDetailsProps> = ({ agreement, onBack, onEdit, onArchive }) => {
   const [activeTab, setActiveTab] = useState<'rules' | 'discussion' | 'history'>('rules');
 
   // Default fallback if no agreement passed (safe-guard)
@@ -77,7 +78,9 @@ const AgreementDetails: React.FC<AgreementDetailsProps> = ({ agreement, onBack, 
             <div>
               <div className="flex items-center gap-3 mb-1">
                 <h1 className="text-3xl font-black text-text-n900">{title}</h1>
-                <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-green-200">Activo</span>
+                <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border ${agreement?.status === 'Activo' ? 'bg-green-100 text-green-700 border-green-200' : 'bg-gray-100 text-gray-700 border-gray-200'}`}>
+                  {agreement?.status || 'Activo'}
+                </span>
                 <span className="bg-gray-100 text-gray-700 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-gray-200">{category}</span>
                 {agreement?.visibility && (
                   <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider border flex items-center gap-1 ${agreement.visibility === 'Organization' ? 'bg-purple-100 text-purple-700 border-purple-200' : (agreement.visibility === 'Private' ? 'bg-indigo-100 text-indigo-700 border-indigo-200' : 'bg-blue-100 text-blue-700 border-blue-200')}`}>
@@ -93,6 +96,15 @@ const AgreementDetails: React.FC<AgreementDetailsProps> = ({ agreement, onBack, 
           </div>
 
           <div className="flex gap-3">
+            {onArchive && agreement?.status !== 'Archivado' && (
+              <button
+                onClick={onArchive}
+                className="p-2 rounded-lg border border-red-200 hover:bg-red-50 text-red-500 transition-colors"
+                title="Archivar/Desactivar Acuerdo"
+              >
+                <span className="material-symbols-outlined">archive</span>
+              </button>
+            )}
             <button className="p-2 rounded-lg border border-gray-border hover:bg-gray-50 text-gray-500" title="Compartir Acuerdo">
               <span className="material-symbols-outlined">ios_share</span>
             </button>
