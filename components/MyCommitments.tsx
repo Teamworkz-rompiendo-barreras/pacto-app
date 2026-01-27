@@ -300,9 +300,8 @@ const MyCommitments: React.FC<MyCommitmentsProps> = ({ onBack }) => {
                     Volver
                 </button>
             </div>
-
             {/* Header Section */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 lg:pr-64">
                 <div className="flex flex-col gap-2">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
                         <span className="material-symbols-outlined text-sm">task_alt</span>
@@ -320,10 +319,10 @@ const MyCommitments: React.FC<MyCommitmentsProps> = ({ onBack }) => {
                     <span className="material-symbols-outlined">add</span>
                     <span>Nueva Tarea</span>
                 </button>
-            </div>
+            </div >
 
             {/* Progress Bar */}
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-border">
+            < div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-border" >
                 <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-primary">analytics</span>
@@ -338,10 +337,10 @@ const MyCommitments: React.FC<MyCommitmentsProps> = ({ onBack }) => {
                     ></div>
                 </div>
                 <p className="mt-3 text-gray-500 text-sm font-medium">{allCompletedCount} de {totalTasksCount} compromisos completados</p>
-            </div>
+            </div >
 
             {/* Task List Header */}
-            <div className="flex items-center justify-between">
+            < div className="flex items-center justify-between" >
                 <h3 className="text-text-n900 text-2xl font-bold tracking-tight flex items-center gap-2">
                     <span className="material-symbols-outlined">format_list_bulleted</span>
                     Mis Tareas Pendientes
@@ -360,94 +359,96 @@ const MyCommitments: React.FC<MyCommitmentsProps> = ({ onBack }) => {
                         Próximos
                     </button>
                 </div>
-            </div>
+            </div >
 
             {/* Active Tasks List */}
-            <div className="flex flex-col gap-5 min-h-[200px]">
-                {visibleTasks.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-10 opacity-50 border-2 border-dashed border-gray-200 rounded-2xl">
-                        <span className="material-symbols-outlined text-4xl mb-2">event_available</span>
-                        <p className="text-lg font-bold">¡Estás al día!</p>
-                        <p className="text-sm">No tienes tareas pendientes para {filter === 'Hoy' ? 'hoy' : 'los próximos días'}.</p>
-                    </div>
-                ) : (
-                    visibleTasks.map((task) => (
-                        <div
-                            key={task.id}
-                            onClick={() => handleTaskClick(task)}
-                            className="group relative bg-white p-6 rounded-2xl shadow-sm border border-transparent hover:border-primary/30 hover:shadow-md transition-all flex items-start gap-5 cursor-pointer animate-fade-in"
-                        >
-                            <div className="mt-1" onClick={(e) => toggleTaskCompletion(e, task.id)}>
-                                <button
-                                    className="size-6 rounded-lg border-2 border-primary/30 hover:border-primary flex items-center justify-center transition-colors group-hover:bg-primary/5"
-                                >
-                                    <span className="material-symbols-outlined text-transparent hover:text-primary text-sm font-black">check</span>
-                                </button>
-                            </div>
-
-                            <div className="flex-1 flex flex-col gap-3">
-                                <div className="flex flex-wrap items-center justify-between gap-2">
-                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-accent-blue/15 text-accent-blue tracking-wide">
-                                        {task.tag}
-                                    </span>
-                                    <div className="flex items-center gap-1.5 text-gray-400">
-                                        <span className="material-symbols-outlined text-[16px]">history</span>
-                                        <span className="text-xs font-medium">Origen: {task.origin}</span>
-                                    </div>
-                                </div>
-
-                                <h4 className="text-xl font-bold text-text-n900 leading-tight">
-                                    {task.title}
-                                </h4>
-
-                                <div className="flex items-center gap-6 text-gray-500">
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="material-symbols-outlined text-[18px]">event</span>
-                                        <span className="text-sm font-medium">{formatDateDisplay(task.date)}</span>
-                                    </div>
-                                    <div className={`flex items-center gap-1.5 ${getPriorityColor(task.priority)}`}>
-                                        <span className="material-symbols-outlined text-[18px]">{getPriorityIcon(task.priority)}</span>
-                                        <span className="text-sm font-bold">Prioridad {task.priority}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* 3 Dots Menu */}
-                            <div className="relative">
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setMenuOpenId(menuOpenId === task.id ? null : task.id);
-                                    }}
-                                    className="p-2 text-gray-300 hover:text-gray-500 rounded-full hover:bg-gray-100 transition-colors opacity-0 group-hover:opacity-100"
-                                >
-                                    <span className="material-symbols-outlined">more_vert</span>
-                                </button>
-
-                                {menuOpenId === task.id && (
-                                    <div ref={menuRef} className="absolute right-0 top-full mt-1 w-40 bg-white rounded-xl shadow-xl border border-gray-100 z-20 animate-fade-in overflow-hidden">
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); openEditModal(task); }}
-                                            className="w-full text-left px-4 py-3 hover:bg-gray-50 text-sm font-bold text-text-n900 flex items-center gap-2"
-                                        >
-                                            <span className="material-symbols-outlined text-sm">edit</span> Editar
-                                        </button>
-                                        <button
-                                            onClick={(e) => requestDelete(e, task.id)}
-                                            className="w-full text-left px-4 py-3 hover:bg-red-50 text-sm font-bold text-red-600 flex items-center gap-2 border-t border-gray-100"
-                                        >
-                                            <span className="material-symbols-outlined text-sm">delete</span> Eliminar
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
+            < div className="flex flex-col gap-5 min-h-[200px]" >
+                {
+                    visibleTasks.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-10 opacity-50 border-2 border-dashed border-gray-200 rounded-2xl">
+                            <span className="material-symbols-outlined text-4xl mb-2">event_available</span>
+                            <p className="text-lg font-bold">¡Estás al día!</p>
+                            <p className="text-sm">No tienes tareas pendientes para {filter === 'Hoy' ? 'hoy' : 'los próximos días'}.</p>
                         </div>
-                    ))
-                )}
-            </div>
+                    ) : (
+                        visibleTasks.map((task) => (
+                            <div
+                                key={task.id}
+                                onClick={() => handleTaskClick(task)}
+                                className="group relative bg-white p-6 rounded-2xl shadow-sm border border-transparent hover:border-primary/30 hover:shadow-md transition-all flex items-start gap-5 cursor-pointer animate-fade-in"
+                            >
+                                <div className="mt-1" onClick={(e) => toggleTaskCompletion(e, task.id)}>
+                                    <button
+                                        className="size-6 rounded-lg border-2 border-primary/30 hover:border-primary flex items-center justify-center transition-colors group-hover:bg-primary/5"
+                                    >
+                                        <span className="material-symbols-outlined text-transparent hover:text-primary text-sm font-black">check</span>
+                                    </button>
+                                </div>
+
+                                <div className="flex-1 flex flex-col gap-3">
+                                    <div className="flex flex-wrap items-center justify-between gap-2">
+                                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-accent-blue/15 text-accent-blue tracking-wide">
+                                            {task.tag}
+                                        </span>
+                                        <div className="flex items-center gap-1.5 text-gray-400">
+                                            <span className="material-symbols-outlined text-[16px]">history</span>
+                                            <span className="text-xs font-medium">Origen: {task.origin}</span>
+                                        </div>
+                                    </div>
+
+                                    <h4 className="text-xl font-bold text-text-n900 leading-tight">
+                                        {task.title}
+                                    </h4>
+
+                                    <div className="flex items-center gap-6 text-gray-500">
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="material-symbols-outlined text-[18px]">event</span>
+                                            <span className="text-sm font-medium">{formatDateDisplay(task.date)}</span>
+                                        </div>
+                                        <div className={`flex items-center gap-1.5 ${getPriorityColor(task.priority)}`}>
+                                            <span className="material-symbols-outlined text-[18px]">{getPriorityIcon(task.priority)}</span>
+                                            <span className="text-sm font-bold">Prioridad {task.priority}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 3 Dots Menu */}
+                                <div className="relative">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setMenuOpenId(menuOpenId === task.id ? null : task.id);
+                                        }}
+                                        className="p-2 text-gray-300 hover:text-gray-500 rounded-full hover:bg-gray-100 transition-colors opacity-0 group-hover:opacity-100"
+                                    >
+                                        <span className="material-symbols-outlined">more_vert</span>
+                                    </button>
+
+                                    {menuOpenId === task.id && (
+                                        <div ref={menuRef} className="absolute right-0 top-full mt-1 w-40 bg-white rounded-xl shadow-xl border border-gray-100 z-20 animate-fade-in overflow-hidden">
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); openEditModal(task); }}
+                                                className="w-full text-left px-4 py-3 hover:bg-gray-50 text-sm font-bold text-text-n900 flex items-center gap-2"
+                                            >
+                                                <span className="material-symbols-outlined text-sm">edit</span> Editar
+                                            </button>
+                                            <button
+                                                onClick={(e) => requestDelete(e, task.id)}
+                                                className="w-full text-left px-4 py-3 hover:bg-red-50 text-sm font-bold text-red-600 flex items-center gap-2 border-t border-gray-100"
+                                            >
+                                                <span className="material-symbols-outlined text-sm">delete</span> Eliminar
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))
+                    )
+                }
+            </div >
 
             {/* Completed Tasks Accordion */}
-            <div className="mt-8 flex flex-col items-center">
+            < div className="mt-8 flex flex-col items-center" >
                 <button
                     onClick={() => setShowCompleted(!showCompleted)}
                     className="text-sm font-bold text-primary hover:underline flex items-center gap-2 group mb-4"
@@ -456,242 +457,250 @@ const MyCommitments: React.FC<MyCommitmentsProps> = ({ onBack }) => {
                     <span className={`material-symbols-outlined text-[18px] transition-transform ${showCompleted ? 'rotate-180' : 'group-hover:translate-y-0.5'}`}>keyboard_arrow_down</span>
                 </button>
 
-                {showCompleted && (
-                    <div className="w-full flex flex-col gap-4 animate-fade-in opacity-60 hover:opacity-100 transition-opacity">
-                        {[...recentlyCompleted, ...completedHistory].map(task => (
-                            <div
-                                key={task.id}
-                                className="bg-gray-50 p-4 rounded-xl border border-transparent flex items-center gap-4 select-none"
-                            >
-                                <div onClick={(e) => { if (!task.origin.includes('Anterior')) toggleTaskCompletion(e, task.id); }} className="cursor-pointer">
-                                    <div className="size-6 rounded-lg bg-primary border-2 border-primary flex items-center justify-center text-white">
-                                        <span className="material-symbols-outlined text-sm font-black">check</span>
+                {
+                    showCompleted && (
+                        <div className="w-full flex flex-col gap-4 animate-fade-in opacity-60 hover:opacity-100 transition-opacity">
+                            {[...recentlyCompleted, ...completedHistory].map(task => (
+                                <div
+                                    key={task.id}
+                                    className="bg-gray-50 p-4 rounded-xl border border-transparent flex items-center gap-4 select-none"
+                                >
+                                    <div onClick={(e) => { if (!task.origin.includes('Anterior')) toggleTaskCompletion(e, task.id); }} className="cursor-pointer">
+                                        <div className="size-6 rounded-lg bg-primary border-2 border-primary flex items-center justify-center text-white">
+                                            <span className="material-symbols-outlined text-sm font-black">check</span>
+                                        </div>
                                     </div>
+                                    <div className="flex-1">
+                                        <h4 className="text-base font-bold text-gray-500 line-through">{task.title}</h4>
+                                        <p className="text-xs text-gray-400">Completada</p>
+                                    </div>
+                                    <span className="text-xs font-bold text-gray-400">{task.date}</span>
                                 </div>
-                                <div className="flex-1">
-                                    <h4 className="text-base font-bold text-gray-500 line-through">{task.title}</h4>
-                                    <p className="text-xs text-gray-400">Completada</p>
-                                </div>
-                                <span className="text-xs font-bold text-gray-400">{task.date}</span>
-                            </div>
-                        ))}
-                        {[...recentlyCompleted, ...completedHistory].length === 0 && (
-                            <p className="text-center text-gray-400 text-sm italic">No hay tareas completadas recientemente.</p>
-                        )}
-                    </div>
-                )}
-            </div>
+                            ))}
+                            {[...recentlyCompleted, ...completedHistory].length === 0 && (
+                                <p className="text-center text-gray-400 text-sm italic">No hay tareas completadas recientemente.</p>
+                            )}
+                        </div>
+                    )
+                }
+            </div >
 
             {/* --- MODAL DETALLE DE TAREA (Lectura) --- */}
-            {selectedTask && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
-                    onClick={() => setSelectedTask(null)}
-                >
+            {
+                selectedTask && (
                     <div
-                        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8 relative"
-                        onClick={e => e.stopPropagation()}
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+                        onClick={() => setSelectedTask(null)}
                     >
-                        <div className="flex justify-between items-start mb-6">
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-accent-blue/15 text-accent-blue tracking-wide uppercase">
-                                {selectedTask.tag.replace('#', '')}
-                            </span>
-                            <div className="flex items-center gap-2">
+                        <div
+                            className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8 relative"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <div className="flex justify-between items-start mb-6">
+                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-accent-blue/15 text-accent-blue tracking-wide uppercase">
+                                    {selectedTask.tag.replace('#', '')}
+                                </span>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => { setSelectedTask(null); openEditModal(selectedTask); }}
+                                        className="p-2 text-gray-400 hover:text-primary rounded-full hover:bg-gray-100 transition-colors"
+                                        title="Editar"
+                                    >
+                                        <span className="material-symbols-outlined">edit</span>
+                                    </button>
+                                    <button onClick={() => setSelectedTask(null)} className="p-2 text-gray-400 hover:text-text-n900 rounded-full hover:bg-gray-100 transition-colors">
+                                        <span className="material-symbols-outlined">close</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <h2 className="text-2xl font-black text-text-n900 mb-4 leading-tight">{selectedTask.title}</h2>
+
+                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 mb-6">
+                                <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Detalles</p>
+                                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{selectedTask.description}</p>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 mb-8">
+                                <div>
+                                    <p className="text-xs text-gray-400 font-bold uppercase">Fecha Límite</p>
+                                    <p className="text-text-n900 font-bold flex items-center gap-2">
+                                        <span className="material-symbols-outlined text-sm">event</span>
+                                        {formatDateDisplay(selectedTask.date)}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-400 font-bold uppercase">Prioridad</p>
+                                    <p className={`font-bold flex items-center gap-2 ${getPriorityColor(selectedTask.priority)}`}>
+                                        <span className="material-symbols-outlined text-sm">{getPriorityIcon(selectedTask.priority)}</span>
+                                        {selectedTask.priority}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-400 font-bold uppercase">Origen</p>
+                                    <p className="text-text-n900 font-bold truncate">{selectedTask.origin}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4">
                                 <button
-                                    onClick={() => { setSelectedTask(null); openEditModal(selectedTask); }}
-                                    className="p-2 text-gray-400 hover:text-primary rounded-full hover:bg-gray-100 transition-colors"
-                                    title="Editar"
+                                    onClick={() => { toggleTaskCompletion({ stopPropagation: () => { } } as any, selectedTask.id); setSelectedTask(null); }}
+                                    className={`flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${selectedTask.completed ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'bg-primary text-white hover:brightness-110 shadow-lg'}`}
                                 >
-                                    <span className="material-symbols-outlined">edit</span>
-                                </button>
-                                <button onClick={() => setSelectedTask(null)} className="p-2 text-gray-400 hover:text-text-n900 rounded-full hover:bg-gray-100 transition-colors">
-                                    <span className="material-symbols-outlined">close</span>
+                                    <span className="material-symbols-outlined">{selectedTask.completed ? 'undo' : 'check'}</span>
+                                    {selectedTask.completed ? 'Marcar como pendiente' : 'Completar Tarea'}
                                 </button>
                             </div>
-                        </div>
-
-                        <h2 className="text-2xl font-black text-text-n900 mb-4 leading-tight">{selectedTask.title}</h2>
-
-                        <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 mb-6">
-                            <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Detalles</p>
-                            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{selectedTask.description}</p>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4 mb-8">
-                            <div>
-                                <p className="text-xs text-gray-400 font-bold uppercase">Fecha Límite</p>
-                                <p className="text-text-n900 font-bold flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-sm">event</span>
-                                    {formatDateDisplay(selectedTask.date)}
-                                </p>
-                            </div>
-                            <div>
-                                <p className="text-xs text-gray-400 font-bold uppercase">Prioridad</p>
-                                <p className={`font-bold flex items-center gap-2 ${getPriorityColor(selectedTask.priority)}`}>
-                                    <span className="material-symbols-outlined text-sm">{getPriorityIcon(selectedTask.priority)}</span>
-                                    {selectedTask.priority}
-                                </p>
-                            </div>
-                            <div>
-                                <p className="text-xs text-gray-400 font-bold uppercase">Origen</p>
-                                <p className="text-text-n900 font-bold truncate">{selectedTask.origin}</p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-4">
-                            <button
-                                onClick={() => { toggleTaskCompletion({ stopPropagation: () => { } } as any, selectedTask.id); setSelectedTask(null); }}
-                                className={`flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${selectedTask.completed ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'bg-primary text-white hover:brightness-110 shadow-lg'}`}
-                            >
-                                <span className="material-symbols-outlined">{selectedTask.completed ? 'undo' : 'check'}</span>
-                                {selectedTask.completed ? 'Marcar como pendiente' : 'Completar Tarea'}
-                            </button>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* --- MODAL FORMULARIO (Crear/Editar) --- */}
-            {isFormOpen && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
-                    onClick={() => setIsFormOpen(false)}
-                >
+            {
+                isFormOpen && (
                     <div
-                        className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative"
-                        onClick={e => e.stopPropagation()}
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+                        onClick={() => setIsFormOpen(false)}
                     >
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-black text-text-n900">
-                                {editingId ? 'Editar Compromiso' : 'Nuevo Compromiso'}
-                            </h3>
-                            <button onClick={() => setIsFormOpen(false)} className="text-gray-400 hover:text-text-n900"><span className="material-symbols-outlined">close</span></button>
-                        </div>
-
-                        <div className="space-y-4 mb-8">
-                            {/* Título */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Título de la tarea</label>
-                                <input
-                                    type="text"
-                                    className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none"
-                                    placeholder="Ej. Revisar documentación..."
-                                    value={formTitle}
-                                    onChange={(e) => setFormTitle(e.target.value)}
-                                    autoFocus
-                                />
+                        <div
+                            className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-xl font-black text-text-n900">
+                                    {editingId ? 'Editar Compromiso' : 'Nuevo Compromiso'}
+                                </h3>
+                                <button onClick={() => setIsFormOpen(false)} className="text-gray-400 hover:text-text-n900"><span className="material-symbols-outlined">close</span></button>
                             </div>
 
-                            {/* Fecha y Origen */}
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-4 mb-8">
+                                {/* Título */}
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Fecha Límite</label>
-                                    <input
-                                        type="date"
-                                        value={formDate}
-                                        onChange={handleDateChange}
-                                        className={`w-full p-3 border rounded-xl focus:ring-2 outline-none bg-white cursor-pointer text-gray-700 font-medium ${dateError ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-primary'}`}
-                                    />
-                                    {dateError && <p className="text-red-500 text-xs mt-1 font-bold">{dateError}</p>}
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Origen</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Título de la tarea</label>
                                     <input
                                         type="text"
-                                        className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary outline-none"
-                                        placeholder="Ej. Dashboard"
-                                        value={formOrigin}
-                                        onChange={(e) => setFormOrigin(e.target.value)}
+                                        className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+                                        placeholder="Ej. Revisar documentación..."
+                                        value={formTitle}
+                                        onChange={(e) => setFormTitle(e.target.value)}
+                                        autoFocus
+                                    />
+                                </div>
+
+                                {/* Fecha y Origen */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Fecha Límite</label>
+                                        <input
+                                            type="date"
+                                            value={formDate}
+                                            onChange={handleDateChange}
+                                            className={`w-full p-3 border rounded-xl focus:ring-2 outline-none bg-white cursor-pointer text-gray-700 font-medium ${dateError ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-primary'}`}
+                                        />
+                                        {dateError && <p className="text-red-500 text-xs mt-1 font-bold">{dateError}</p>}
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">Origen</label>
+                                        <input
+                                            type="text"
+                                            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                            placeholder="Ej. Dashboard"
+                                            value={formOrigin}
+                                            onChange={(e) => setFormOrigin(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Prioridad */}
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Prioridad</label>
+                                    <div className="flex gap-2">
+                                        {['Alta', 'Media', 'Baja'].map(p => (
+                                            <button
+                                                key={p}
+                                                onClick={() => setFormPriority(p as any)}
+                                                className={`flex-1 py-2 rounded-lg text-sm font-bold border transition-all ${formPriority === p
+                                                    ? 'bg-primary text-white border-primary'
+                                                    : 'bg-white text-gray-500 border-gray-200 hover:border-primary/50'
+                                                    }`}
+                                            >
+                                                {p}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Descripción */}
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Descripción</label>
+                                    <textarea
+                                        rows={3}
+                                        className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none resize-none"
+                                        placeholder="Detalles adicionales..."
+                                        value={formDesc}
+                                        onChange={(e) => setFormDesc(e.target.value)}
                                     />
                                 </div>
                             </div>
 
-                            {/* Prioridad */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Prioridad</label>
-                                <div className="flex gap-2">
-                                    {['Alta', 'Media', 'Baja'].map(p => (
-                                        <button
-                                            key={p}
-                                            onClick={() => setFormPriority(p as any)}
-                                            className={`flex-1 py-2 rounded-lg text-sm font-bold border transition-all ${formPriority === p
-                                                    ? 'bg-primary text-white border-primary'
-                                                    : 'bg-white text-gray-500 border-gray-200 hover:border-primary/50'
-                                                }`}
-                                        >
-                                            {p}
-                                        </button>
-                                    ))}
-                                </div>
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setIsFormOpen(false)}
+                                    className="flex-1 py-3 text-gray-500 font-bold hover:bg-gray-50 rounded-xl transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={handleSaveTask}
+                                    disabled={!formTitle.trim() || !!dateError}
+                                    className="flex-1 py-3 bg-primary text-white font-bold rounded-xl shadow-md hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                >
+                                    {editingId ? 'Guardar Cambios' : 'Crear Tarea'}
+                                </button>
                             </div>
-
-                            {/* Descripción */}
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Descripción</label>
-                                <textarea
-                                    rows={3}
-                                    className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none resize-none"
-                                    placeholder="Detalles adicionales..."
-                                    value={formDesc}
-                                    onChange={(e) => setFormDesc(e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => setIsFormOpen(false)}
-                                className="flex-1 py-3 text-gray-500 font-bold hover:bg-gray-50 rounded-xl transition-colors"
-                            >
-                                Cancelar
-                            </button>
-                            <button
-                                onClick={handleSaveTask}
-                                disabled={!formTitle.trim() || !!dateError}
-                                className="flex-1 py-3 bg-primary text-white font-bold rounded-xl shadow-md hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                            >
-                                {editingId ? 'Guardar Cambios' : 'Crear Tarea'}
-                            </button>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* --- MODAL ELIMINAR TAREA (Confirmación) --- */}
-            {showDeleteModal && (
-                <div
-                    className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
-                    onClick={() => setShowDeleteModal(false)}
-                >
+            {
+                showDeleteModal && (
                     <div
-                        className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 relative flex flex-col items-center text-center"
-                        onClick={e => e.stopPropagation()}
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+                        onClick={() => setShowDeleteModal(false)}
                     >
-                        <div className="size-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-4">
-                            <span className="material-symbols-outlined text-3xl">delete</span>
-                        </div>
-                        <h3 className="text-xl font-black text-text-n900 mb-2">¿Eliminar tarea?</h3>
-                        <p className="text-gray-600 text-sm mb-6">Esta acción no se puede deshacer y la tarea se eliminará permanentemente de tu lista.</p>
+                        <div
+                            className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 relative flex flex-col items-center text-center"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <div className="size-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-4">
+                                <span className="material-symbols-outlined text-3xl">delete</span>
+                            </div>
+                            <h3 className="text-xl font-black text-text-n900 mb-2">¿Eliminar tarea?</h3>
+                            <p className="text-gray-600 text-sm mb-6">Esta acción no se puede deshacer y la tarea se eliminará permanentemente de tu lista.</p>
 
-                        <div className="flex gap-3 w-full">
-                            <button
-                                onClick={() => setShowDeleteModal(false)}
-                                className="flex-1 py-3 text-gray-600 font-bold hover:bg-gray-50 rounded-xl transition-colors"
-                            >
-                                Cancelar
-                            </button>
-                            <button
-                                onClick={confirmDelete}
-                                className="flex-1 py-3 bg-red-600 text-white font-bold rounded-xl shadow-md hover:bg-red-700 transition-all"
-                            >
-                                Sí, eliminar
-                            </button>
+                            <div className="flex gap-3 w-full">
+                                <button
+                                    onClick={() => setShowDeleteModal(false)}
+                                    className="flex-1 py-3 text-gray-600 font-bold hover:bg-gray-50 rounded-xl transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={confirmDelete}
+                                    className="flex-1 py-3 bg-red-600 text-white font-bold rounded-xl shadow-md hover:bg-red-700 transition-all"
+                                >
+                                    Sí, eliminar
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
-        </div>
+        </div >
     );
 };
 

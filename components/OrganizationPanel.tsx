@@ -200,8 +200,8 @@ const OrganizationPanel: React.FC<OrganizationPanelProps> = ({ onNavigateToBulkU
         <button
             onClick={() => setActiveTab(id)}
             className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all w-full text-left ${activeTab === id
-                    ? 'bg-primary text-white shadow-md font-bold'
-                    : 'text-gray-600 hover:bg-bg-s1 hover:text-text-n900 font-medium'
+                ? 'bg-primary text-white shadow-md font-bold'
+                : 'text-gray-600 hover:bg-bg-s1 hover:text-text-n900 font-medium'
                 }`}
         >
             <span className={`material-symbols-outlined ${activeTab === id ? 'fill-current' : ''}`}>{icon}</span>
@@ -243,7 +243,7 @@ const OrganizationPanel: React.FC<OrganizationPanelProps> = ({ onNavigateToBulkU
                     {/* --- TAB: GENERAL --- */}
                     {activeTab === 'general' && (
                         <div className="space-y-8 animate-fade-in">
-                            <div className="pb-6 border-b border-primary/10 pr-20">
+                            <div className="pb-6 border-b border-primary/10 lg:pr-64">
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit mb-2">
                                     <span className="material-symbols-outlined text-sm">info</span>
                                     Información General
@@ -288,7 +288,7 @@ const OrganizationPanel: React.FC<OrganizationPanelProps> = ({ onNavigateToBulkU
                     {/* --- TAB: EQUIPOS (NUEVO) --- */}
                     {activeTab === 'teams_groups' && (
                         <div className="space-y-8 animate-fade-in">
-                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-primary/10 pr-20">
+                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-primary/10 lg:pr-64">
                                 <div className="space-y-2">
                                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
                                         <span className="material-symbols-outlined text-sm">groups_3</span>
@@ -354,7 +354,7 @@ const OrganizationPanel: React.FC<OrganizationPanelProps> = ({ onNavigateToBulkU
                     {/* --- TAB: GESTIÓN DE USUARIOS --- */}
                     {activeTab === 'team' && (
                         <div className="space-y-8 animate-fade-in">
-                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-primary/10 pr-20">
+                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-primary/10 lg:pr-64">
                                 <div className="space-y-2">
                                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
                                         <span className="material-symbols-outlined text-sm">group</span>
@@ -452,8 +452,8 @@ const OrganizationPanel: React.FC<OrganizationPanelProps> = ({ onNavigateToBulkU
                                                     </td>
                                                     <td className="px-6 py-4">
                                                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border uppercase tracking-tight ${user.role === 'Admin' ? 'bg-primary text-white border-primary' :
-                                                                user.role === 'Manager' ? 'bg-secondary-s3 text-white border-secondary-s3' :
-                                                                    'bg-white text-gray-600 border-gray-200'
+                                                            user.role === 'Manager' ? 'bg-secondary-s3 text-white border-secondary-s3' :
+                                                                'bg-white text-gray-600 border-gray-200'
                                                             }`}>
                                                             {user.role}
                                                         </span>
@@ -470,8 +470,8 @@ const OrganizationPanel: React.FC<OrganizationPanelProps> = ({ onNavigateToBulkU
                                                                 onClick={() => handleResend(user.email)}
                                                                 disabled={resentStatus[user.email] === 'sending' || resentStatus[user.email] === 'sent'}
                                                                 className={`font-black text-sm uppercase tracking-wider underline-offset-4 transition-all ${resentStatus[user.email] === 'sent'
-                                                                        ? 'text-green-600 no-underline cursor-default'
-                                                                        : (resentStatus[user.email] === 'sending' ? 'text-gray-400 no-underline cursor-wait' : 'text-primary hover:underline')
+                                                                    ? 'text-green-600 no-underline cursor-default'
+                                                                    : (resentStatus[user.email] === 'sending' ? 'text-gray-400 no-underline cursor-wait' : 'text-primary hover:underline')
                                                                     }`}
                                                             >
                                                                 {resentStatus[user.email] === 'sending' ? 'Enviando...' : (resentStatus[user.email] === 'sent' ? '¡Enviado!' : 'Reenviar')}
@@ -518,7 +518,7 @@ const OrganizationPanel: React.FC<OrganizationPanelProps> = ({ onNavigateToBulkU
 
                     {activeTab === 'roles' && (
                         <div className="space-y-8 animate-fade-in">
-                            <div className="pb-6 border-b border-primary/10 pr-20">
+                            <div className="pb-6 border-b border-primary/10 lg:pr-64">
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit mb-2">
                                     <span className="material-symbols-outlined text-sm">key</span>
                                     Roles y Permisos
@@ -541,7 +541,7 @@ const OrganizationPanel: React.FC<OrganizationPanelProps> = ({ onNavigateToBulkU
                     )}
                     {activeTab === 'settings' && (
                         <div className="space-y-8 animate-fade-in">
-                            <div className="flex flex-col gap-2 pb-6 border-b border-primary/10 pr-20">
+                            <div className="flex flex-col gap-2 pb-6 border-b border-primary/10 lg:pr-64">
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
                                     <span className="material-symbols-outlined text-sm">palette</span>
                                     Accesibilidad Global

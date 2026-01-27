@@ -46,7 +46,7 @@ const InclusionBox: React.FC<InclusionBoxProps> = ({ onBack }) => {
   return (
     <div className="w-full max-w-2xl mx-auto py-8 animate-fade-in relative pb-20">
 
-      <div className="mb-10 space-y-2 pr-20">
+      <div className="mb-10 space-y-2 lg:pr-64">
         <button
           onClick={onBack}
           className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-primary transition-colors w-fit mb-4"

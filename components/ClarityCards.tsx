@@ -272,7 +272,7 @@ const ClarityCards: React.FC<ClarityCardsProps> = ({ onGoDashboard, onCreateNew,
     <div className="flex gap-6 h-full relative animate-fade-in">
       {/* Contenido Principal */}
       <div className="flex-1 flex flex-col">
-        <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+        <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 lg:pr-64">
           <div className="flex flex-col gap-2">
             <button
               onClick={onGoDashboard}

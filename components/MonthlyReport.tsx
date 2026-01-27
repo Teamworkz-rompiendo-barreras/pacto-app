@@ -46,7 +46,7 @@ const MonthlyReport: React.FC<MonthlyReportProps> = ({ onBack, onNavigateToWeekl
       </div>
 
       {/* Page Heading */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10 pr-20">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10 lg:pr-64">
         <div className="flex flex-col gap-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
             <span className="material-symbols-outlined text-sm">analytics</span>

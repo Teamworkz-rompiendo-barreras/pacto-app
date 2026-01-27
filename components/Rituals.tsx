@@ -66,12 +66,15 @@ const Rituals: React.FC<RitualsProps> = ({ rituals, onCreate, onViewDetails, onT
 
                 {/* Header */}
                 <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                    <div className="flex flex-col gap-2">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
-                            <span className="material-symbols-outlined text-sm">self_improvement</span>
-                            Rituales de Equipo
+                    {/* Header Content */}
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10 lg:pr-64">
+                        <div className="flex flex-col gap-2">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
+                                <span className="material-symbols-outlined text-sm">self_improvement</span>
+                                Rituales de Equipo
+                            </div>
+                            <h2 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight">{t('ritual.title')}</h2>
                         </div>
-                        <h2 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight">{t('ritual.title')}</h2>
                         <p className="text-gray-600 text-xl max-w-lg font-medium">{t('ritual.desc')}</p>
                     </div>
                     <div className="flex items-center gap-3">
@@ -336,7 +339,7 @@ const Rituals: React.FC<RitualsProps> = ({ rituals, onCreate, onViewDetails, onT
             </div>
 
             {/* Right Column: Sidebar (Energy & Widgets) */}
-            <div className="lg:col-span-4 sticky top-6 h-fit space-y-6">
+            <div className="lg:col-span-4 sticky top-6 h-fit space-y-6 lg:mt-24">
 
                 {/* Energy Header */}
                 <div className="flex items-center gap-2 mb-2">

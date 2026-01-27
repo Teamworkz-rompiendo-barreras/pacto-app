@@ -134,7 +134,7 @@ const Achievements: React.FC<AchievementsProps> = ({ onCelebrate, onGoBack }) =>
                     <span className="material-symbols-outlined text-sm">arrow_back</span>
                     Inclusión en Acción
                 </div>
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 lg:pr-64">
                     <div className="space-y-2 max-w-2xl">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
                             <span className="material-symbols-outlined text-sm">emoji_events</span>
