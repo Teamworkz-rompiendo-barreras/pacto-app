@@ -46,20 +46,22 @@ const InclusionBox: React.FC<InclusionBoxProps> = ({ onBack }) => {
   return (
     <div className="w-full max-w-2xl mx-auto py-8 animate-fade-in relative pb-20">
 
-      {/* Botón de volver móvil */}
-      <button
-        onClick={onBack}
-        className="md:hidden flex items-center gap-2 text-gray-500 hover:text-primary mb-6 font-bold"
-      >
-        <span className="material-symbols-outlined">arrow_back</span>
-        Volver
-      </button>
-
-      <div className="text-center mb-10 space-y-3">
-        <h1 className="text-3xl md:text-4xl font-black text-text-n900 leading-tight">
-          Buzón de Sugerencias de Inclusión
+      <div className="mb-10 space-y-2 pr-20">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-primary transition-colors w-fit mb-4"
+        >
+          <span className="material-symbols-outlined text-lg">arrow_back</span>
+          Volver
+        </button>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
+          <span className="material-symbols-outlined text-sm">mark_email_unread</span>
+          Buzón de Inclusión
+        </div>
+        <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
+          Buzón de Sugerencias
         </h1>
-        <p className="text-gray-600 font-medium text-lg max-w-lg mx-auto leading-relaxed">
+        <p className="text-xl text-gray-600 font-medium max-w-lg leading-relaxed">
           Un espacio seguro y anónimo diseñado para escuchar tu voz y mejorar juntos nuestra cultura laboral.
         </p>
       </div>

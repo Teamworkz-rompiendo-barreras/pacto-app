@@ -46,13 +46,16 @@ const MonthlyReport: React.FC<MonthlyReportProps> = ({ onBack, onNavigateToWeekl
       </div>
 
       {/* Page Heading */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10 pr-20">
         <div className="flex flex-col gap-2">
-          <span className="text-primary font-bold tracking-widest uppercase text-xs">Análisis de Impacto Neurodiverso</span>
-          <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
+            <span className="material-symbols-outlined text-sm">analytics</span>
+            Reporte Mensual
+          </div>
+          <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
             Reporte Mensual <span className="text-primary/60">—</span> Octubre 2023
           </h1>
-          <p className="text-gray-600 max-w-2xl text-lg font-medium">
+          <p className="text-xl text-gray-600 font-medium max-w-2xl leading-relaxed">
             Visualización de métricas críticas para la seguridad psicológica y claridad de procesos del equipo.
           </p>
         </div>
