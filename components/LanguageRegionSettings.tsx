@@ -29,7 +29,7 @@ const LanguageRegionSettings: React.FC<LanguageRegionSettingsProps> = ({ onBack,
     return (
         <div className="bg-bg-s1 min-h-full font-display text-text-n900 flex flex-col animate-fade-in">
             {/* Top Navigation */}
-            <header className="w-full px-6 py-4 flex items-center justify-between sticky top-0 bg-bg-s1/90 backdrop-blur-sm z-35">
+            <header className="w-full px-6 py-4 flex items-center justify-between sticky top-0 bg-bg-s1/90 backdrop-blur-sm z-[35]">
                 <div className="flex items-center gap-3 cursor-pointer" onClick={onBack}>
                     <div className="bg-primary text-white p-1.5 rounded-lg">
                         <span className="material-symbols-outlined text-[24px]">diversity_3</span>

@@ -239,7 +239,7 @@ const NotificationPreferences: React.FC<NotificationPreferencesProps> = ({ onBac
             </main>
 
             {/* Sticky Footer Action Bar */}
-            <footer className="sticky bottom-0 z-35 w-full bg-white/90 backdrop-blur-md border-t border-gray-200 py-4 px-6 lg:px-10">
+            <footer className="sticky bottom-0 z-[35] w-full bg-white/90 backdrop-blur-md border-t border-gray-200 py-4 px-6 lg:px-10">
                 <div className="max-w-4xl mx-auto flex items-center justify-between">
                     <button
                         onClick={handleRestoreDefaults}
