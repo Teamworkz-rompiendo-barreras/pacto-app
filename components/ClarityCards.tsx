@@ -281,8 +281,12 @@ const ClarityCards: React.FC<ClarityCardsProps> = ({ onGoDashboard, onCreateNew,
               <span className="material-symbols-outlined text-lg">arrow_back</span>
               Volver
             </button>
-            <h2 className="text-4xl font-bold tracking-tight text-primary">Kits de Claridad</h2>
-            <p className="text-gray-700 text-lg mt-1 font-medium">Herramientas prácticas para la inclusión neurodiversa.</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
+              <span className="material-symbols-outlined text-sm">psychology</span>
+              Kits de Claridad
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight text-text-n900">Kits de Claridad</h2>
+            <p className="text-gray-600 text-xl font-medium">Herramientas prácticas para la inclusión neurodiversa.</p>
           </div>
           <div className="relative max-w-xs w-full">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">search</span>
