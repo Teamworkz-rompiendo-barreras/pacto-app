@@ -12,7 +12,8 @@ interface DashboardProps {
     onEditAgreement: (agreement: Agreement) => void;
     onExploreLibrary: () => void;
     onNavigate: (view: View) => void;
-    onSendTip?: (tip: string) => void; // Added
+    onSendTip?: (tip: string) => void;
+    isArchivedView?: boolean;
 }
 
 const TIPS_DB = [
@@ -25,7 +26,7 @@ const TIPS_DB = [
     "Graba las reuniones importantes. Para personas con TDAH, poder revisar la grabación a 1.5x velocidad es una herramienta vital."
 ];
 
-const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, onCreateNew, onViewAgreement, onEditAgreement, onExploreLibrary, onNavigate, onSendTip }) => {
+const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, onCreateNew, onViewAgreement, onEditAgreement, onExploreLibrary, onNavigate, onSendTip, isArchivedView = false }) => {
     const { toast } = useToast();
     const { t } = useLanguage();
     const [tipStatus, setTipStatus] = useState<'idle' | 'sending' | 'success'>('idle');
@@ -250,8 +251,26 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                 {/* Main Content (Acuerdos) */}
                 <div className="lg:col-span-8 flex flex-col gap-6">
                     <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-2xl font-bold text-text-n900">{t('dash.section.agreements')}</h3>
-                        <button className="text-sm font-bold text-primary hover:underline">{t('dash.link.viewall')}</button>
+                        <h3 className="text-2xl font-bold text-text-n900">
+                            {isArchivedView ? 'Acuerdos Archivados' : t('dash.section.agreements')}
+                        </h3>
+                        {!isArchivedView ? (
+                            <button
+                                onClick={() => onNavigate(View.ARCHIVED_AGREEMENTS)}
+                                className="text-sm font-bold text-gray-400 hover:text-text-n900 flex items-center gap-1 transition-colors"
+                            >
+                                <span className="material-symbols-outlined text-sm">archive</span>
+                                Ver Archivados
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => onNavigate(View.DASHBOARD)}
+                                className="text-sm font-bold text-primary hover:underline flex items-center gap-1"
+                            >
+                                <span className="material-symbols-outlined text-sm">arrow_back</span>
+                                Volver al Dashboard
+                            </button>
+                        )}
                     </div>
 
                     <div className="grid gap-4">

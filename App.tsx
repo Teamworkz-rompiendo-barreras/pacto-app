@@ -314,6 +314,27 @@ const AppContent: React.FC = () => {
           />
         );
 
+      case View.ARCHIVED_AGREEMENTS:
+        return (
+          <Dashboard
+            user={user}
+            agreements={agreements.filter(a => a.status === 'Archivado')}
+            onCreateNew={() => { setAgreementTemplate(undefined); navigateTo(View.NEW_AGREEMENT); }}
+            onViewAgreement={(agreement) => {
+              setSelectedAgreement(agreement);
+              navigateTo(View.AGREEMENT_DETAILS);
+            }}
+            onEditAgreement={(agreement) => {
+              setSelectedAgreement(agreement);
+              navigateTo(View.EDIT_AGREEMENT);
+            }}
+            onExploreLibrary={() => navigateTo(View.LIBRARY)}
+            onNavigate={navigateTo}
+            notifications={notifications}
+            isArchivedView={true}
+          />
+        );
+
       case View.MY_AGREEMENTS:
         return (
           <MyAgreements
