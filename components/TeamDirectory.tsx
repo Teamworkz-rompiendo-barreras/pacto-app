@@ -184,8 +184,8 @@ const TeamDirectory: React.FC<TeamDirectoryProps> = ({ members, onViewProfile, o
                                     key={tag}
                                     onClick={() => toggleComm(tag)}
                                     className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${selectedComm.includes(tag)
-                                            ? 'bg-primary text-white shadow-md'
-                                            : 'bg-gray-100 text-gray-600 hover:bg-primary/20 hover:text-primary'
+                                        ? 'bg-primary text-white shadow-md'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-primary/20 hover:text-primary'
                                         }`}
                                 >
                                     {tag}
@@ -216,7 +216,7 @@ const TeamDirectory: React.FC<TeamDirectoryProps> = ({ members, onViewProfile, o
                 </button>
 
                 {/* Header & Search */}
-                <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-border flex flex-col gap-6 relative overflow-hidden">
+                <div className="bg-white rounded-xl p-8 pr-20 shadow-sm border border-gray-border flex flex-col gap-6 relative overflow-hidden">
                     {/* Header Content */}
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10">
                         <div className="flex flex-col gap-2">
@@ -262,8 +262,8 @@ const TeamDirectory: React.FC<TeamDirectoryProps> = ({ members, onViewProfile, o
                     <button
                         onClick={() => setSelectedDepts([])}
                         className={`flex h-12 items-center justify-center gap-x-2 rounded-xl px-6 font-bold transition-all ${selectedDepts.length === 0
-                                ? 'bg-primary text-white shadow-lg shadow-primary/25'
-                                : 'bg-white text-gray-700 border border-gray-200 shadow-sm hover:border-primary/30 hover:text-primary hover:shadow-md'
+                            ? 'bg-primary text-white shadow-lg shadow-primary/25'
+                            : 'bg-white text-gray-700 border border-gray-200 shadow-sm hover:border-primary/30 hover:text-primary hover:shadow-md'
                             }`}
                     >
                         Todos <span className={`px-2 py-0.5 rounded-md text-xs font-bold ${selectedDepts.length === 0 ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
@@ -280,8 +280,8 @@ const TeamDirectory: React.FC<TeamDirectoryProps> = ({ members, onViewProfile, o
                                 setSelectedDepts([cat]);
                             }}
                             className={`flex h-12 items-center justify-center gap-x-2 rounded-xl px-6 font-bold transition-all ${selectedDepts.includes(cat) && selectedDepts.length === 1
-                                    ? 'bg-primary text-white shadow-lg shadow-primary/25'
-                                    : 'bg-white text-gray-700 border border-gray-200 shadow-sm hover:border-primary/30 hover:text-primary hover:shadow-md'
+                                ? 'bg-primary text-white shadow-lg shadow-primary/25'
+                                : 'bg-white text-gray-700 border border-gray-200 shadow-sm hover:border-primary/30 hover:text-primary hover:shadow-md'
                                 }`}
                         >
                             {cat === 'Ingeniería' ? 'IT / Eng' : (cat === 'Operaciones' ? 'RRHH / Ops' : cat)}
@@ -375,8 +375,8 @@ const TeamDirectory: React.FC<TeamDirectoryProps> = ({ members, onViewProfile, o
                                     key={pageNum}
                                     onClick={() => setCurrentPage(pageNum)}
                                     className={`size-10 rounded-xl font-bold flex items-center justify-center transition-all ${currentPage === pageNum
-                                            ? 'bg-primary text-white shadow-lg'
-                                            : 'bg-white border border-gray-border text-text-n900 hover:bg-gray-50'
+                                        ? 'bg-primary text-white shadow-lg'
+                                        : 'bg-white border border-gray-border text-text-n900 hover:bg-gray-50'
                                         }`}
                                 >
                                     {pageNum}
