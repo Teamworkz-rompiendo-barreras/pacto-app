@@ -351,6 +351,7 @@ const AppContent: React.FC = () => {
               initialData={selectedAgreement}
               onSave={(data) => { handleUpdateAgreement(data) }}
               onBack={() => navigateTo(View.DASHBOARD)}
+              onArchive={handleArchiveAgreement}
             />
           </div>
         );

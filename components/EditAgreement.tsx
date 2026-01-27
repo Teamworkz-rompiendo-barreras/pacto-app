@@ -5,10 +5,11 @@ import AgreementForm from './AgreementForm';
 interface EditAgreementProps {
     onBack: () => void;
     onSave: (data: Partial<Agreement>) => void;
+    onArchive?: () => void;
     initialData?: Agreement | null;
 }
 
-const EditAgreement: React.FC<EditAgreementProps> = ({ onBack, onSave, initialData }) => {
+const EditAgreement: React.FC<EditAgreementProps> = ({ onBack, onSave, onArchive, initialData }) => {
     // Si no hay datos iniciales, mostramos un estado vacío/informativo
     if (!initialData) {
         return (
@@ -42,12 +43,22 @@ const EditAgreement: React.FC<EditAgreementProps> = ({ onBack, onSave, initialDa
 
     return (
         <div className="w-full">
-            {/* Header simplificado ya que AgreementForm tiene su propio header, pero podemos añadir breadcrumbs o contexto si queremos */}
-            <div className="max-w-2xl mx-auto pt-8 px-4 mb-[-20px] relative z-10">
+            {/* Header simplificado */}
+            <div className="max-w-2xl mx-auto pt-8 px-4 mb-[-20px] relative z-10 flex justify-between items-center">
                 <button onClick={onBack} className="text-gray-500 hover:text-primary flex items-center gap-1 text-sm font-bold transition-colors">
                     <span className="material-symbols-outlined text-sm">arrow_back</span>
                     Volver
                 </button>
+
+                {onArchive && (
+                    <button
+                        onClick={onArchive}
+                        className="text-red-500 hover:text-red-700 font-bold text-xs flex items-center gap-1 px-3 py-1 rounded bg-red-50 hover:bg-red-100 transition-colors"
+                    >
+                        <span className="material-symbols-outlined text-sm">archive</span>
+                        ARCHIVAR ACUERDO
+                    </button>
+                )}
             </div>
 
             <AgreementForm

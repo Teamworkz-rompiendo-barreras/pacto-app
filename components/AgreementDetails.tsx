@@ -99,10 +99,11 @@ const AgreementDetails: React.FC<AgreementDetailsProps> = ({ agreement, onBack, 
             {onArchive && agreement?.status !== 'Archivado' && (
               <button
                 onClick={onArchive}
-                className="p-2 rounded-lg border border-red-200 hover:bg-red-50 text-red-500 transition-colors"
+                className="px-3 py-2 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 text-red-600 transition-colors flex items-center gap-2"
                 title="Archivar/Desactivar Acuerdo"
               >
-                <span className="material-symbols-outlined">archive</span>
+                <span className="material-symbols-outlined text-[20px]">archive</span>
+                <span className="font-bold text-xs uppercase tracking-wide">Archivar</span>
               </button>
             )}
             <button className="p-2 rounded-lg border border-gray-border hover:bg-gray-50 text-gray-500" title="Compartir Acuerdo">
