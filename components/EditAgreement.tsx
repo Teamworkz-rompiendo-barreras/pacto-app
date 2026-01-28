@@ -43,13 +43,7 @@ const EditAgreement: React.FC<EditAgreementProps> = ({ onBack, onSave, onArchive
 
     return (
         <div className="w-full">
-            {/* Header simplificado */}
-            <div className="max-w-3xl mx-auto pt-4 px-0 mb-4 relative z-10 flex justify-between items-center">
-                <button onClick={onBack} className="text-gray-500 hover:text-primary flex items-center gap-1 text-sm font-bold transition-colors">
-                    <span className="material-symbols-outlined text-sm">arrow_back</span>
-                    Volver
-                </button>
-            </div>
+            {/* Header simplificado eliminado (ahora en AgreementForm) */}
 
             <AgreementForm
                 initialData={initialData}

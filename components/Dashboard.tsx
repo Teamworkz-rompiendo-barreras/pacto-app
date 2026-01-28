@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Agreement, View, UserProfile, Notification } from '../types';
 import { useToast } from '../context/ToastContext';
 import { useLanguage } from '../LanguageContext';
-
+import { PageContainer } from './common/PageContainer';
+import { PageHeader } from './common/PageHeader';
 interface DashboardProps {
     user: UserProfile | null;
     agreements: Agreement[];
@@ -82,30 +83,26 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
     // --- RENDERIZADO VIEW: ADMIN (PANEL DE CONTROL) ---
     if (isAdmin && showAdminPanel) {
         return (
-            <div className="w-full max-w-7xl mx-auto animate-fade-in font-display pb-12 px-6 md:px-10 pt-12">
-                <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
-                    <div className="flex flex-col gap-2">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
+            <PageContainer>
+                <PageHeader
+                    title={t('admin.title')}
+                    subtitle={t('admin.subtitle').replace('{name}', user?.name.split(' ')[0] || 'la Organización')}
+                    badge={
+                        <>
                             <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
                             {t('admin.badge')}
-                        </div>
-                        <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
-                            {t('admin.title')}
-                        </h1>
-                        <p className="text-xl text-gray-600 font-medium">
-                            {t('admin.subtitle').replace('{name}', user?.name.split(' ')[0] || 'la Organización')}
-                        </p>
-                    </div>
-
-                    {/* TOGGLE VISTA ADMIN / PERSONAL */}
-                    <button
-                        onClick={() => setShowAdminPanel(false)}
-                        className="flex items-center gap-3 bg-white border-2 border-primary text-primary px-5 py-2.5 rounded-xl font-bold shadow-sm hover:bg-primary hover:text-white transition-all group"
-                    >
-                        <span className="material-symbols-outlined group-hover:rotate-180 transition-transform">swap_vert</span>
-                        <span>{t('admin.btn.switch')}</span>
-                    </button>
-                </header>
+                        </>
+                    }
+                    actionButton={
+                        <button
+                            onClick={() => setShowAdminPanel(false)}
+                            className="flex items-center gap-3 bg-white border-2 border-primary text-primary px-5 py-2.5 rounded-xl font-bold shadow-sm hover:bg-primary hover:text-white transition-all group"
+                        >
+                            <span className="material-symbols-outlined group-hover:rotate-180 transition-transform">swap_vert</span>
+                            <span>{t('admin.btn.switch')}</span>
+                        </button>
+                    }
+                />
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4">
@@ -195,60 +192,49 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                         </div>
                     </div>
                 </div>
-            </div>
+            </PageContainer>
         );
     }
 
     // --- RENDERIZADO VIEW: EMPLEADO (MIEMBRO) ---
     return (
-        <div className="w-full max-w-7xl mx-auto animate-fade-in font-display pb-12 px-6 md:px-10 pt-12">
+        <PageContainer>
+            {/* Header Normal */}
+            <PageHeader
+                title={isArchivedView ? "Acuerdos Archivados" : `Hola, ${user?.name.split(' ')[0]}`}
+                subtitle={isArchivedView ? "Historial de acuerdos antiguos." : t('dash.subtitle')}
+                badge={isArchivedView ? (
+                    <>
+                        <span className="material-symbols-outlined text-sm">archive</span>
+                        Archivo
+                    </>
+                ) : undefined}
+                badgeColor={isArchivedView ? "bg-gray-100 text-gray-600" : undefined}
+                actionButton={
+                    <div className="flex gap-3">
+                        {isAdmin && (
+                            <button
+                                onClick={() => setShowAdminPanel(true)}
+                                className="hidden md:flex items-center gap-2 bg-white border-2 border-gray-200 text-gray-600 px-4 py-3 rounded-xl font-bold hover:border-primary hover:text-primary transition-all"
+                            >
+                                <span className="material-symbols-outlined">admin_panel_settings</span>
+                                {t('admin.badge')}
+                            </button>
+                        )}
+                        {!isArchivedView && (
+                            <button
+                                onClick={onCreateNew}
+                                className="flex justify-center items-center gap-2 bg-primary hover:brightness-110 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                            >
+                                <span className="material-symbols-outlined">add</span>
+                                <span>{t('dashboard.btn.new')}</span>
+                            </button>
+                        )}
+                    </div>
+                }
+            />
 
-            {/* Header */}
-            <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
-                <div className="flex flex-col gap-2">
-                    {isAdmin && (
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-xs font-bold uppercase tracking-wider w-fit">
-                            <span className="material-symbols-outlined text-sm">person</span>
-                            {t('dash.view.personal')}
-                        </div>
-                    )}
-                    <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
-                        {t('dash.welcome').replace('{name}', user ? user.name.split(' ')[0] : 'Compañero')}
-                    </h1>
-                    <p className="text-xl text-gray-600 font-medium">
-                        {t('dash.subtitle')}
-                    </p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto items-end md:items-center">
-                    {isAdmin && (
-                        <button
-                            onClick={() => setShowAdminPanel(true)}
-                            className="flex items-center gap-2 text-gray-500 font-bold text-sm hover:text-primary transition-colors mb-2 sm:mb-0 mr-4"
-                        >
-                            <span className="material-symbols-outlined">settings_backup_restore</span>
-                            {t('dash.return_admin')}
-                        </button>
-                    )}
-                    <button
-                        onClick={onExploreLibrary}
-                        className="hidden sm:flex items-center gap-2 bg-white border-2 border-primary/10 text-primary px-6 py-3 rounded-xl font-bold hover:bg-primary/5 transition-all"
-                    >
-                        <span className="material-symbols-outlined">library_books</span>
-                        <span>{t('dash.btn.library')}</span>
-                    </button>
-                    <button
-                        onClick={onCreateNew}
-                        className="flex-1 md:flex-none justify-center items-center gap-2 bg-primary hover:brightness-110 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex"
-                    >
-                        <span className="material-symbols-outlined">add</span>
-                        <span>{t('dash.btn.new')}</span>
-                    </button>
-                </div>
-            </header>
-
-            {/* Grid Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
                 {/* Main Content (Acuerdos) */}
                 <div className="lg:col-span-8 flex flex-col gap-6">
                     <div className="flex items-center justify-between mb-2">
@@ -452,8 +438,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                     </button>
                 </div>
 
-            </div>
-        </div>
+            </div >
+        </PageContainer >
     );
 };
 

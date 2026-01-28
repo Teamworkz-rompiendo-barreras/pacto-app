@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
 import { Agreement } from '../types';
+import { PageContainer } from './common/PageContainer';
+import { PageHeader } from './common/PageHeader';
 
 interface MyAgreementsProps {
     agreements: Agreement[];
@@ -22,28 +24,26 @@ const MyAgreements: React.FC<MyAgreementsProps> = ({ agreements, onCreateNew, on
     });
 
     return (
-        <div className="w-full max-w-7xl mx-auto animate-fade-in font-display pb-12 px-6 md:px-10 pt-12">
-            <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
-                <div className="flex flex-col gap-2">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
+        <PageContainer>
+            <PageHeader
+                title="Mis Acuerdos"
+                subtitle="Consulta y gestiona todos los acuerdos vivos de tu equipo."
+                badge={
+                    <>
                         <span className="material-symbols-outlined text-sm">handshake</span>
                         Gestión de Acuerdos
-                    </div>
-                    <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
-                        Mis Acuerdos
-                    </h1>
-                    <p className="text-xl text-gray-600 font-medium">
-                        Consulta y gestiona todos los acuerdos vivos de tu equipo.
-                    </p>
-                </div>
-                <button
-                    onClick={onCreateNew}
-                    className="flex justify-center items-center gap-2 bg-primary hover:brightness-110 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                >
-                    <span className="material-symbols-outlined">add</span>
-                    <span>Nuevo Acuerdo</span>
-                </button>
-            </header>
+                    </>
+                }
+                actionButton={
+                    <button
+                        onClick={onCreateNew}
+                        className="flex justify-center items-center gap-2 bg-primary hover:brightness-110 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    >
+                        <span className="material-symbols-outlined">add</span>
+                        <span>Nuevo Acuerdo</span>
+                    </button>
+                }
+            />
 
             {/* Controls */}
             <div className="flex flex-col md:flex-row gap-4 mb-8">
@@ -122,7 +122,7 @@ const MyAgreements: React.FC<MyAgreementsProps> = ({ agreements, onCreateNew, on
                     </div>
                 )}
             </div>
-        </div>
+        </PageContainer>
     );
 };
 

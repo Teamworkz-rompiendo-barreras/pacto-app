@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
 import { Notification } from '../types';
+import { PageContainer } from './common/PageContainer';
+import { PageHeader } from './common/PageHeader';
 
 interface NotificationsProps {
   notifications: Notification[];
@@ -32,41 +34,30 @@ const Notifications: React.FC<NotificationsProps> = ({ notifications, onBack, on
   // Group notifications by Today / Earlier could be done here, but simple list for now is better than hardcoded.
 
   return (
-    <div className="flex flex-col flex-1 max-w-[800px] mx-auto w-full animate-fade-in pb-12">
-
-      {/* Breadcrumb / Back Navigation */}
-      <div className="mb-6 md:hidden">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 text-gray-500 hover:text-primary transition-colors text-sm font-bold"
-        >
-          <span className="material-symbols-outlined text-lg">arrow_back</span>
-          Volver
-        </button>
-      </div>
-
-      {/* Page Heading */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-text-n900 text-4xl font-black leading-tight tracking-tight">Centro de Notificaciones</h1>
-          <p className="text-gray-600 text-base font-normal">Gestiona tus actualizaciones y recordatorios de inclusión.</p>
-        </div>
-        <div className="flex flex-col items-end gap-3">
-          <button
-            onClick={handleMarkAllAsRead}
-            className="flex items-center justify-center rounded-xl h-11 px-6 bg-primary text-white text-sm font-bold shadow-md hover:brightness-110 active:scale-95 transition-all"
-          >
-            Marcar todas como leídas
-          </button>
-          <button
-            onClick={onConfigure}
-            className="text-primary text-sm font-bold hover:underline flex items-center gap-1 group"
-          >
-            <span className="material-symbols-outlined text-sm group-hover:rotate-45 transition-transform">settings</span>
-            Configuración de Notificaciones
-          </button>
-        </div>
-      </div>
+    <PageContainer>
+      <PageHeader
+        title="Centro de Notificaciones"
+        subtitle="Gestiona tus actualizaciones y recordatorios de inclusión."
+        onBack={onBack}
+        backLabel="Volver"
+        actionButton={
+          <div className="flex flex-col items-end gap-3 sm:flex-row sm:items-center">
+            <button
+              onClick={handleMarkAllAsRead}
+              className="flex items-center justify-center rounded-xl h-11 px-6 bg-primary text-white text-sm font-bold shadow-md hover:brightness-110 active:scale-95 transition-all"
+            >
+              Marcar todas como leídas
+            </button>
+            <button
+              onClick={onConfigure}
+              className="text-primary text-sm font-bold hover:underline flex items-center gap-1 group"
+            >
+              <span className="material-symbols-outlined text-sm group-hover:rotate-45 transition-transform">settings</span>
+              Configuración
+            </button>
+          </div>
+        }
+      />
 
       {/* Notification Content Area */}
       <div className="flex flex-col gap-4">
@@ -88,8 +79,8 @@ const Notifications: React.FC<NotificationsProps> = ({ notifications, onBack, on
               )}
 
               <div className={`flex items-center justify-center rounded-lg shrink-0 size-12 group-hover:scale-110 transition-transform ${notif.type === 'tip' ? 'bg-secondary-s3/10 text-secondary-s3' :
-                  notif.type === 'weekly' ? 'bg-purple-100 text-purple-600' :
-                    'bg-blue-50 text-blue-600'
+                notif.type === 'weekly' ? 'bg-purple-100 text-purple-600' :
+                  'bg-blue-50 text-blue-600'
                 }`}>
                 <span className="material-symbols-outlined">
                   {notif.type === 'tip' ? 'lightbulb' :
@@ -120,7 +111,8 @@ const Notifications: React.FC<NotificationsProps> = ({ notifications, onBack, on
         )}
 
       </div>
-    </div>
+
+    </PageContainer >
   );
 };
 

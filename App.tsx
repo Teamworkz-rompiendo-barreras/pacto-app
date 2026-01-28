@@ -352,20 +352,17 @@ const AppContent: React.FC = () => {
         );
 
       case View.MY_COMMITMENTS:
-        return <div className="p-6 md:p-10 w-full"><MyCommitments onBack={() => navigateTo(View.DASHBOARD)} /></div>;
+        return <MyCommitments onBack={() => navigateTo(View.DASHBOARD)} />;
 
       case View.NEW_AGREEMENT:
         return (
-          <div className="p-6 md:p-10 w-full">
-            <AgreementForm
-              initialData={agreementTemplate}
-              onSave={handleSaveAgreement}
-              onCancel={() => navigateTo(View.DASHBOARD)}
-            />
-          </div>
+          <AgreementForm
+            initialData={agreementTemplate}
+            onSave={handleSaveAgreement}
+            onCancel={() => navigateTo(View.DASHBOARD)}
+          />
         );
 
-      case View.EDIT_AGREEMENT:
         return (
           <div className="w-full">
             <EditAgreement
@@ -404,14 +401,12 @@ const AppContent: React.FC = () => {
 
       case View.TEAM:
         return (
-          <div className="p-6 md:p-10 w-full">
-            <TeamDirectory
-              members={teamMembers}
-              onViewProfile={() => navigateTo(View.PUBLIC_PROFILE)}
-              onGoBack={() => navigateTo(View.DASHBOARD)}
-              onNavigateToPrivacy={() => navigateTo(View.TEAM_PRIVACY)}
-            />
-          </div>
+          <TeamDirectory
+            members={teamMembers}
+            onViewProfile={() => navigateTo(View.PUBLIC_PROFILE)}
+            onGoBack={() => navigateTo(View.DASHBOARD)}
+            onNavigateToPrivacy={() => navigateTo(View.TEAM_PRIVACY)}
+          />
         );
 
       case View.TEAM_PRIVACY:
@@ -451,19 +446,17 @@ const AppContent: React.FC = () => {
 
       case View.RITUALS:
         return (
-          <div className="p-6 md:p-10 w-full h-full">
-            <Rituals
-              rituals={rituals}
-              onCreate={() => navigateTo(View.NEW_RITUAL)}
-              onViewDetails={(r) => {
-                setSelectedRitual(r);
-                navigateTo(View.RITUAL_DETAILS);
-              }}
-              onToggleStatus={() => { }}
-              onViewHistory={() => navigateTo(View.RITUAL_HISTORY)}
-              onStartPreparation={() => navigateTo(View.RITUAL_PREPARATION)}
-            />
-          </div>
+          <Rituals
+            rituals={rituals}
+            onCreate={() => navigateTo(View.NEW_RITUAL)}
+            onViewDetails={(r) => {
+              setSelectedRitual(r);
+              navigateTo(View.RITUAL_DETAILS);
+            }}
+            onToggleStatus={() => { }}
+            onViewHistory={() => navigateTo(View.RITUAL_HISTORY)}
+            onStartPreparation={() => navigateTo(View.RITUAL_PREPARATION)}
+          />
         );
 
       case View.NEW_RITUAL:
@@ -503,15 +496,13 @@ const AppContent: React.FC = () => {
 
       case View.NOTIFICATIONS:
         return (
-          <div className="p-6 md:p-10 w-full">
-            <Notifications
-              notifications={notifications}
-              onBack={() => navigateTo(View.DASHBOARD)}
-              onConfigure={() => navigateTo(View.NOTIFICATION_SETTINGS)}
-              onViewItem={(type) => navigateTo(type === 'weekly' ? View.WEEKLY_SUMMARY : View.DASHBOARD)}
-              onMarkRead={() => user && notificationService.markAsRead(user.id).then(() => notificationService.getNotifications(user.id).then(setNotifications))}
-            />
-          </div>
+          <Notifications
+            notifications={notifications}
+            onBack={() => navigateTo(View.DASHBOARD)}
+            onConfigure={() => navigateTo(View.NOTIFICATION_SETTINGS)}
+            onViewItem={(type) => navigateTo(type === 'weekly' ? View.WEEKLY_SUMMARY : View.DASHBOARD)}
+            onMarkRead={() => user && notificationService.markAsRead(user.id).then(() => notificationService.getNotifications(user.id).then(setNotifications))}
+          />
         );
 
       case View.NOTIFICATION_SETTINGS:

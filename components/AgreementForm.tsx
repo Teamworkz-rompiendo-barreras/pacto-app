@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Agreement } from '../types';
 import { useToast } from '../context/ToastContext';
+import { PageContainer } from './common/PageContainer';
+import { PageHeader } from './common/PageHeader';
 
 interface AgreementFormProps {
   onSave: (data: Partial<Agreement>) => void;
@@ -174,28 +176,33 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, onArchi
     }, 800);
   };
 
+  // Determine if editing based on ID presence
+  const isEdit = initialData && (initialData as any).id;
+
   return (
-    <div className="max-w-3xl mx-auto animate-fade-in pb-20">
-      <header className="mb-8 flex justify-between items-start">
-        <div>
-          <h2 className="text-3xl font-black text-text-n900">Crear un Nuevo Acuerdo Vivo</h2>
-          <p className="text-gray-600 mt-2 font-medium">Define expectativas claras para que todo el equipo sepa cómo colaborar mejor.</p>
-        </div>
-        <button
-          type="button"
-          onClick={handleGenerateAI}
-          disabled={isGenerating}
-          className="hidden md:flex items-center gap-2 bg-primary hover:brightness-110 text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-md transition-all active:scale-95 disabled:opacity-70 focus:outline-none focus:ring-4 focus:ring-primary/40"
-          aria-label="Sugerir contenido usando Inteligencia Artificial"
-        >
-          {isGenerating ? (
-            <span className="material-symbols-outlined animate-spin text-sm">refresh</span>
-          ) : (
-            <span className="material-symbols-outlined text-sm">auto_awesome</span>
-          )}
-          {isGenerating ? 'Generando...' : 'Sugerir con IA'}
-        </button>
-      </header>
+    <PageContainer>
+      <PageHeader
+        title={isEdit ? "Editar Acuerdo" : "Crear un Nuevo Acuerdo Vivo"}
+        subtitle={isEdit ? "Modifica los detalles del acuerdo existente." : "Define expectativas claras para que todo el equipo sepa cómo colaborar mejor."}
+        onBack={onCancel}
+        backLabel="Cancelar"
+        actionButton={
+          <button
+            type="button"
+            onClick={handleGenerateAI}
+            disabled={isGenerating}
+            className="hidden md:flex items-center gap-2 bg-primary hover:brightness-110 text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-md transition-all active:scale-95 disabled:opacity-70 focus:outline-none focus:ring-4 focus:ring-primary/40"
+            aria-label="Sugerir contenido usando Inteligencia Artificial"
+          >
+            {isGenerating ? (
+              <span className="material-symbols-outlined animate-spin text-sm">refresh</span>
+            ) : (
+              <span className="material-symbols-outlined text-sm">auto_awesome</span>
+            )}
+            {isGenerating ? 'Generando...' : 'Sugerir con IA'}
+          </button>
+        }
+      />
 
       <form onSubmit={handleSubmit} className="bg-white border border-gray-border p-8 rounded-xl space-y-8 shadow-xl shadow-primary/5">
 
@@ -394,7 +401,7 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, onArchi
           )}
         </div>
       </form>
-    </div>
+    </PageContainer>
   );
 };
 
