@@ -164,7 +164,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                 </div>
 
                 {notification && (
-                    <div className={`mb-6 p-4 rounded-xl text-sm font-bold flex items-center gap-2 border ${isErrorCallback(notification) ? 'bg-red-50 text-red-700 border-red-100' : 'bg-green-50 text-green-700 border-green-100'}`}>
+                    <div role="alert" aria-live="polite" className={`mb-6 p-4 rounded-xl text-sm font-bold flex items-center gap-2 border ${isErrorCallback(notification) ? 'bg-red-50 text-red-700 border-red-100' : 'bg-green-50 text-green-700 border-green-100'}`}>
                         <span className="material-symbols-outlined text-lg">
                             {isErrorCallback(notification) ? 'error' : 'check_circle'}
                         </span>
@@ -177,9 +177,10 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                     <div className="space-y-8 animate-fade-in">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {/* SEMILLA */}
-                            <div
+                            <button
+                                type="button"
                                 onClick={() => setSelectedPlanTier('SEED')}
-                                className={`p-6 rounded-2xl border-2 cursor-pointer transition-all hover:scale-105 ${selectedPlanTier === 'SEED' ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10' : 'border-gray-100 hover:border-primary/50'}`}
+                                className={`w-full text-left p-6 rounded-2xl border-2 cursor-pointer transition-all hover:scale-105 focus:outline-none focus:ring-4 focus:ring-primary/20 ${selectedPlanTier === 'SEED' ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10' : 'border-gray-100 hover:border-primary/50'}`}
                             >
                                 <div className="mb-4">
                                     <span className="text-xs font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded">Semilla</span>
@@ -194,12 +195,13 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                                 <div className={`size-6 rounded-full border-2 ml-auto flex items-center justify-center ${selectedPlanTier === 'SEED' ? 'border-primary bg-primary text-white' : 'border-gray-300'}`}>
                                     {selectedPlanTier === 'SEED' && <span className="material-symbols-outlined text-sm">check</span>}
                                 </div>
-                            </div>
+                            </button>
 
                             {/* CRECIMIENTO */}
-                            <div
+                            <button
+                                type="button"
                                 onClick={() => setSelectedPlanTier('GROWTH')}
-                                className={`p-6 rounded-2xl border-2 cursor-pointer transition-all hover:scale-105 ${selectedPlanTier === 'GROWTH' ? 'border-secondary-s3 bg-secondary-s3/5 shadow-lg shadow-secondary-s3/10' : 'border-gray-100 hover:border-secondary-s3/50'}`}
+                                className={`w-full text-left p-6 rounded-2xl border-2 cursor-pointer transition-all hover:scale-105 focus:outline-none focus:ring-4 focus:ring-secondary-s3/20 ${selectedPlanTier === 'GROWTH' ? 'border-secondary-s3 bg-secondary-s3/5 shadow-lg shadow-secondary-s3/10' : 'border-gray-100 hover:border-secondary-s3/50'}`}
                             >
                                 <div className="mb-4">
                                     <span className="text-xs font-black uppercase tracking-widest text-secondary-s3 bg-secondary-s3/10 px-2 py-1 rounded">Crecimiento</span>
@@ -214,12 +216,13 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                                 <div className={`size-6 rounded-full border-2 ml-auto flex items-center justify-center ${selectedPlanTier === 'GROWTH' ? 'border-secondary-s3 bg-secondary-s3 text-white' : 'border-gray-300'}`}>
                                     {selectedPlanTier === 'GROWTH' && <span className="material-symbols-outlined text-sm">check</span>}
                                 </div>
-                            </div>
+                            </button>
 
                             {/* CORPORATIVO */}
-                            <div
+                            <button
+                                type="button"
                                 onClick={() => setSelectedPlanTier('ENTERPRISE')}
-                                className={`p-6 rounded-2xl border-2 cursor-pointer transition-all hover:scale-105 ${selectedPlanTier === 'ENTERPRISE' ? 'border-text-n900 bg-gray-50 shadow-lg' : 'border-gray-100 hover:border-gray-300'}`}
+                                className={`w-full text-left p-6 rounded-2xl border-2 cursor-pointer transition-all hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 ${selectedPlanTier === 'ENTERPRISE' ? 'border-text-n900 bg-gray-50 shadow-lg' : 'border-gray-100 hover:border-gray-300'}`}
                             >
                                 <div className="mb-4">
                                     <span className="text-xs font-black uppercase tracking-widest text-text-n900 bg-gray-200 px-2 py-1 rounded">Corporativo</span>
@@ -234,7 +237,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                                 <div className={`size-6 rounded-full border-2 ml-auto flex items-center justify-center ${selectedPlanTier === 'ENTERPRISE' ? 'border-text-n900 bg-text-n900 text-white' : 'border-gray-300'}`}>
                                     {selectedPlanTier === 'ENTERPRISE' && <span className="material-symbols-outlined text-sm">check</span>}
                                 </div>
-                            </div>
+                            </button>
                         </div>
 
                         <div className="flex gap-4 pt-4">

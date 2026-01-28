@@ -251,9 +251,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                 {/* Main Content (Acuerdos) */}
                 <div className="lg:col-span-8 flex flex-col gap-6">
                     <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-2xl font-bold text-text-n900">
+                        <h2 className="text-2xl font-bold text-text-n900">
                             {isArchivedView ? 'Acuerdos Archivados' : t('dash.section.agreements')}
-                        </h3>
+                        </h2>
                         {!isArchivedView ? (
                             <button
                                 onClick={() => onNavigate(View.ARCHIVED_AGREEMENTS)}
@@ -285,7 +285,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                             </div>
                         ) : (
                             agreements.map((agreement) => (
-                                <div key={agreement.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group flex flex-col sm:flex-row justify-between gap-4 cursor-pointer" onClick={() => onViewAgreement(agreement)}>
+                                <button
+                                    key={agreement.id}
+                                    className="w-full text-left bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group flex flex-col sm:flex-row justify-between gap-4 cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20"
+                                    onClick={() => onViewAgreement(agreement)}
+                                >
                                     <div className="flex flex-col gap-1">
                                         <div className="flex items-center gap-3 mb-1">
                                             <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${agreement.category === 'Comunicación' ? 'bg-blue-100 text-blue-700' :
@@ -306,18 +310,26 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                                         <p className="text-gray-500 font-medium text-sm line-clamp-1">{agreement.description}</p>
                                     </div>
                                     <div className="flex items-center gap-2 sm:self-center">
-                                        <button
+                                        <div
+                                            role="button"
+                                            tabIndex={0}
                                             onClick={(e) => { e.stopPropagation(); onEditAgreement(agreement); }}
-                                            className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                                            className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors focus:ring-2 focus:ring-primary"
                                             title="Editar"
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                    e.stopPropagation();
+                                                    onEditAgreement(agreement);
+                                                }
+                                            }}
                                         >
                                             <span className="material-symbols-outlined">edit</span>
-                                        </button>
-                                        <button className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors">
+                                        </div>
+                                        <div className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors">
                                             <span className="material-symbols-outlined">arrow_forward</span>
-                                        </button>
+                                        </div>
                                     </div>
-                                </div>
+                                </button>
                             ))
                         )}
                     </div>

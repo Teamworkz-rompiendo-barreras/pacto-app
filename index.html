@@ -203,14 +203,13 @@
     </div>
     <script type="module" src="/index.tsx"></script>
     <script>
-        // ELIMINAR Service Workers antiguos para forzar recarga de versión nueva
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function (registrations) {
-                for (let registration of registrations) {
-                    registration.unregister().then(function () {
-                        console.log('Service Worker eliminado para limpiar caché.');
-                    });
-                }
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('SW registered: ', registration);
+                }).catch(registrationError => {
+                    console.log('SW registration failed: ', registrationError);
+                });
             });
         }
     </script>

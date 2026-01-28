@@ -3,7 +3,16 @@ const CACHE_NAME = 'pacto-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/manifest.json'
+  '/manifest.json',
+  'https://cdn.icons-png.flaticon.com/512/3208/3208899.png',
+  'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap',
+  'https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;700;900&display=swap',
+  'https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap',
+  'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap',
+  'https://assets.website-files.com/62e24f46cb61d904791a8770/css/open-dyslexic.css',
+  'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap',
+  'https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap',
+  'https://cdn.tailwindcss.com'
 ];
 
 self.addEventListener('install', (event) => {
