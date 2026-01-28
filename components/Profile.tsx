@@ -977,10 +977,19 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                                         <p className="text-gray-600 text-sm">Escanea este código QR con tu aplicación de autenticación (Google Auth, Authy, etc).</p>
                                     </div>
 
-                                    <div className="size-48 bg-gray-900 mx-auto rounded-xl flex items-center justify-center relative overflow-hidden group">
-                                        <div className="absolute inset-0 bg-white opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #000 2px, transparent 2.5px)', backgroundSize: '10px 10px' }}></div>
-                                        <span className="material-symbols-outlined text-white text-6xl relative z-10">qr_code_2</span>
+                                    <div className="size-48 bg-black mx-auto rounded-xl flex items-center justify-center relative overflow-hidden group border-4 border-white shadow-xl">
+                                        <div className="absolute inset-0 flex flex-wrap content-start">
+                                            {/* Simulación visual de código NaviLens (Patrón de colores) */}
+                                            <div className="w-1/4 h-full bg-[#f60000]"></div>
+                                            <div className="w-1/4 h-full bg-[#ffec00]"></div>
+                                            <div className="w-1/4 h-full bg-[#009ee0]"></div>
+                                            <div className="w-1/4 h-full bg-black"></div>
+                                        </div>
+                                        <div className="absolute inset-0 flex items-center justify-center bg-white/10 backdrop-blur-[1px]">
+                                            <span className="material-symbols-outlined text-white text-6xl drop-shadow-lg">qr_code_scanner</span>
+                                        </div>
                                     </div>
+                                    <p className="text-xs text-center text-gray-500 mt-2 font-medium">Compatible con NaviLens GO</p>
 
                                     <div className="space-y-3">
                                         <label className="block text-sm font-bold text-left">Ingresa el código de 6 dígitos</label>
