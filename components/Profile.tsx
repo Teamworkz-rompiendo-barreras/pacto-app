@@ -265,6 +265,16 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
         }, 2000);
     };
 
+    const handleSaveProfile = () => {
+        onUpdateUser({
+            name,
+            role,
+            about,
+            avatar
+        });
+        toast("Perfil actualizado correctamente", 'success');
+    };
+
     return (
         <PageContainer>
             <PageHeader
@@ -419,6 +429,16 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                                     className="w-full bg-bg-s1/30 border border-black/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all resize-none"
                                 ></textarea>
                                 <p className="text-xs opacity-50 italic text-text-n900">Esta información será visible para tus compañeros de equipo para facilitar la colaboración.</p>
+                            </div>
+
+                            <div className="sm:col-span-2 flex justify-end pt-4 border-t border-black/5 mt-2">
+                                <button
+                                    onClick={handleSaveProfile}
+                                    className="bg-primary text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2"
+                                >
+                                    <span className="material-symbols-outlined">save</span>
+                                    Guardar Cambios
+                                </button>
                             </div>
                         </div>
                     </section>
