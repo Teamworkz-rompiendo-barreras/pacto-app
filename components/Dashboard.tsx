@@ -285,12 +285,18 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                             </div>
                         ) : (
                             agreements.map((agreement) => (
-                                <button
+                                <div
                                     key={agreement.id}
-                                    className="w-full text-left bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group flex flex-col sm:flex-row justify-between gap-4 cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/20"
-                                    onClick={() => onViewAgreement(agreement)}
+                                    className="w-full text-left bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group flex flex-col sm:flex-row justify-between gap-4 relative"
                                 >
-                                    <div className="flex flex-col gap-1">
+                                    {/* Main Click Area Overlay */}
+                                    <button
+                                        onClick={() => onViewAgreement(agreement)}
+                                        className="absolute inset-0 w-full h-full rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/20 cursor-pointer z-0 opacity-0"
+                                        aria-label={`Ver detalles de ${agreement.title}`}
+                                    ></button>
+
+                                    <div className="flex flex-col gap-1 z-10 pointer-events-none">
                                         <div className="flex items-center gap-3 mb-1">
                                             <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${agreement.category === 'Comunicación' ? 'bg-blue-100 text-blue-700' :
                                                 agreement.category === 'Foco' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'
@@ -309,27 +315,20 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
                                         <h4 className="text-xl font-bold text-text-n900 group-hover:text-primary transition-colors">{agreement.title}</h4>
                                         <p className="text-gray-500 font-medium text-sm line-clamp-1">{agreement.description}</p>
                                     </div>
-                                    <div className="flex items-center gap-2 sm:self-center">
-                                        <div
-                                            role="button"
-                                            tabIndex={0}
+                                    <div className="flex items-center gap-2 sm:self-center z-20">
+                                        <button
                                             onClick={(e) => { e.stopPropagation(); onEditAgreement(agreement); }}
-                                            className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors focus:ring-2 focus:ring-primary"
+                                            className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors focus:ring-2 focus:ring-primary pointer-events-auto"
                                             title="Editar"
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter' || e.key === ' ') {
-                                                    e.stopPropagation();
-                                                    onEditAgreement(agreement);
-                                                }
-                                            }}
+                                            aria-label={`Editar ${agreement.title}`}
                                         >
                                             <span className="material-symbols-outlined">edit</span>
-                                        </div>
-                                        <div className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors">
+                                        </button>
+                                        <div className="p-2 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors pointer-events-none">
                                             <span className="material-symbols-outlined">arrow_forward</span>
                                         </div>
                                     </div>
-                                </button>
+                                </div>
                             ))
                         )}
                     </div>
