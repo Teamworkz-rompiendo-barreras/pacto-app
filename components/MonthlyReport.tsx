@@ -119,13 +119,15 @@ const MonthlyReport: React.FC<MonthlyReportProps> = ({ onBack, onNavigateToWeekl
               {['May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct'].map((month, idx) => {
                 const val = trendData[idx] || 0;
                 return (
-                  <div key={month} className="flex flex-col items-center gap-3 w-full group">
-                    <div className="text-xs font-bold text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">{val}%</div>
+                  <div key={month} className="flex flex-col items-center gap-3 w-full group" role="group" aria-label={`Datos de ${month}`}>
+                    <div className="text-xs font-bold text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true">{val}%</div>
                     <div
                       className={`w-full rounded-t-lg relative transition-all ${idx === 5 ? 'bg-primary shadow-lg shadow-primary/30' : 'bg-primary/20 group-hover:bg-primary/30'}`}
                       style={{ height: `${val}%` }}
+                      role="img"
+                      aria-label={`Nivel de seguridad psicológica: ${val}%`}
                     ></div>
-                    <span className={`text-sm font-bold ${idx === 5 ? 'text-primary font-black' : 'text-gray-600'}`}>{month}</span>
+                    <span className={`text-sm font-bold ${idx === 5 ? 'text-primary font-black' : 'text-gray-600'}`} aria-hidden="true">{month}</span>
                   </div>
                 );
               })}

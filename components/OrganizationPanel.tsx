@@ -546,13 +546,17 @@ const OrganizationPanel: React.FC<OrganizationPanelProps> = ({ onNavigateToBulkU
                                     <span className="material-symbols-outlined text-sm">palette</span>
                                     Accesibilidad Global
                                 </div>
-                                <h3 className="text-4xl md:text-5xl font-black tracking-tight leading-tight text-text-n900">Accesibilidad Global</h3>
+                                <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight text-text-n900">Accesibilidad Global</h2>
                                 <p className="text-xl text-gray-600 font-medium">Define estándares de visualización predeterminados para toda la organización.</p>
                             </div>
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                 {/* Card 1 */}
-                                <div className={`p-6 rounded-2xl flex flex-col justify-between gap-6 border-l-4 shadow-sm transition-all cursor-pointer ${globalSettings.lowStimulus ? 'bg-white border-primary border-l-primary' : 'bg-gray-100 border-gray-300 opacity-80 hover:opacity-100'}`} onClick={() => toggleGlobalSetting('lowStimulus')}>
-                                    <div className="space-y-2">
+                                <button
+                                    type="button"
+                                    className={`p-6 rounded-2xl flex flex-col justify-between gap-6 border-l-4 shadow-sm transition-all cursor-pointer text-left focus:outline-none focus:ring-4 focus:ring-primary/20 ${globalSettings.lowStimulus ? 'bg-white border-primary border-l-primary' : 'bg-gray-100 border-gray-300 opacity-80 hover:opacity-100'}`}
+                                    onClick={() => toggleGlobalSetting('lowStimulus')}
+                                >
+                                    <div className="space-y-2 w-full">
                                         <div className="flex items-center justify-between">
                                             <span className={`material-symbols-outlined text-3xl ${globalSettings.lowStimulus ? 'text-primary' : 'text-gray-400'}`}>brand_awareness</span>
                                             <div className={`w-12 h-6 rounded-full relative transition-colors ${globalSettings.lowStimulus ? 'bg-primary' : 'bg-gray-300'}`}>
@@ -562,10 +566,14 @@ const OrganizationPanel: React.FC<OrganizationPanelProps> = ({ onNavigateToBulkU
                                         <h4 className="font-black text-lg text-text-n900">Modo Bajo Estímulo</h4>
                                         <p className="text-sm text-gray-500 leading-relaxed">Fuerza una paleta de colores neutros y reduce el movimiento visual en toda la plataforma.</p>
                                     </div>
-                                </div>
+                                </button>
                                 {/* Card 2 */}
-                                <div className={`p-6 rounded-2xl flex flex-col justify-between gap-6 border-l-4 shadow-sm transition-all cursor-pointer ${globalSettings.easyRead ? 'bg-white border-primary border-l-primary' : 'bg-gray-100 border-gray-300 opacity-80 hover:opacity-100'}`} onClick={() => toggleGlobalSetting('easyRead')}>
-                                    <div className="space-y-2">
+                                <button
+                                    type="button"
+                                    className={`p-6 rounded-2xl flex flex-col justify-between gap-6 border-l-4 shadow-sm transition-all cursor-pointer text-left focus:outline-none focus:ring-4 focus:ring-primary/20 ${globalSettings.easyRead ? 'bg-white border-primary border-l-primary' : 'bg-gray-100 border-gray-300 opacity-80 hover:opacity-100'}`}
+                                    onClick={() => toggleGlobalSetting('easyRead')}
+                                >
+                                    <div className="space-y-2 w-full">
                                         <div className="flex items-center justify-between">
                                             <span className={`material-symbols-outlined text-3xl ${globalSettings.easyRead ? 'text-primary' : 'text-gray-400'}`}>subject</span>
                                             <div className={`w-12 h-6 rounded-full relative transition-colors ${globalSettings.easyRead ? 'bg-primary' : 'bg-gray-300'}`}>
@@ -575,10 +583,14 @@ const OrganizationPanel: React.FC<OrganizationPanelProps> = ({ onNavigateToBulkU
                                         <h4 className="font-black text-lg text-text-n900">Lectura Facilitada</h4>
                                         <p className="text-sm text-gray-500 leading-relaxed">Aumenta el interlineado y activa la tipografía Atkinson Hyperlegible por defecto.</p>
                                     </div>
-                                </div>
+                                </button>
                                 {/* Card 3 */}
-                                <div className={`p-6 rounded-2xl flex flex-col justify-between gap-6 border-l-4 shadow-sm transition-all cursor-pointer ${globalSettings.dynamicContrast ? 'bg-white border-primary border-l-primary' : 'bg-gray-100 border-gray-300 opacity-80 hover:opacity-100'}`} onClick={() => toggleGlobalSetting('dynamicContrast')}>
-                                    <div className="space-y-2">
+                                <button
+                                    type="button"
+                                    className={`p-6 rounded-2xl flex flex-col justify-between gap-6 border-l-4 shadow-sm transition-all cursor-pointer text-left focus:outline-none focus:ring-4 focus:ring-primary/20 ${globalSettings.dynamicContrast ? 'bg-white border-primary border-l-primary' : 'bg-gray-100 border-gray-300 opacity-80 hover:opacity-100'}`}
+                                    onClick={() => toggleGlobalSetting('dynamicContrast')}
+                                >
+                                    <div className="space-y-2 w-full">
                                         <div className="flex items-center justify-between">
                                             <span className={`material-symbols-outlined text-3xl ${globalSettings.dynamicContrast ? 'text-primary' : 'text-gray-400'}`}>contrast</span>
                                             <div className={`w-12 h-6 rounded-full relative transition-colors ${globalSettings.dynamicContrast ? 'bg-primary' : 'bg-gray-300'}`}>
@@ -588,7 +600,7 @@ const OrganizationPanel: React.FC<OrganizationPanelProps> = ({ onNavigateToBulkU
                                         <h4 className="font-black text-lg text-text-n900">Contraste Dinámico</h4>
                                         <p className="text-sm text-gray-500 leading-relaxed">Ajusta automáticamente el contraste según la iluminación ambiental del usuario.</p>
                                     </div>
-                                </div>
+                                </button>
                             </div>
                         </div>
                     )}
