@@ -1,5 +1,7 @@
 
 import React, { useState } from 'react';
+import { PageContainer } from './common/PageContainer';
+import { PageHeader } from './common/PageHeader';
 
 interface AchievementsProps {
     onCelebrate: () => void;
@@ -126,27 +128,19 @@ const Achievements: React.FC<AchievementsProps> = ({ onCelebrate, onGoBack }) =>
     };
 
     return (
-        <div className="animate-fade-in pb-12 space-y-10 max-w-[1200px] mx-auto w-full relative">
-
-            {/* Header */}
-            <div className="flex flex-col gap-6">
-                <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest cursor-pointer hover:underline w-fit" onClick={onGoBack}>
-                    <span className="material-symbols-outlined text-sm">arrow_back</span>
-                    Inclusión en Acción
-                </div>
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 lg:pr-64">
-                    <div className="space-y-2 max-w-2xl">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
-                            <span className="material-symbols-outlined text-sm">emoji_events</span>
-                            Logros
-                        </div>
-                        <h1 className="text-4xl md:text-5xl font-black text-text-n900 leading-tight tracking-tight">
-                            Nuestros Logros
-                        </h1>
-                        <p className="text-xl text-gray-600 font-medium leading-relaxed">
-                            Celebrando cada paso hacia una inclusión real y el progreso colectivo de nuestro equipo neurodiverso.
-                        </p>
-                    </div>
+        <PageContainer>
+            <PageHeader
+                title="Nuestros Logros"
+                subtitle="Celebrando cada paso hacia una inclusión real y el progreso colectivo de nuestro equipo neurodiverso."
+                badge={
+                    <>
+                        <span className="material-symbols-outlined text-sm">emoji_events</span>
+                        Logros
+                    </>
+                }
+                onBack={onGoBack}
+                backLabel="Inclusión en Acción"
+                actionButton={
                     <button
                         onClick={onCelebrate}
                         className="bg-primary hover:brightness-110 text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-primary/20 hover:-translate-y-1 transition-all active:scale-95"
@@ -154,8 +148,8 @@ const Achievements: React.FC<AchievementsProps> = ({ onCelebrate, onGoBack }) =>
                         <span className="material-symbols-outlined">celebration</span>
                         Celebrar con el equipo
                     </button>
-                </div>
-            </div>
+                }
+            />
 
             {/* Grid de Insignias y Desafíos */}
             <div className="space-y-4">
@@ -440,7 +434,7 @@ const Achievements: React.FC<AchievementsProps> = ({ onCelebrate, onGoBack }) =>
                 </div>
             )}
 
-        </div>
+        </PageContainer>
     );
 };
 

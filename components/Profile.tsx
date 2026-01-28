@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { UserProfile, AccessibilitySettings } from '../types';
 import { useToast } from '../context/ToastContext';
+import { PageContainer } from './common/PageContainer';
+import { PageHeader } from './common/PageHeader';
 
 interface ProfileProps {
     user: UserProfile;
@@ -265,43 +267,30 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
     };
 
     return (
-        <div className="max-w-5xl mx-auto px-6 py-12 animate-fade-in font-display relative">
-            {/* Page Heading */}
-            <div className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                <div>
-                    <h1 className="text-4xl md:text-5xl font-black leading-tight tracking-tighter mb-4 text-text-n900">
-                        Perfil y Preferencias
-                    </h1>
-                    <p className="text-lg opacity-80 max-w-2xl leading-relaxed text-text-n900">
-                        Personaliza tu entorno de trabajo digital y tu tarjeta de presentación ante el equipo.
-                    </p>
-                </div>
-                <div className="flex gap-3">
-                    {onBack && (
+        <PageContainer>
+            <PageHeader
+                title="Perfil y Preferencias"
+                subtitle="Personaliza tu entorno de trabajo digital y tu tarjeta de presentación ante el equipo."
+                onBack={onBack}
+                actionButton={
+                    <div className="flex gap-3">
                         <button
-                            onClick={onBack}
-                            className="shrink-0 flex items-center gap-2 px-6 py-3 text-gray-500 font-bold hover:text-primary transition-colors"
+                            onClick={onLogout}
+                            className="shrink-0 flex items-center gap-2 px-6 py-3 border border-gray-300 text-gray-600 font-bold rounded-xl hover:bg-gray-100 transition-all shadow-sm"
                         >
-                            <span className="material-symbols-outlined">arrow_back</span>
-                            Volver
+                            <span className="material-symbols-outlined">logout</span>
+                            Salir
                         </button>
-                    )}
-                    <button
-                        onClick={onLogout}
-                        className="shrink-0 flex items-center gap-2 px-6 py-3 border border-gray-300 text-gray-600 font-bold rounded-xl hover:bg-gray-100 transition-all shadow-sm"
-                    >
-                        <span className="material-symbols-outlined">logout</span>
-                        Salir
-                    </button>
-                    <button
-                        onClick={onOpenPublicView}
-                        className="shrink-0 flex items-center gap-2 px-6 py-3 bg-white border-2 border-primary text-primary font-bold rounded-xl hover:bg-primary hover:text-white transition-all shadow-sm"
-                    >
-                        <span className="material-symbols-outlined">visibility</span>
-                        Ver Perfil Público
-                    </button>
-                </div>
-            </div>
+                        <button
+                            onClick={onOpenPublicView}
+                            className="shrink-0 flex items-center gap-2 px-6 py-3 bg-white border-2 border-primary text-primary font-bold rounded-xl hover:bg-primary hover:text-white transition-all shadow-sm"
+                        >
+                            <span className="material-symbols-outlined">visibility</span>
+                            Ver Perfil Público
+                        </button>
+                    </div>
+                }
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
                 {/* Sidebar Navigation */}
@@ -674,7 +663,10 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                         </button>
                     </div>
                 </div>
-            </div >
+            </div>
+
+
+
 
             {/* --- MODAL GESTIÓN DE DISPOSITIVOS --- */}
             {
@@ -1005,7 +997,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                 )
             }
 
-        </div >
+        </PageContainer >
     );
 };
 

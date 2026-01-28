@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { wellbeingService } from '../services/wellbeingService';
 
+import { PageContainer } from './common/PageContainer';
+import { PageHeader } from './common/PageHeader';
+
 interface InclusionBoxProps {
   onBack: () => void;
 }
@@ -44,27 +47,18 @@ const InclusionBox: React.FC<InclusionBoxProps> = ({ onBack }) => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto py-8 animate-fade-in relative pb-20">
-
-      <div className="mb-10 space-y-2 lg:pr-64">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-primary transition-colors w-fit mb-4"
-        >
-          <span className="material-symbols-outlined text-lg">arrow_back</span>
-          Volver
-        </button>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
-          <span className="material-symbols-outlined text-sm">mark_email_unread</span>
-          Buzón de Inclusión
-        </div>
-        <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
-          Buzón de Sugerencias
-        </h1>
-        <p className="text-xl text-gray-600 font-medium max-w-lg leading-relaxed">
-          Un espacio seguro y anónimo diseñado para escuchar tu voz y mejorar juntos nuestra cultura laboral.
-        </p>
-      </div>
+    <PageContainer>
+      <PageHeader
+        title="Buzón de Sugerencias"
+        subtitle="Un espacio seguro y anónimo diseñado para escuchar tu voz y mejorar juntos nuestra cultura laboral."
+        badge={
+          <>
+            <span className="material-symbols-outlined text-sm">mark_email_unread</span>
+            Buzón de Inclusión
+          </>
+        }
+        onBack={onBack}
+      />
 
       <div className="bg-white rounded-3xl shadow-xl shadow-primary/5 border border-gray-100 overflow-hidden">
 
@@ -185,7 +179,7 @@ const InclusionBox: React.FC<InclusionBoxProps> = ({ onBack }) => {
         </div>
       )}
 
-    </div>
+    </PageContainer>
   );
 };
 

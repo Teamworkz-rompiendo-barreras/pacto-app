@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 
 interface PageHeaderProps {
-    title: string;
-    subtitle?: string;
+    title: string | React.ReactNode;
+    subtitle?: string | React.ReactNode; // Can be string or JSX Element (icon + text)
     badge?: ReactNode; // Can be string or JSX Element (icon + text)
     badgeColor?: string; // Optional override class for badge bg/text
     actionButton?: ReactNode;

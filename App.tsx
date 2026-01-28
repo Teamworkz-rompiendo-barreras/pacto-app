@@ -413,13 +413,13 @@ const AppContent: React.FC = () => {
         return <TeamPrivacySettings onBack={() => navigateTo(View.TEAM)} onSave={() => navigateTo(View.TEAM)} userAvatar={user?.avatar} />;
 
       case View.FEEDBACK:
-        return <div className="p-6 md:p-10 w-full"><Feedback onSave={() => navigateTo(View.DASHBOARD)} onCancel={() => navigateTo(View.DASHBOARD)} /></div>;
+        return <Feedback onSave={() => navigateTo(View.DASHBOARD)} onCancel={() => navigateTo(View.DASHBOARD)} />;
 
       case View.INCLUSION_BOX:
-        return <div className="p-6 md:p-10 w-full"><InclusionBox onBack={() => navigateTo(View.DASHBOARD)} /></div>;
+        return <InclusionBox onBack={() => navigateTo(View.DASHBOARD)} />;
 
       case View.ACHIEVEMENTS:
-        return <div className="p-6 md:p-10 w-full"><Achievements onCelebrate={() => setShowCelebration(true)} onGoBack={() => navigateTo(View.DASHBOARD)} /></div>;
+        return <Achievements onCelebrate={() => setShowCelebration(true)} onGoBack={() => navigateTo(View.DASHBOARD)} />;
 
       case View.ORGANIZATION:
         return <div className="w-full overflow-hidden"><OrganizationPanel onNavigateToBulkUpload={() => navigateTo(View.BULK_UPLOAD)} onNavigateToDataExport={() => navigateTo(View.DATA_EXPORT)} /></div>;
@@ -483,12 +483,10 @@ const AppContent: React.FC = () => {
 
       case View.REPORTS:
         return (
-          <div className="p-6 md:p-10 w-full">
-            <MonthlyReport
-              onBack={() => navigateTo(View.DASHBOARD)}
-              onNavigateToWeekly={() => navigateTo(View.WEEKLY_SUMMARY)}
-            />
-          </div>
+          <MonthlyReport
+            onBack={() => navigateTo(View.DASHBOARD)}
+            onNavigateToWeekly={() => navigateTo(View.WEEKLY_SUMMARY)}
+          />
         );
 
       case View.WEEKLY_SUMMARY:

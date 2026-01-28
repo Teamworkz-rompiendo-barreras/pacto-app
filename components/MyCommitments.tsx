@@ -1,5 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
+import { PageContainer } from './common/PageContainer';
+import { PageHeader } from './common/PageHeader';
 
 interface MyCommitmentsProps {
     onBack: () => void;
@@ -288,38 +290,27 @@ const MyCommitments: React.FC<MyCommitmentsProps> = ({ onBack }) => {
     };
 
     return (
-        <div className="animate-fade-in flex flex-col gap-8 pb-10 relative">
-
-            {/* Back Button (Mobile) */}
-            <div className="mb-2 md:hidden">
-                <button
-                    onClick={onBack}
-                    className="flex items-center gap-2 text-gray-500 hover:text-primary transition-colors text-sm font-bold"
-                >
-                    <span className="material-symbols-outlined text-lg">arrow_back</span>
-                    Volver
-                </button>
-            </div>
-            {/* Header Section */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 lg:pr-64">
-                <div className="flex flex-col gap-2">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
+        <PageContainer>
+            <PageHeader
+                title="Mis Compromisos"
+                subtitle="Gestiona tus tareas pendientes de los rituales Replay."
+                badge={
+                    <>
                         <span className="material-symbols-outlined text-sm">task_alt</span>
                         Mis Compromisos
-                    </div>
-                    <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
-                        Mis Compromisos
-                    </h1>
-                    <p className="text-xl text-gray-600 font-medium">Gestiona tus tareas pendientes de los rituales Replay.</p>
-                </div>
-                <button
-                    className="flex items-center gap-2 bg-primary hover:brightness-110 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 active:scale-95"
-                    onClick={openCreateModal}
-                >
-                    <span className="material-symbols-outlined">add</span>
-                    <span>Nueva Tarea</span>
-                </button>
-            </div >
+                    </>
+                }
+                onBack={onBack}
+                actionButton={
+                    <button
+                        className="flex items-center gap-2 bg-primary hover:brightness-110 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 active:scale-95"
+                        onClick={openCreateModal}
+                    >
+                        <span className="material-symbols-outlined">add</span>
+                        <span>Nueva Tarea</span>
+                    </button>
+                }
+            />
 
             {/* Progress Bar */}
             < div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-border" >
@@ -700,7 +691,7 @@ const MyCommitments: React.FC<MyCommitmentsProps> = ({ onBack }) => {
                 )
             }
 
-        </div >
+        </PageContainer >
     );
 };
 

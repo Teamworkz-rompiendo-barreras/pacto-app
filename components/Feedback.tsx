@@ -1,6 +1,9 @@
 
 import React, { useState, useRef } from 'react';
 
+import { PageContainer } from './common/PageContainer';
+import { PageHeader } from './common/PageHeader';
+
 interface FeedbackProps {
   onSave: () => void;
   onCancel: () => void;
@@ -13,7 +16,7 @@ const Feedback: React.FC<FeedbackProps> = ({ onSave, onCancel }) => {
   const [fileName, setFileName] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileClick = () => {
@@ -28,7 +31,7 @@ const Feedback: React.FC<FeedbackProps> = ({ onSave, onCancel }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!message.trim() || !type) {
       alert('Por favor, selecciona un tipo de comentario y escribe un mensaje.');
       return;
@@ -50,20 +53,19 @@ const Feedback: React.FC<FeedbackProps> = ({ onSave, onCancel }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8 animate-fade-in relative">
-      <header className="text-center space-y-4">
-        <h2 className="text-4xl font-bold tracking-tight">¿Cómo podemos mejorar PACTO?</h2>
-        <p className="text-xl opacity-70 max-w-xl mx-auto">
-          Ayúdanos a evolucionar la plataforma para que sea el mejor lugar para el talento neurodivergente.
-        </p>
-      </header>
+    <PageContainer>
+      <PageHeader
+        title="¿Cómo podemos mejorar PACTO?"
+        subtitle="Ayúdanos a evolucionar la plataforma para que sea el mejor lugar para el talento neurodivergente."
+        onBack={onCancel}
+      />
 
       <section className="bg-pacto-bg border border-pacto-border rounded-pacto p-8 md:p-10 shadow-sm space-y-8">
         {/* Alerta de apoyo */}
         <div className="p-5 rounded-lg bg-pacto-secondary/10 border border-pacto-secondary/20 flex items-start gap-4">
           <div className="text-pacto-primary shrink-0">
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
           </div>
           <div>
@@ -78,7 +80,7 @@ const Feedback: React.FC<FeedbackProps> = ({ onSave, onCancel }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label htmlFor="feedback-type" className="block font-bold">Tipo de comentario</label>
-              <select 
+              <select
                 id="feedback-type"
                 value={type}
                 onChange={(e) => setType(e.target.value)}
@@ -96,15 +98,15 @@ const Feedback: React.FC<FeedbackProps> = ({ onSave, onCancel }) => {
 
             <div className="space-y-2">
               <label className="block font-bold">Adjuntar captura (Opcional)</label>
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleFileChange} 
-                className="hidden" 
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
                 accept="image/*,.pdf"
                 disabled={isSubmitting}
               />
-              <button 
+              <button
                 type="button"
                 onClick={handleFileClick}
                 disabled={isSubmitting}
@@ -127,7 +129,7 @@ const Feedback: React.FC<FeedbackProps> = ({ onSave, onCancel }) => {
 
           <div className="space-y-2">
             <label htmlFor="message" className="block font-bold">Tu mensaje</label>
-            <textarea 
+            <textarea
               id="message"
               required
               rows={5}
@@ -145,7 +147,7 @@ const Feedback: React.FC<FeedbackProps> = ({ onSave, onCancel }) => {
               <p className="font-bold">Deseo recibir una respuesta</p>
               <p className="text-sm opacity-60">Te contactaremos por email si necesitamos más detalles.</p>
             </div>
-            <button 
+            <button
               type="button"
               role="switch"
               aria-checked={wantsResponse}
@@ -159,7 +161,7 @@ const Feedback: React.FC<FeedbackProps> = ({ onSave, onCancel }) => {
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-6">
-            <button 
+            <button
               type="button"
               onClick={onCancel}
               disabled={isSubmitting}
@@ -167,7 +169,7 @@ const Feedback: React.FC<FeedbackProps> = ({ onSave, onCancel }) => {
             >
               Cancelar
             </button>
-            <button 
+            <button
               type="submit"
               disabled={isSubmitting}
               className="w-full sm:w-auto px-10 py-4 rounded-pacto bg-pacto-primary text-white font-bold shadow-lg hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
@@ -190,7 +192,7 @@ const Feedback: React.FC<FeedbackProps> = ({ onSave, onCancel }) => {
           </div>
         </form>
       </section>
-      
+
       {/* Notificación de éxito */}
       {showSuccess && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white border-2 border-green-500 text-text-n900 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 z-50 animate-bounce-in max-w-sm w-full">
@@ -203,7 +205,7 @@ const Feedback: React.FC<FeedbackProps> = ({ onSave, onCancel }) => {
           </div>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 };
 

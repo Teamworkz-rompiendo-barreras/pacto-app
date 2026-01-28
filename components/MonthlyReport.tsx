@@ -1,6 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { reportService, MonthlyKPI } from '../services/reportService';
+import { PageContainer } from './common/PageContainer';
+import { PageHeader } from './common/PageHeader';
 
 interface MonthlyReportProps {
   onBack: () => void;
@@ -33,56 +35,47 @@ const MonthlyReport: React.FC<MonthlyReportProps> = ({ onBack, onNavigateToWeekl
   };
 
   return (
-    <div className="animate-fade-in pb-10">
-      {/* Back Navigation */}
-      <div className="mb-6">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 text-gray-500 hover:text-primary transition-colors text-sm font-bold group"
-        >
-          <span className="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
-          Volver
-        </button>
-      </div>
-
-      {/* Page Heading */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10 lg:pr-64">
-        <div className="flex flex-col gap-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
+    <PageContainer>
+      <PageHeader
+        title={
+          <span>
+            Reporte Mensual <span className="text-primary/60">—</span> Octubre 2023
+          </span>
+        }
+        subtitle="Visualización de métricas críticas para la seguridad psicológica y claridad de procesos del equipo."
+        badge={
+          <>
             <span className="material-symbols-outlined text-sm">analytics</span>
             Reporte Mensual
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black text-text-n900 tracking-tight leading-tight">
-            Reporte Mensual <span className="text-primary/60">—</span> Octubre 2023
-          </h1>
-          <p className="text-xl text-gray-600 font-medium max-w-2xl leading-relaxed">
-            Visualización de métricas críticas para la seguridad psicológica y claridad de procesos del equipo.
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3">
-          {onNavigateToWeekly && (
-            <button
-              onClick={onNavigateToWeekly}
-              className="flex items-center justify-center gap-2 bg-white border border-primary/20 text-primary hover:bg-primary/5 px-6 py-3 rounded-xl font-bold transition-all shadow-sm active:scale-95"
-            >
-              <span className="material-symbols-outlined text-xl">calendar_view_week</span>
-              <span>Ver Semana Actual</span>
-            </button>
-          )}
-          <button
-            onClick={handleExportPDF}
-            disabled={isExporting}
-            className="flex items-center justify-center gap-2 bg-primary hover:brightness-110 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 active:scale-95 disabled:opacity-70 disabled:cursor-wait"
-          >
-            {isExporting ? (
-              <span className="material-symbols-outlined text-xl animate-spin">refresh</span>
-            ) : (
-              <span className="material-symbols-outlined text-xl">picture_as_pdf</span>
+          </>
+        }
+        onBack={onBack}
+        actionButton={
+          <div className="flex flex-col sm:flex-row gap-3">
+            {onNavigateToWeekly && (
+              <button
+                onClick={onNavigateToWeekly}
+                className="flex items-center justify-center gap-2 bg-white border border-primary/20 text-primary hover:bg-primary/5 px-6 py-3 rounded-xl font-bold transition-all shadow-sm active:scale-95"
+              >
+                <span className="material-symbols-outlined text-xl">calendar_view_week</span>
+                <span>Ver Semana Actual</span>
+              </button>
             )}
-            <span>{isExporting ? 'Generando...' : 'Exportar PDF'}</span>
-          </button>
-        </div>
-      </div>
+            <button
+              onClick={handleExportPDF}
+              disabled={isExporting}
+              className="flex items-center justify-center gap-2 bg-primary hover:brightness-110 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 active:scale-95 disabled:opacity-70 disabled:cursor-wait"
+            >
+              {isExporting ? (
+                <span className="material-symbols-outlined text-xl animate-spin">refresh</span>
+              ) : (
+                <span className="material-symbols-outlined text-xl">picture_as_pdf</span>
+              )}
+              <span>{isExporting ? 'Generando...' : 'Exportar PDF'}</span>
+            </button>
+          </div>
+        }
+      />
 
       {/* Stats Grid (KPI Cards) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
@@ -190,7 +183,7 @@ const MonthlyReport: React.FC<MonthlyReportProps> = ({ onBack, onNavigateToWeekl
           <a className="hover:text-primary transition-colors cursor-pointer">Soporte</a>
         </div>
       </footer>
-    </div>
+    </PageContainer>
   );
 };
 
