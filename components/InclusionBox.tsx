@@ -5,10 +5,9 @@ import { PageContainer } from './common/PageContainer';
 import { PageHeader } from './common/PageHeader';
 
 interface InclusionBoxProps {
-  onBack: () => void;
 }
 
-const InclusionBox: React.FC<InclusionBoxProps> = ({ onBack }) => {
+const InclusionBox: React.FC<InclusionBoxProps> = () => {
   const [category, setCategory] = useState('');
   const [suggestion, setSuggestion] = useState('');
   const [impact, setImpact] = useState('');
@@ -57,7 +56,6 @@ const InclusionBox: React.FC<InclusionBoxProps> = ({ onBack }) => {
             Buzón de Inclusión
           </>
         }
-        onBack={onBack}
       />
 
       <div className="bg-white rounded-3xl shadow-xl shadow-primary/5 border border-gray-100 overflow-hidden">

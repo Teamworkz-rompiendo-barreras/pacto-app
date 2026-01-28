@@ -5,7 +5,6 @@ import { PageHeader } from './common/PageHeader';
 
 interface AchievementsProps {
     onCelebrate: () => void;
-    onGoBack: () => void;
 }
 
 interface AchievementItem {
@@ -19,7 +18,7 @@ interface AchievementItem {
     participants?: string[]; // Datos extra para el modal
 }
 
-const Achievements: React.FC<AchievementsProps> = ({ onCelebrate, onGoBack }) => {
+const Achievements: React.FC<AchievementsProps> = ({ onCelebrate }) => {
     const [showChallengeDetails, setShowChallengeDetails] = useState(false);
 
     // Estado para la expansión del historial
@@ -138,8 +137,6 @@ const Achievements: React.FC<AchievementsProps> = ({ onCelebrate, onGoBack }) =>
                         Logros
                     </>
                 }
-                onBack={onGoBack}
-                backLabel="Inclusión en Acción"
                 actionButton={
                     <button
                         onClick={onCelebrate}

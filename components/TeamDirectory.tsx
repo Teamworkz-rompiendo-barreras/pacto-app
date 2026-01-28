@@ -7,11 +7,10 @@ import { UserProfile } from '../types';
 interface TeamDirectoryProps {
     members: UserProfile[];
     onViewProfile: (user: UserProfile) => void;
-    onGoBack: () => void;
     onNavigateToPrivacy?: () => void; // Nueva prop
 }
 
-const TeamDirectory: React.FC<TeamDirectoryProps> = ({ members, onViewProfile, onGoBack, onNavigateToPrivacy }) => {
+const TeamDirectory: React.FC<TeamDirectoryProps> = ({ members, onViewProfile, onNavigateToPrivacy }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({});
 
@@ -140,8 +139,6 @@ const TeamDirectory: React.FC<TeamDirectoryProps> = ({ members, onViewProfile, o
                         Directorio de Equipo
                     </>
                 }
-                onBack={onGoBack}
-                backLabel="Volver al Dashboard"
                 actionButton={
                     onNavigateToPrivacy && (
                         <button
@@ -225,14 +222,8 @@ const TeamDirectory: React.FC<TeamDirectoryProps> = ({ members, onViewProfile, o
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col gap-8 min-w-0">
 
-                    {/* Mobile Back Button */}
-                    <button
-                        onClick={onGoBack}
-                        className="md:hidden flex items-center gap-2 text-gray-500 hover:text-primary transition-colors font-bold text-sm"
-                    >
-                        <span className="material-symbols-outlined text-lg">arrow_back</span>
-                        Volver
-                    </button>
+                    {/* Mobile Back Button Removed */}
+
 
                     {/* Header & Search */}
                     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-border flex flex-row gap-4 relative z-10 mb-8 items-center">

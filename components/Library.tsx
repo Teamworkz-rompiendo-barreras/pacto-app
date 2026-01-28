@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Agreement } from '../types';
 
 interface LibraryProps {
-    onBack: () => void;
     onUseTemplate: (template: Partial<Agreement>) => void;
 }
 
@@ -54,7 +53,7 @@ const TEMPLATES = [
     }
 ];
 
-const Library: React.FC<LibraryProps> = ({ onBack, onUseTemplate }) => {
+const Library: React.FC<LibraryProps> = ({ onUseTemplate }) => {
     const [filter, setFilter] = useState('Todos');
     const [searchTerm, setSearchTerm] = useState('');
     const [previewTemplate, setPreviewTemplate] = useState<typeof TEMPLATES[0] | null>(null);
@@ -71,9 +70,6 @@ const Library: React.FC<LibraryProps> = ({ onBack, onUseTemplate }) => {
             <div className="sticky top-0 z-[35] w-full bg-bg-s1/95 backdrop-blur-md border-b border-[#D1C8B1] px-6 lg:px-12 py-4 mb-8 -mt-4 -mx-4 lg:-mt-8 lg:-mx-8">
                 <div className="max-w-[1200px] mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <button onClick={onBack} className="p-2 rounded-full hover:bg-black/5 transition-colors">
-                            <span className="material-symbols-outlined text-text-n900">arrow_back</span>
-                        </button>
                         <h1 className="text-xl font-black tracking-tight text-text-n900">Biblioteca de Acuerdos</h1>
                     </div>
 

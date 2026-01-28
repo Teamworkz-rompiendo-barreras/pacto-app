@@ -2,12 +2,11 @@
 import React, { useState } from 'react';
 
 interface RitualReflectionProps {
-  onBack: () => void;
   onNext: () => void;
   userAvatar?: string;
 }
 
-const RitualReflection: React.FC<RitualReflectionProps> = ({ onBack, onNext, userAvatar }) => {
+const RitualReflection: React.FC<RitualReflectionProps> = ({ onNext, userAvatar }) => {
   // State to track the decision for each agreement: 'keep', 'adjust', or null
   const [decisions, setDecisions] = useState<Record<string, 'keep' | 'adjust' | null>>({
     '1': null,
@@ -63,26 +62,7 @@ const RitualReflection: React.FC<RitualReflectionProps> = ({ onBack, onNext, use
   return (
     <div className="bg-[#F0E8D1] min-h-screen flex flex-col text-text-n900 antialiased font-display selection:bg-primary/20 animate-fade-in">
       {/* Top Navigation */}
-      <header className="flex items-center justify-between whitespace-nowrap border-b border-[#D4CDB6]/50 bg-[#F0E8D1]/80 backdrop-blur-sm sticky top-0 z-50 px-6 lg:px-10 py-4">
-        <div className="flex items-center gap-4 cursor-pointer" onClick={onBack}>
-          <div className="flex items-center justify-center size-10 rounded-xl bg-primary text-white shadow-sm">
-            <span className="material-symbols-outlined text-2xl">diversity_3</span>
-          </div>
-          <h2 className="text-text-n900 text-xl font-bold tracking-tight">PACTO</h2>
-        </div>
-        <div className="flex items-center gap-6">
-          <button className="flex items-center justify-center rounded-full size-10 hover:bg-black/5 transition-colors duration-200 text-text-n900">
-            <span className="material-symbols-outlined text-2xl">notifications</span>
-          </button>
-          <div className="rounded-full size-10 ring-2 ring-white overflow-hidden bg-gray-200">
-             {userAvatar ? (
-                <img src={userAvatar} alt="Profile" className="w-full h-full object-cover" />
-             ) : (
-                <div className="w-full h-full flex items-center justify-center bg-primary text-white font-bold">U</div>
-             )}
-          </div>
-        </div>
-      </header>
+
 
       <main className="flex-grow w-full max-w-4xl mx-auto px-4 sm:px-6 py-8 md:py-12 flex flex-col gap-8">
         {/* Progress Bar & Breadcrumbs */}
@@ -110,9 +90,9 @@ const RitualReflection: React.FC<RitualReflectionProps> = ({ onBack, onNext, use
         {/* Cards Container */}
         <div className="flex flex-col gap-8 mt-4 pb-24">
           {agreements.map((agreement) => (
-            <article 
-                key={agreement.id}
-                className="group relative bg-[#FCFBF7] rounded-2xl shadow-sm border border-[#E6E2D6] overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/20"
+            <article
+              key={agreement.id}
+              className="group relative bg-[#FCFBF7] rounded-2xl shadow-sm border border-[#E6E2D6] overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/20"
             >
               <div className={`absolute top-0 left-0 w-1.5 h-full ${agreement.accentColor}`}></div>
               <div className="p-6 md:p-8 flex flex-col gap-6">
@@ -131,7 +111,7 @@ const RitualReflection: React.FC<RitualReflectionProps> = ({ onBack, onNext, use
                     <span className="material-symbols-outlined text-2xl">{agreement.icon}</span>
                   </div>
                 </div>
-                
+
                 <div className="h-px w-full bg-[#E6E2D6]"></div>
 
                 {/* Actions */}
@@ -140,10 +120,10 @@ const RitualReflection: React.FC<RitualReflectionProps> = ({ onBack, onNext, use
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Option 1: Keep */}
                     <label className="cursor-pointer relative group/option">
-                      <input 
-                        type="radio" 
-                        name={`agreement_${agreement.id}`} 
-                        className="peer sr-only" 
+                      <input
+                        type="radio"
+                        name={`agreement_${agreement.id}`}
+                        className="peer sr-only"
                         checked={decisions[agreement.id] === 'keep'}
                         onChange={() => handleDecisionChange(agreement.id, 'keep')}
                       />
@@ -160,9 +140,9 @@ const RitualReflection: React.FC<RitualReflectionProps> = ({ onBack, onNext, use
 
                     {/* Option 2: Adjust */}
                     <label className="cursor-pointer relative group/option">
-                      <input 
-                        type="radio" 
-                        name={`agreement_${agreement.id}`} 
+                      <input
+                        type="radio"
+                        name={`agreement_${agreement.id}`}
                         className="peer sr-only"
                         checked={decisions[agreement.id] === 'adjust'}
                         onChange={() => handleDecisionChange(agreement.id, 'adjust')}
@@ -183,9 +163,9 @@ const RitualReflection: React.FC<RitualReflectionProps> = ({ onBack, onNext, use
                   {decisions[agreement.id] === 'adjust' && (
                     <div className="mt-2 animate-fade-in">
                       <label className="block text-sm font-bold text-text-n900 mb-2">Propuesta de cambio:</label>
-                      <textarea 
-                        className="w-full rounded-xl border-2 border-primary/30 bg-white p-4 text-base focus:border-primary focus:ring-4 focus:ring-primary/10 resize-none transition-shadow shadow-sm outline-none" 
-                        placeholder="Describe cómo te gustaría adaptar este acuerdo... Por ejemplo: 'Prefiero que sea 48h antes para temas complejos'." 
+                      <textarea
+                        className="w-full rounded-xl border-2 border-primary/30 bg-white p-4 text-base focus:border-primary focus:ring-4 focus:ring-primary/10 resize-none transition-shadow shadow-sm outline-none"
+                        placeholder="Describe cómo te gustaría adaptar este acuerdo... Por ejemplo: 'Prefiero que sea 48h antes para temas complejos'."
                         rows={3}
                         value={feedback[agreement.id] || ''}
                         onChange={(e) => handleFeedbackChange(agreement.id, e.target.value)}
@@ -205,7 +185,7 @@ const RitualReflection: React.FC<RitualReflectionProps> = ({ onBack, onNext, use
           <div className="text-sm font-bold text-gray-600 hidden sm:block">
             {reviewedCount} de {agreements.length} acuerdos revisados
           </div>
-          <button 
+          <button
             onClick={onNext}
             className="w-full sm:w-auto px-8 py-4 bg-primary text-white text-lg font-bold rounded-xl shadow-lg hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-3 focus:ring-4 focus:ring-primary/30"
           >

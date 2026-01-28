@@ -184,8 +184,6 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, onArchi
       <PageHeader
         title={isEdit ? "Editar Acuerdo" : "Crear un Nuevo Acuerdo Vivo"}
         subtitle={isEdit ? "Modifica los detalles del acuerdo existente." : "Define expectativas claras para que todo el equipo sepa cómo colaborar mejor."}
-        onBack={onCancel}
-        backLabel="Cancelar"
         actionButton={
           <button
             type="button"

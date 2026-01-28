@@ -4,7 +4,6 @@ import { PageContainer } from './common/PageContainer';
 import { PageHeader } from './common/PageHeader';
 
 interface MyCommitmentsProps {
-    onBack: () => void;
 }
 
 interface Task {
@@ -18,7 +17,7 @@ interface Task {
     description: string;
 }
 
-const MyCommitments: React.FC<MyCommitmentsProps> = ({ onBack }) => {
+const MyCommitments: React.FC<MyCommitmentsProps> = () => {
     // Helpers de Fecha
     const getTodayStr = () => new Date().toISOString().split('T')[0];
 
@@ -300,7 +299,6 @@ const MyCommitments: React.FC<MyCommitmentsProps> = ({ onBack }) => {
                         Mis Compromisos
                     </>
                 }
-                onBack={onBack}
                 actionButton={
                     <button
                         className="flex items-center gap-2 bg-primary hover:brightness-110 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 active:scale-95"

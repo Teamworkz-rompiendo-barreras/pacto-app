@@ -5,11 +5,10 @@ import { PageContainer } from './common/PageContainer';
 import { PageHeader } from './common/PageHeader';
 
 interface MonthlyReportProps {
-  onBack: () => void;
   onNavigateToWeekly?: () => void;
 }
 
-const MonthlyReport: React.FC<MonthlyReportProps> = ({ onBack, onNavigateToWeekly }) => {
+const MonthlyReport: React.FC<MonthlyReportProps> = ({ onNavigateToWeekly }) => {
   const [isExporting, setIsExporting] = useState(false);
   const [showAllSuggestions, setShowAllSuggestions] = useState(false);
   const [kpis, setKpis] = useState<MonthlyKPI[]>([]);
@@ -49,7 +48,6 @@ const MonthlyReport: React.FC<MonthlyReportProps> = ({ onBack, onNavigateToWeekl
             Reporte Mensual
           </>
         }
-        onBack={onBack}
         actionButton={
           <div className="flex flex-col sm:flex-row gap-3">
             {onNavigateToWeekly && (

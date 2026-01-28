@@ -24,36 +24,7 @@ const HelpCenter: React.FC<HelpCenterProps> = ({ user, onNavigate }) => {
   return (
     <div className="bg-[#f2ead9] font-public text-[#121316] min-h-screen flex flex-col animate-fade-in">
       {/* Top Navigation */}
-      <header className="sticky top-0 z-50 bg-[#f2ead9]/80 backdrop-blur-md border-b border-[#121316]/5 px-6 lg:px-10 py-3">
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => onNavigate(View.DASHBOARD)}>
-              <div className="size-8 bg-[#3750a4] rounded-lg flex items-center justify-center text-white">
-                <span className="material-symbols-outlined text-xl">handshake</span>
-              </div>
-              <h2 className="text-[#121316] text-xl font-bold tracking-tight">PACTO</h2>
-            </div>
-            <nav className="hidden md:flex items-center gap-6">
-              <button onClick={() => onNavigate(View.DASHBOARD)} className="text-[#121316]/70 hover:text-[#3750a4] transition-colors text-sm font-medium">Dashboard</button>
-              <button onClick={() => onNavigate(View.DASHBOARD)} className="text-[#121316]/70 hover:text-[#3750a4] transition-colors text-sm font-medium">Acuerdos</button>
-              <button onClick={() => onNavigate(View.CLARITY_CARDS)} className="text-[#121316]/70 hover:text-[#3750a4] transition-colors text-sm font-medium">Clarity Cards</button>
-              <button className="text-[#121316] text-sm font-bold border-b-2 border-[#3750a4]">Ayuda</button>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="p-2 rounded-xl bg-white/50 hover:bg-white transition-colors" onClick={() => onNavigate(View.NOTIFICATIONS)}>
-              <span className="material-symbols-outlined text-lg">notifications</span>
-            </button>
-            <div className="size-10 rounded-full bg-[#3750a4]/20 border-2 border-[#3750a4]/10 flex items-center justify-center overflow-hidden cursor-pointer" onClick={() => onNavigate(View.PROFILE)}>
-              {user.avatar ? (
-                <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
-              ) : (
-                <span className="font-bold text-[#3750a4]">{getInitials(user.name)}</span>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+
 
       <main className="flex-1 max-w-[1440px] mx-auto w-full flex flex-col lg:flex-row gap-8 p-6 lg:p-10">
         {/* Sidebar Navigation */}

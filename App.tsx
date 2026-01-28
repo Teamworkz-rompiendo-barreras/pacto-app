@@ -352,7 +352,7 @@ const AppContent: React.FC = () => {
         );
 
       case View.MY_COMMITMENTS:
-        return <MyCommitments onBack={() => navigateTo(View.DASHBOARD)} />;
+        return <MyCommitments />;
 
       case View.NEW_AGREEMENT:
         return (
@@ -375,7 +375,7 @@ const AppContent: React.FC = () => {
         );
 
       case View.AGREEMENT_DETAILS:
-        return <AgreementDetails agreement={selectedAgreement} onBack={() => navigateTo(View.DASHBOARD)} onEdit={() => navigateTo(View.EDIT_AGREEMENT)} onArchive={handleArchiveAgreement} />;
+        return <AgreementDetails agreement={selectedAgreement} onEdit={() => navigateTo(View.EDIT_AGREEMENT)} onArchive={handleArchiveAgreement} />;
 
       case View.PROFILE:
         if (!user) return null;
@@ -403,7 +403,6 @@ const AppContent: React.FC = () => {
           <TeamDirectory
             members={teamMembers}
             onViewProfile={() => navigateTo(View.PUBLIC_PROFILE)}
-            onGoBack={() => navigateTo(View.DASHBOARD)}
             onNavigateToPrivacy={() => navigateTo(View.TEAM_PRIVACY)}
           />
         );
@@ -415,10 +414,10 @@ const AppContent: React.FC = () => {
         return <Feedback onSave={() => navigateTo(View.DASHBOARD)} onCancel={() => navigateTo(View.DASHBOARD)} />;
 
       case View.INCLUSION_BOX:
-        return <InclusionBox onBack={() => navigateTo(View.DASHBOARD)} />;
+        return <InclusionBox />;
 
       case View.ACHIEVEMENTS:
-        return <Achievements onCelebrate={() => setShowCelebration(true)} onGoBack={() => navigateTo(View.DASHBOARD)} />;
+        return <Achievements onCelebrate={() => setShowCelebration(true)} />;
 
       case View.ORGANIZATION:
         return <div className="w-full overflow-hidden"><OrganizationPanel onNavigateToBulkUpload={() => navigateTo(View.BULK_UPLOAD)} onNavigateToDataExport={() => navigateTo(View.DATA_EXPORT)} /></div>;
@@ -474,7 +473,7 @@ const AppContent: React.FC = () => {
         return <RitualPreparation onBack={() => navigateTo(View.RITUALS)} onNext={() => navigateTo(View.RITUAL_REFLECTION)} />
 
       case View.RITUAL_REFLECTION:
-        return <RitualReflection onBack={() => navigateTo(View.RITUAL_PREPARATION)} onNext={() => navigateTo(View.RITUAL_CONCLUSIONS)} userAvatar={user?.avatar} />;
+        return <RitualReflection onNext={() => navigateTo(View.RITUAL_CONCLUSIONS)} userAvatar={user?.avatar} />;
 
       case View.RITUAL_CONCLUSIONS:
         return <RitualConclusions onBack={() => navigateTo(View.RITUAL_REFLECTION)} onFinish={() => navigateTo(View.RITUALS)} />;
@@ -482,7 +481,6 @@ const AppContent: React.FC = () => {
       case View.REPORTS:
         return (
           <MonthlyReport
-            onBack={() => navigateTo(View.DASHBOARD)}
             onNavigateToWeekly={() => navigateTo(View.WEEKLY_SUMMARY)}
           />
         );
