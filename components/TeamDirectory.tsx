@@ -55,6 +55,11 @@ const TeamDirectory: React.FC<TeamDirectoryProps> = ({ members, onViewProfile, o
 
     // Lógica de Filtrado Avanzada
     const filteredMembers = members.filter(member => {
+        // 0. Filtro de Privacidad
+        if (member.settings?.profile_visibility === 'private') return false;
+        // Simulación: Ocultar 'managers' a no-managers (asumiendo visualización pública básica per se)
+        if (member.settings?.profile_visibility === 'managers' && !member.role.toLowerCase().includes('manager')) return false;
+
         // 1. Búsqueda por Texto
         const matchesSearch =
             member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
