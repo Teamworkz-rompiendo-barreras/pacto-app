@@ -5,7 +5,6 @@ import { Agreement } from '../types';
 
 interface AgreementDetailsProps {
   agreement?: Agreement; // Now accepting the actual data
-  onBack: () => void;
   onEdit?: () => void;
   onArchive?: () => void;
 }
@@ -20,7 +19,7 @@ interface Comment {
   color: string;
 }
 
-const AgreementDetails: React.FC<AgreementDetailsProps> = ({ agreement, onBack, onEdit, onArchive }) => {
+const AgreementDetails: React.FC<AgreementDetailsProps> = ({ agreement, onEdit, onArchive }) => {
   const [activeTab, setActiveTab] = useState<'rules' | 'discussion' | 'history'>('rules');
 
   // Default fallback if no agreement passed (safe-guard)
@@ -62,13 +61,7 @@ const AgreementDetails: React.FC<AgreementDetailsProps> = ({ agreement, onBack, 
     <div className="max-w-4xl mx-auto w-full animate-fade-in pb-10">
       {/* Header de Navegación */}
       <div className="mb-6">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 text-gray-500 hover:text-primary transition-colors text-sm font-bold mb-4"
-        >
-          <span className="material-symbols-outlined text-lg">arrow_back</span>
-          Volver al Dashboard
-        </button>
+
 
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div className="flex items-start gap-4">

@@ -4,10 +4,9 @@ import { Ritual } from '../types';
 
 interface RitualDetailsProps {
     ritual: Ritual;
-    onBack: () => void;
 }
 
-const RitualDetails: React.FC<RitualDetailsProps> = ({ ritual, onBack }) => {
+const RitualDetails: React.FC<RitualDetailsProps> = ({ ritual }) => {
     const handleDownloadSummary = () => {
         alert("Descargando resumen PDF del ritual...");
     };
@@ -15,21 +14,8 @@ const RitualDetails: React.FC<RitualDetailsProps> = ({ ritual, onBack }) => {
     return (
         <div className="max-w-[1200px] mx-auto w-full animate-fade-in pb-12">
 
-            {/* Breadcrumbs & Back Link */}
-            <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                    <button onClick={onBack} className="hover:text-primary transition-colors">Rituales</button>
-                    <span className="material-symbols-outlined text-xs">chevron_right</span>
-                    <span className="text-primary font-bold">Detalle de Replay</span>
-                </div>
-                <button
-                    onClick={onBack}
-                    className="flex items-center gap-2 text-primary font-bold text-sm group hover:underline"
-                >
-                    <span className="material-symbols-outlined transition-transform group-hover:-translate-x-1 text-lg">arrow_back</span>
-                    Volver a Rituales
-                </button>
-            </div>
+            {/* Breadcrumbs & Back Link Removed - Handled by Layout */}
+
 
             {/* Page Heading */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">

@@ -15,7 +15,6 @@ interface ProfileProps {
     onLogout: () => void;
     onDeleteAccount?: () => void; // Prop para eliminación directa sin modal de confirmación de logout
     onNavigateToLanguage: () => void;
-    onBack?: () => void;
     initialSection?: string;
 }
 
@@ -26,7 +25,7 @@ const MOCK_SESSIONS = [
     { id: '3', device: 'Safari en Mac', location: 'Valencia, ES', lastActive: 'Hace 5 días', current: false, icon: 'laptop_mac' }
 ];
 
-const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpdateUser, onOpenPublicView, onLogout, onDeleteAccount, onNavigateToLanguage, onBack, initialSection = 'personal' }) => {
+const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpdateUser, onOpenPublicView, onLogout, onDeleteAccount, onNavigateToLanguage, initialSection = 'personal' }) => {
     const { toast } = useToast();
     // Estado local para el formulario de perfil
     const [name, setName] = useState(user.name);
@@ -271,7 +270,6 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
             <PageHeader
                 title="Perfil y Preferencias"
                 subtitle="Personaliza tu entorno de trabajo digital y tu tarjeta de presentación ante el equipo."
-                onBack={onBack}
                 actionButton={
                     <div className="flex gap-3">
                         <button

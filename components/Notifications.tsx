@@ -6,13 +6,12 @@ import { PageHeader } from './common/PageHeader';
 
 interface NotificationsProps {
   notifications: Notification[];
-  onBack: () => void;
   onMarkRead?: () => void;
   onConfigure: () => void;
   onViewItem: (type: 'agreement' | 'ritual' | 'report' | 'accessibility' | 'weekly' | 'tip') => void;
 }
 
-const Notifications: React.FC<NotificationsProps> = ({ notifications, onBack, onMarkRead, onConfigure, onViewItem }) => {
+const Notifications: React.FC<NotificationsProps> = ({ notifications, onMarkRead, onConfigure, onViewItem }) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const handleMarkAllAsRead = () => {
@@ -38,8 +37,6 @@ const Notifications: React.FC<NotificationsProps> = ({ notifications, onBack, on
       <PageHeader
         title="Centro de Notificaciones"
         subtitle="Gestiona tus actualizaciones y recordatorios de inclusión."
-        onBack={onBack}
-        backLabel="Volver"
         actionButton={
           <div className="flex flex-col items-end gap-3 sm:flex-row sm:items-center">
             <button

@@ -391,7 +391,6 @@ const AppContent: React.FC = () => {
               onLogout={() => setShowLogoutModal(true)}
               onDeleteAccount={handleLogout}
               onNavigateToLanguage={() => navigateTo(View.LANGUAGE_REGION)}
-              onBack={() => navigateTo(View.DASHBOARD)}
             />
           </div>
         );
@@ -428,13 +427,12 @@ const AppContent: React.FC = () => {
         return <div className="p-6 md:p-10 w-full"><BulkUpload onBack={() => navigateTo(View.ORGANIZATION)} onComplete={() => navigateTo(View.ORGANIZATION)} /></div>;
 
       case View.DATA_EXPORT:
-        return <DataExport onBack={() => navigateTo(View.ORGANIZATION)} />;
+        return <DataExport />;
 
       case View.CLARITY_CARDS:
         return (
           <div className="p-6 md:p-10 w-full">
             <ClarityCards
-              onGoDashboard={() => navigateTo(View.DASHBOARD)}
               onCreateNew={() => navigateTo(View.NEW_AGREEMENT)}
               onConvertToAgreement={(template) => {
                 setAgreementTemplate(template);
@@ -464,7 +462,7 @@ const AppContent: React.FC = () => {
 
       case View.RITUAL_DETAILS:
         if (!selectedRitual) return <div className="p-10 text-center">No ritual selected</div>;
-        return <div className="p-6 md:p-10 w-full"><RitualDetails ritual={selectedRitual} onBack={() => navigateTo(View.RITUALS)} /></div>;
+        return <div className="p-6 md:p-10 w-full"><RitualDetails ritual={selectedRitual} /></div>;
 
       case View.RITUAL_HISTORY:
         return <div className="p-6 md:p-10 w-full"><RitualHistory history={ritualHistory} onBack={() => navigateTo(View.RITUALS)} onViewDetails={(item) => {/* Logic for history details */ }} /></div>;
@@ -490,13 +488,12 @@ const AppContent: React.FC = () => {
         );
 
       case View.WEEKLY_SUMMARY:
-        return <WeeklySummary onBack={() => navigateTo(View.REPORTS)} onNavigateToCards={() => navigateTo(View.CLARITY_CARDS)} />;
+        return <WeeklySummary onNavigateToCards={() => navigateTo(View.CLARITY_CARDS)} />;
 
       case View.NOTIFICATIONS:
         return (
           <Notifications
             notifications={notifications}
-            onBack={() => navigateTo(View.DASHBOARD)}
             onConfigure={() => navigateTo(View.NOTIFICATION_SETTINGS)}
             onViewItem={(type) => navigateTo(type === 'weekly' ? View.WEEKLY_SUMMARY : View.DASHBOARD)}
             onMarkRead={() => user && notificationService.markAsRead(user.id).then(() => notificationService.getNotifications(user.id).then(setNotifications))}
@@ -504,13 +501,13 @@ const AppContent: React.FC = () => {
         );
 
       case View.NOTIFICATION_SETTINGS:
-        return <NotificationPreferences onBack={() => navigateTo(View.NOTIFICATIONS)} onSave={() => navigateTo(View.NOTIFICATIONS)} />;
+        return <NotificationPreferences onSave={() => navigateTo(View.NOTIFICATIONS)} />;
 
       case View.LANGUAGE_REGION:
         return <LanguageRegionSettings onBack={() => navigateTo(View.PROFILE)} onSave={() => navigateTo(View.PROFILE)} userAvatar={user?.avatar} />;
 
       case View.GLOBAL_SEARCH:
-        return <div className="w-full"><GlobalSearch onBack={() => navigateTo(View.DASHBOARD)} onAdoptAgreement={() => navigateTo(View.NEW_AGREEMENT)} /></div>;
+        return <div className="w-full"><GlobalSearch onAdoptAgreement={() => navigateTo(View.NEW_AGREEMENT)} /></div>;
 
       case View.CONTACT:
         return (
@@ -527,7 +524,6 @@ const AppContent: React.FC = () => {
       case View.LIBRARY:
         return (
           <Library
-            onBack={() => navigateTo(View.DASHBOARD)}
             onUseTemplate={(template) => {
               setAgreementTemplate(template);
               navigateTo(View.NEW_AGREEMENT);
@@ -598,6 +594,26 @@ const AppContent: React.FC = () => {
           onLogout={() => setShowLogoutModal(true)}
           unreadCount={notifications.filter(n => !n.isRead).length}
           onOpenNotifications={() => navigateTo(View.NOTIFICATIONS)}
+          onBack={(() => {
+            if ([
+              View.PROFILE, View.CLARITY_CARDS, View.FEEDBACK, View.MY_COMMITMENTS,
+              View.AGREEMENT_DETAILS, View.EDIT_AGREEMENT, View.NEW_AGREEMENT,
+              View.INCLUSION_BOX, View.ACHIEVEMENTS, View.ORGANIZATION,
+              View.REPORTS, View.NOTIFICATIONS, View.GLOBAL_SEARCH, View.LIBRARY,
+              View.RITUAL_REMINDER, View.RITUAL_DETAILS
+            ].includes(view)) return () => navigateTo(View.DASHBOARD);
+            if (view === View.PUBLIC_PROFILE) return () => navigateTo(View.PROFILE);
+            if (view === View.TEAM_PRIVACY) return () => navigateTo(View.TEAM);
+            if (view === View.BULK_UPLOAD || view === View.DATA_EXPORT) return () => navigateTo(View.ORGANIZATION);
+            if (view === View.NEW_RITUAL || view === View.RITUAL_HISTORY || view === View.RITUAL_PREPARATION) return () => navigateTo(View.RITUALS);
+            if (view === View.RITUAL_REFLECTION) return () => navigateTo(View.RITUAL_PREPARATION);
+            if (view === View.RITUAL_CONCLUSIONS) return () => navigateTo(View.RITUAL_REFLECTION);
+            if (view === View.WEEKLY_SUMMARY) return () => navigateTo(View.REPORTS);
+            if (view === View.NOTIFICATION_SETTINGS) return () => navigateTo(View.NOTIFICATIONS);
+            if (view === View.LANGUAGE_REGION) return () => navigateTo(View.PROFILE);
+            if (view === View.MY_LIBRARY) return () => navigateTo(View.LIBRARY);
+            return undefined;
+          })()}
         >
           {renderContent()}
         </Layout>

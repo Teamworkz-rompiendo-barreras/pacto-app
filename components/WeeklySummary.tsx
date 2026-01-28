@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { reportService, WeeklySummaryData } from '../services/reportService';
 
 interface WeeklySummaryProps {
-  onBack: () => void;
   onNavigateToCards: () => void;
 }
 
-const WeeklySummary: React.FC<WeeklySummaryProps> = ({ onBack, onNavigateToCards }) => {
+const WeeklySummary: React.FC<WeeklySummaryProps> = ({ onNavigateToCards }) => {
   const [data, setData] = useState<WeeklySummaryData | null>(null);
 
   useEffect(() => {
@@ -24,8 +23,8 @@ const WeeklySummary: React.FC<WeeklySummaryProps> = ({ onBack, onNavigateToCards
       {/* Header Section */}
       <header className="w-full px-6 py-8 md:px-12 lg:px-20 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="flex items-center gap-3 group cursor-pointer" onClick={onBack}>
-            <div className="flex items-center justify-center size-10 rounded-xl bg-primary text-white shadow-sm transition-transform group-hover:scale-105">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center size-10 rounded-xl bg-primary text-white shadow-sm transition-transform">
               <span className="material-symbols-outlined text-2xl">diversity_3</span>
             </div>
             <h1 className="text-primary text-2xl font-bold tracking-tight">PACTO</h1>
@@ -35,12 +34,6 @@ const WeeklySummary: React.FC<WeeklySummaryProps> = ({ onBack, onNavigateToCards
               <span className="material-symbols-outlined text-primary text-lg">calendar_today</span>
               <span className="text-text-n900 text-sm font-bold">12 - 18 de Octubre, 2023</span>
             </div>
-            <button
-              onClick={onBack}
-              className="text-sm font-bold text-gray-500 hover:text-primary transition-colors flex items-center gap-1 md:hidden"
-            >
-              <span className="material-symbols-outlined">arrow_back</span> Volver
-            </button>
           </div>
         </div>
         <div className="mt-12 mb-8">

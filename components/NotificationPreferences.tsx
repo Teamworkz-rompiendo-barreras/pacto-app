@@ -2,11 +2,10 @@
 import React, { useState } from 'react';
 
 interface NotificationPreferencesProps {
-    onBack: () => void;
     onSave: () => void;
 }
 
-const NotificationPreferences: React.FC<NotificationPreferencesProps> = ({ onBack, onSave }) => {
+const NotificationPreferences: React.FC<NotificationPreferencesProps> = ({ onSave }) => {
     // Estados para Alertas en Plataforma
     const [platformNew, setPlatformNew] = useState(true);
     const [platformRituals, setPlatformRituals] = useState(true);
@@ -57,13 +56,8 @@ const NotificationPreferences: React.FC<NotificationPreferencesProps> = ({ onBac
         <div className="flex flex-col h-full bg-bg-s1 relative animate-fade-in font-display">
 
             {/* Top Header Mobile */}
-            <div className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200">
-                <button onClick={onBack} className="p-2 -ml-2 rounded-lg hover:bg-gray-100 text-gray-600">
-                    <span className="material-symbols-outlined">arrow_back</span>
-                </button>
-                <h2 className="text-lg font-bold tracking-tight">Notificaciones</h2>
-                <div className="w-8"></div> {/* Spacer */}
-            </div>
+            {/* Top Header Mobile Removed - Layout handles it */}
+
 
             {/* Scrollable Content */}
             <main className="flex-1 overflow-y-auto p-6 lg:p-10 pb-24 scroll-smooth custom-scrollbar">
@@ -72,10 +66,7 @@ const NotificationPreferences: React.FC<NotificationPreferencesProps> = ({ onBac
                     {/* Page Heading */}
                     <div className="flex flex-col gap-3">
                         <div className="flex items-center gap-2 mb-2">
-                            <button onClick={onBack} className="hidden md:flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-primary transition-colors">
-                                <span className="material-symbols-outlined text-lg">arrow_back</span>
-                                Volver
-                            </button>
+                            {/* Back button removed */}
                         </div>
                         <h1 className="text-text-n900 text-3xl lg:text-4xl font-black leading-tight tracking-tight">
                             Preferencias de Notificación
@@ -249,7 +240,6 @@ const NotificationPreferences: React.FC<NotificationPreferencesProps> = ({ onBac
                     </button>
                     <div className="flex gap-4 w-full sm:w-auto justify-end">
                         <button
-                            onClick={onBack}
                             className="px-6 py-2.5 rounded-lg border border-gray-300 text-text-n900 text-sm font-bold hover:bg-gray-50 transition-colors"
                         >
                             Cancelar

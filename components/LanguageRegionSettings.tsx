@@ -28,31 +28,7 @@ const LanguageRegionSettings: React.FC<LanguageRegionSettingsProps> = ({ onBack,
 
     return (
         <div className="bg-bg-s1 min-h-full font-display text-text-n900 flex flex-col animate-fade-in">
-            {/* Top Navigation */}
-            <header className="w-full px-6 py-4 flex items-center justify-between sticky top-0 bg-bg-s1/90 backdrop-blur-sm z-[35]">
-                <div className="flex items-center gap-3 cursor-pointer" onClick={onBack}>
-                    <div className="bg-primary text-white p-1.5 rounded-lg">
-                        <span className="material-symbols-outlined text-[24px]">diversity_3</span>
-                    </div>
-                    <h1 className="text-xl font-bold tracking-tight text-text-n900">PACTO</h1>
-                </div>
-                <div className="flex items-center gap-4">
-                    <button
-                        onClick={onBack}
-                        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-black/5 transition-colors text-gray-600"
-                        title={t('global.btn.close')}
-                    >
-                        <span className="material-symbols-outlined">close</span>
-                    </button>
-                    <div className="w-10 h-10 rounded-full bg-cover bg-center border-2 border-white shadow-sm bg-gray-200 overflow-hidden">
-                        {userAvatar ? (
-                            <img src={userAvatar} alt="Profile" className="w-full h-full object-cover" />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary font-bold">U</div>
-                        )}
-                    </div>
-                </div>
-            </header>
+            {/* Top Navigation Removed - Handled by Layout */}
 
             {/* Main Content Area */}
             <main className="flex-1 flex items-center justify-center p-4 md:p-8">
@@ -63,13 +39,8 @@ const LanguageRegionSettings: React.FC<LanguageRegionSettingsProps> = ({ onBack,
 
                     {/* Header Section */}
                     <div className="mb-10">
-                        <button
-                            onClick={onBack}
-                            className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-primary mb-4 transition-colors md:hidden"
-                        >
-                            <span className="material-symbols-outlined text-lg">arrow_back</span>
-                            {t('back')}
-                        </button>
+                        {/* Back button removed */}
+
                         <h2 className="text-3xl font-black text-text-n900 mb-3 tracking-tight">{t('settings.title')}</h2>
                         <p className="text-gray-600 text-lg leading-relaxed font-medium max-w-xl">
                             {t('settings.desc')}
@@ -201,12 +172,12 @@ const LanguageRegionSettings: React.FC<LanguageRegionSettingsProps> = ({ onBack,
                         </button>
                     </div>
                 </div>
-            </main>
+            </main >
 
             <footer className="w-full py-6 text-center text-gray-500 text-xs font-medium">
                 <p>© 2026 PACTO {t('global.brand_suffix')}. {t('global.copyright')}</p>
             </footer>
-        </div>
+        </div >
     );
 };
 

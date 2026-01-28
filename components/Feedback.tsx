@@ -57,7 +57,7 @@ const Feedback: React.FC<FeedbackProps> = ({ onSave, onCancel }) => {
       <PageHeader
         title="¿Cómo podemos mejorar PACTO?"
         subtitle="Ayúdanos a evolucionar la plataforma para que sea el mejor lugar para el talento neurodivergente."
-        onBack={onCancel}
+      // Back button handled by Layout
       />
 
       <section className="bg-pacto-bg border border-pacto-border rounded-pacto p-8 md:p-10 shadow-sm space-y-8">

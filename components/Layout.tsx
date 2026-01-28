@@ -6,13 +6,14 @@ interface LayoutProps {
     children: React.ReactNode;
     user: UserProfile | null;
     currentView: View;
-    unreadCount?: number; // New prop
+    unreadCount?: number;
     onNavigate: (view: View) => void;
     onLogout: () => void;
-    onOpenNotifications?: () => void; // New prop
+    onOpenNotifications?: () => void;
+    onBack?: () => void; // New prop for standardized back navigation
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCount = 0, onNavigate, onLogout, onOpenNotifications }) => {
+const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCount = 0, onNavigate, onLogout, onOpenNotifications, onBack }) => {
     const { t } = useLanguage();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -155,23 +156,37 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCoun
             {/* Main Content Area */}
             <main className="flex-1 lg:ml-64 w-full pt-16 lg:pt-0 relative">
 
-                {/* Desktop Top Bar (Notification Bell) - Floating -> Now Sticky/Flex to avoid overlap */}
-                <div className="hidden lg:flex w-full justify-end items-center px-8 py-6 gap-3 sticky top-0 bg-bg-s1/90 backdrop-blur-sm z-20">
-                    <button
-                        onClick={onOpenNotifications}
-                        className="bg-white p-3 rounded-full shadow-sm text-gray-500 hover:text-primary hover:shadow-md transition-all relative border border-gray-100"
-                        title={t('global.notifications')}
-                    >
-                        <span className="material-symbols-outlined">notifications</span>
-                        {unreadCount > 0 && (
-                            <span className="absolute top-0 right-0 size-3 bg-red-500 border-2 border-white rounded-full"></span>
+                {/* Desktop Top Bar (Notification Bell & Back Button) */}
+                <div className="hidden lg:flex w-full justify-between items-center px-8 py-6 gap-3 sticky top-0 bg-bg-s1/90 backdrop-blur-sm z-20">
+                    <div className="flex-1">
+                        {onBack && (
+                            <button
+                                onClick={onBack}
+                                className="flex items-center gap-2 text-gray-500 hover:text-primary transition-colors font-bold text-sm group"
+                            >
+                                <span className="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                                Volver
+                            </button>
                         )}
-                    </button>
-                    <div className="bg-white pl-2 pr-4 py-2 rounded-full shadow-sm border border-gray-100 flex items-center gap-3 cursor-pointer hover:shadow-md transition-all" onClick={() => onNavigate(View.PROFILE)}>
-                        <div className="size-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs overflow-hidden">
-                            {user.avatar ? <img src={user.avatar} className="size-full object-cover" /> : user.name[0]}
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={onOpenNotifications}
+                            className="bg-white p-3 rounded-full shadow-sm text-gray-500 hover:text-primary hover:shadow-md transition-all relative border border-gray-100"
+                            title={t('global.notifications')}
+                        >
+                            <span className="material-symbols-outlined">notifications</span>
+                            {unreadCount > 0 && (
+                                <span className="absolute top-0 right-0 size-3 bg-red-500 border-2 border-white rounded-full"></span>
+                            )}
+                        </button>
+                        <div className="bg-white pl-2 pr-4 py-2 rounded-full shadow-sm border border-gray-100 flex items-center gap-3 cursor-pointer hover:shadow-md transition-all" onClick={() => onNavigate(View.PROFILE)}>
+                            <div className="size-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs overflow-hidden">
+                                {user.avatar ? <img src={user.avatar} className="size-full object-cover" /> : user.name[0]}
+                            </div>
+                            <span className="text-xs font-bold text-gray-700 max-w-[100px] truncate">{user.name.split(' ')[0]}</span>
                         </div>
-                        <span className="text-xs font-bold text-gray-700 max-w-[100px] truncate">{user.name.split(' ')[0]}</span>
                     </div>
                 </div>
 
