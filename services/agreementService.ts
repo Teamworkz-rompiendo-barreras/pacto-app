@@ -1,7 +1,9 @@
 import { Agreement } from '../types';
 
-// Mock Data
-let MOCK_AGREEMENTS: Agreement[] = [
+const STORAGE_KEY = 'pacto_agreements';
+
+// Initial default data if storage is empty
+const DEFAULT_AGREEMENTS: Agreement[] = [
     {
         id: '1',
         title: 'Sin reuniones los viernes',
@@ -38,13 +40,33 @@ let MOCK_AGREEMENTS: Agreement[] = [
     }
 ];
 
+// Helper to get data
+const getStoredAgreements = (): Agreement[] => {
+    try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (!stored) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_AGREEMENTS));
+            return DEFAULT_AGREEMENTS;
+        }
+        return JSON.parse(stored);
+    } catch (e) {
+        console.error("Error reading agreements from storage", e);
+        return DEFAULT_AGREEMENTS;
+    }
+};
+
+// Helper to set data
+const setStoredAgreements = (agreements: Agreement[]) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(agreements));
+};
+
 export const agreementService = {
     // Obtener acuerdos visibles para un usuario
     getAgreements: async (userId: string, role: string): Promise<Agreement[]> => {
-        // En un futuro, filtrar por visibilidad y permisos
-        // Por ahora devolvemos todos los mocks + los creados en memoria
         return new Promise((resolve) => {
-            setTimeout(() => resolve([...MOCK_AGREEMENTS]), 500); // Simulate delay
+            const agreements = getStoredAgreements();
+            // Simulate network delay slightly for realism, but much faster
+            setTimeout(() => resolve(agreements), 100);
         });
     },
 
@@ -56,28 +78,34 @@ export const agreementService = {
             updatedAt: new Date().toISOString(),
             version: 1
         };
-        MOCK_AGREEMENTS = [newAgreement, ...MOCK_AGREEMENTS];
+        const current = getStoredAgreements();
+        const updated = [newAgreement, ...current];
+        setStoredAgreements(updated);
         return newAgreement;
     },
 
     // Actualizar acuerdo existente
     updateAgreement: async (id: string, updates: Partial<Agreement>): Promise<Agreement | null> => {
-        const index = MOCK_AGREEMENTS.findIndex(a => a.id === id);
+        const current = getStoredAgreements();
+        const index = current.findIndex(a => a.id === id);
         if (index === -1) return null;
 
         const updatedAgreement = {
-            ...MOCK_AGREEMENTS[index],
+            ...current[index],
             ...updates,
             updatedAt: new Date().toISOString(),
-            version: MOCK_AGREEMENTS[index].version + 1
+            version: current[index].version + 1
         };
-        MOCK_AGREEMENTS[index] = updatedAgreement;
+        current[index] = updatedAgreement;
+        setStoredAgreements(current);
         return updatedAgreement;
     },
 
     // Eliminar (Soft Delete / Archivar)
     deleteAgreement: async (id: string): Promise<boolean> => {
-        MOCK_AGREEMENTS = MOCK_AGREEMENTS.filter(a => a.id !== id);
+        const current = getStoredAgreements();
+        const filtered = current.filter(a => a.id !== id);
+        setStoredAgreements(filtered);
         return true;
     }
 };

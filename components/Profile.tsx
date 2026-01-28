@@ -19,7 +19,7 @@ interface ProfileProps {
 }
 
 // Datos simulados de sesiones activas
-const MOCK_SESSIONS = [
+const DEMO_SESSIONS = [
     { id: '1', device: 'Chrome en Windows', location: 'Madrid, ES', lastActive: 'Activo ahora', current: true, icon: 'laptop_mac' },
     { id: '2', device: 'iPhone 13', location: 'Barcelona, ES', lastActive: 'Hace 2 horas', current: false, icon: 'phone_iphone' },
     { id: '3', device: 'Safari en Mac', location: 'Valencia, ES', lastActive: 'Hace 5 días', current: false, icon: 'laptop_mac' }
@@ -48,7 +48,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
 
     // Estados para Modales de Zona de Peligro
     const [showDevicesModal, setShowDevicesModal] = useState(false);
-    const [activeSessions, setActiveSessions] = useState(MOCK_SESSIONS);
+    const [activeSessions, setActiveSessions] = useState(DEMO_SESSIONS);
     const [isLoadingSessions, setIsLoadingSessions] = useState(false);
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);

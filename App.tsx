@@ -137,9 +137,40 @@ const AppContent: React.FC = () => {
   const [selectedRitual, setSelectedRitual] = useState<Ritual | null>(null);
   const [selectedAgreement, setSelectedAgreement] = useState<Agreement | undefined>(undefined);
   const [agreementTemplate, setAgreementTemplate] = useState<Partial<Agreement> | undefined>(undefined);
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
 
-  // Mock data for Team (Ahora vacío o sólo el usuario actual para no confundir)
-  const [teamMembers] = useState<UserProfile[]>([]);
+  // Demo data for Team
+  const DEMO_TEAM: UserProfile[] = [
+    {
+      id: '2',
+      name: 'Ana García',
+      email: 'ana@team.com',
+      role: 'Engineering Manager',
+      avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
+      about: 'Liderando equipos con empatía y estructura.',
+      settings: { id: 'temp2', dyslexia_font: false, high_contrast: false, comm_preference: 'Visual', avoid_calls: false, need_processing: false, profile_visibility: 'team' }
+    },
+    {
+      id: '3',
+      name: 'Carlos Ruiz',
+      email: 'carlos@team.com',
+      role: 'Frontend Developer',
+      avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d',
+      about: 'Apasionado por UX y accesibilidad.',
+      settings: { id: 'temp3', dyslexia_font: false, high_contrast: false, comm_preference: 'Escrito', avoid_calls: true, need_processing: true, profile_visibility: 'team' }
+    },
+    {
+      id: '4',
+      name: 'Marta Díaz',
+      email: 'marta@team.com',
+      role: 'Product Owner',
+      avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704e',
+      about: 'Definiendo el futuro del producto.',
+      settings: { id: 'temp4', dyslexia_font: false, high_contrast: false, comm_preference: 'Verbal', avoid_calls: false, need_processing: false, profile_visibility: 'team' }
+    }
+  ];
+
+  const [teamMembers] = useState<UserProfile[]>(DEMO_TEAM);
 
   const navigateTo = (newView: View) => {
     setView(newView);
@@ -167,13 +198,12 @@ const AppContent: React.FC = () => {
     checkSession();
   }, []); // Dependencias vacías para ejecutar solo al montar app
 
-  const handleLogin = async (name: string, settings: AccessibilitySettings) => {
-    // Ya no creamos el usuario aquí, porque authService.signUp/signIn ya nos devuelve el usuario completo
-    const currentUser = await authService.getCurrentUser();
-    if (currentUser) {
-      setUser(currentUser);
+  const handleLogin = async (userProfile: UserProfile) => {
+    // Directly use the user object returned from Login (which comes from AuthService -> UserService)
+    if (userProfile) {
+      setUser(userProfile);
     } else {
-      console.warn("No se pudo recuperar usuario tras login, usando datos locales temporales");
+      console.warn("Login exitoso pero sin datos de usuario.");
     }
     navigateTo(View.DASHBOARD);
   };
@@ -244,6 +274,7 @@ const AppContent: React.FC = () => {
       icon: 'event'
     };
     setRituals([...rituals, newRitual]);
+    setShowCelebration(true); // Feedback visual
     navigateTo(View.RITUALS);
   };
 
@@ -387,7 +418,7 @@ const AppContent: React.FC = () => {
               onSaveSettings={(s) => setUser({ ...user, settings: s })}
               onUpdateUser={(u) => setUser({ ...user, ...u })}
               onCreateNew={() => navigateTo(View.NEW_AGREEMENT)}
-              onOpenPublicView={() => navigateTo(View.PUBLIC_PROFILE)}
+              onOpenPublicView={() => { setSelectedUser(user); navigateTo(View.PUBLIC_PROFILE); }}
               onLogout={() => setShowLogoutModal(true)}
               onDeleteAccount={handleLogout}
               onNavigateToLanguage={() => navigateTo(View.LANGUAGE_REGION)}
@@ -396,13 +427,13 @@ const AppContent: React.FC = () => {
         );
 
       case View.PUBLIC_PROFILE:
-        return <PublicProfile user={user || undefined} agreements={agreements} onBack={() => navigateTo(View.PROFILE)} onProposeAgreement={() => navigateTo(View.NEW_AGREEMENT)} />;
+        return <PublicProfile user={selectedUser || user || undefined} agreements={agreements} colleagues={teamMembers} onBack={() => navigateTo(View.PROFILE)} onProposeAgreement={() => navigateTo(View.NEW_AGREEMENT)} />;
 
       case View.TEAM:
         return (
           <TeamDirectory
             members={teamMembers}
-            onViewProfile={() => navigateTo(View.PUBLIC_PROFILE)}
+            onViewProfile={(u) => { setSelectedUser(u); navigateTo(View.PUBLIC_PROFILE); }}
             onNavigateToPrivacy={() => navigateTo(View.TEAM_PRIVACY)}
           />
         );

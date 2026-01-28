@@ -1,11 +1,11 @@
 // Verified Deployment
 import React, { useState } from 'react';
-import { AccessibilitySettings } from '../types';
+import { AccessibilitySettings, UserProfile } from '../types';
 import { authService } from '../services/authService';
 import { useLanguage } from '../LanguageContext';
 
 interface LoginProps {
-    onLogin: (name: string, settings: AccessibilitySettings) => void;
+    onLogin: (user: UserProfile) => void;
     onCancel: () => void;
 }
 
@@ -52,7 +52,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                     if (error.includes("Email not confirmed")) msg = "Debes confirmar tu correo electrónico antes de entrar.";
                     setNotification(msg);
                 } else if (user) {
-                    onLogin(user.name, user.settings);
+                    onLogin(user);
                 }
 
             } else if (mode === 'SIGNUP_COMPANY' || mode === 'SIGNUP_EMPLOYEE') {
@@ -104,7 +104,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                     if (error.includes("already registered")) msg = "Este correo ya está registrado.";
                     setNotification(msg);
                 } else if (user) {
-                    onLogin(user.name, user.settings);
+                    onLogin(user);
                 }
             } else {
                 // RECOVERY

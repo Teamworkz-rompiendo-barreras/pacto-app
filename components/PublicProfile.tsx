@@ -5,19 +5,14 @@ import { UserProfile, Agreement } from '../types';
 interface PublicProfileProps {
   user?: UserProfile; // Datos del usuario a mostrar
   agreements?: Agreement[]; // Acuerdos reales
+  colleagues?: UserProfile[]; // Lista de compañeros para saludo
   onBack: () => void;
   onProposeAgreement: () => void;
 }
 
-// Datos simulados para la lista de selección de compañeros
-const MOCK_COLLEAGUES = [
-  { id: '1', name: 'Ana García', role: 'Engineering Manager' },
-  { id: '2', name: 'Luis Chen', role: 'Frontend Developer' },
-  { id: '3', name: 'Marta Ruiz', role: 'Product Owner' },
-  { id: '4', name: 'Carlos Díaz', role: 'QA Engineer' }
-];
+const DEFAULT_COLLEAGUES: UserProfile[] = [];
 
-const PublicProfile: React.FC<PublicProfileProps> = ({ user, agreements = [], onBack, onProposeAgreement }) => {
+const PublicProfile: React.FC<PublicProfileProps> = ({ user, agreements = [], onBack, onProposeAgreement, colleagues = DEFAULT_COLLEAGUES }) => {
   // Estado para feedback visual del saludo
   const [greetingSent, setGreetingSent] = useState(false);
   const [imgError, setImgError] = useState(false);
@@ -65,11 +60,10 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user, agreements = [], on
     }, 2000);
   };
 
-  // Combinar el usuario actual con la lista mock para mostrar opciones
-  // Filtramos para no duplicar si el usuario actual ya está en los mocks
+  // Combinar el usuario actual con la lista real para mostrar opciones
   const allPotentialRecipients = [
     { id: 'current', name: displayUser.name, role: displayUser.role },
-    ...MOCK_COLLEAGUES.filter(c => c.name !== displayUser.name)
+    ...(colleagues.filter(c => c.name !== displayUser.name))
   ];
 
   return (
@@ -237,8 +231,8 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user, agreements = [], on
               onClick={handleOpenGreetingModal}
               disabled={greetingSent}
               className={`border-2 font-bold py-3 px-8 rounded-full transition-all flex items-center gap-2 ${greetingSent
-                  ? 'bg-green-100 border-green-200 text-green-700'
-                  : 'border-primary/20 hover:border-primary text-primary'
+                ? 'bg-green-100 border-green-200 text-green-700'
+                : 'border-primary/20 hover:border-primary text-primary'
                 }`}
             >
               {greetingSent ? (
@@ -281,8 +275,8 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user, agreements = [], on
                   <label
                     key={recipient.id}
                     className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${selectedRecipients.includes(recipient.name)
-                        ? 'border-primary bg-primary/5'
-                        : 'border-gray-200 hover:bg-gray-50'
+                      ? 'border-primary bg-primary/5'
+                      : 'border-gray-200 hover:bg-gray-50'
                       }`}
                   >
                     <div className="flex items-center gap-3">
@@ -296,8 +290,8 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user, agreements = [], on
                       </div>
                     </div>
                     <div className={`size-5 rounded border flex items-center justify-center ${selectedRecipients.includes(recipient.name)
-                        ? 'bg-primary border-primary'
-                        : 'border-gray-300'
+                      ? 'bg-primary border-primary'
+                      : 'border-gray-300'
                       }`}>
                       {selectedRecipients.includes(recipient.name) && (
                         <span className="material-symbols-outlined text-white text-sm">check</span>

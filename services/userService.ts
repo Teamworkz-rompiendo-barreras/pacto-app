@@ -1,17 +1,41 @@
 import { supabase } from '../supabaseClient';
 import { UserProfile, AccessibilitySettings } from '../types';
 
+const USER_STORAGE_KEY = 'pacto_users_v1';
+
+// Helper for local storage
+const getLocalUsers = (): UserProfile[] => {
+    try {
+        const stored = localStorage.getItem(USER_STORAGE_KEY);
+        return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+};
+
+const saveLocalUser = (user: UserProfile) => {
+    const users = getLocalUsers();
+    const existingIndex = users.findIndex(u => u.id === user.id || u.email === user.email);
+    if (existingIndex >= 0) {
+        users[existingIndex] = user;
+    } else {
+        users.push(user);
+    }
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
+};
+
 export const userService = {
     // Crear o actualizar un usuario y sus ajustes
     async createUserProfile(user: UserProfile): Promise<UserProfile | null> {
+        // Fallback for Demo/Local mode first
+        saveLocalUser(user);
+
+        // Try Supabase (Best Effort)
         try {
             console.log('Guardando usuario en Supabase...', user);
 
-            // 1. Guardar ajustes de accesibilidad primero
             const { data: settingsData, error: settingsError } = await supabase
                 .from('accessibility_settings')
-                .insert([{
-                    id: user.settings.id, // Usamos el mismo ID que en el objeto local (o generamos uno nuevo si es necesario)
+                .upsert([{ // Upsert is safer
+                    id: user.settings.id,
                     dyslexia_font: user.settings.dyslexia_font,
                     high_contrast: user.settings.high_contrast,
                     comm_preference: user.settings.comm_preference,
@@ -22,43 +46,39 @@ export const userService = {
                 .select()
                 .single();
 
-            if (settingsError) {
-                console.error('Error guardando ajustes:', settingsError);
-                // Si falla porque ya existe (ej. login repetido con mismo ID generado), intentamos actualizar o ignorar
-                // Por simplificación en MVP, asumimos éxito o logueamos error
-            }
+            if (settingsError) console.warn('Supabase Settings Error (Demo mode?):', settingsError.message);
 
-            // 2. Guardar perfil de usuario
             const { data: profileData, error: profileError } = await supabase
                 .from('profiles')
-                .insert([{
+                .upsert([{
                     id: user.id,
                     name: user.name,
                     email: user.email,
                     role: user.role,
                     about: user.about,
                     avatar_url: user.avatar,
-                    settings_id: user.settings.id // Enlazamos con los ajustes creados
+                    settings_id: user.settings.id
                 }])
                 .select()
                 .single();
 
-            if (profileError) {
-                console.error('Error guardando perfil:', profileError);
-                return null;
-            }
+            if (profileError) console.warn('Supabase Profile Error (Demo mode?):', profileError.message);
 
-            console.log('Usuario guardado con éxito:', profileData);
-            return user;
-
+            return user; // Return success based on local save
         } catch (error) {
-            console.error('Error inesperado en createUserProfile:', error);
-            return null;
+            console.warn('Network error or offline (using local data):', error);
+            return user;
         }
     },
 
     // Obtener perfil por email (simulación de login)
     async getUserProfileByEmail(email: string): Promise<UserProfile | null> {
+        // Check local storage first
+        const localUsers = getLocalUsers();
+        const localUser = localUsers.find(u => u.email === email);
+        if (localUser) return localUser;
+
+        // Try Supabase
         try {
             const { data, error } = await supabase
                 .from('profiles')
@@ -69,27 +89,21 @@ export const userService = {
                 .eq('email', email)
                 .single();
 
-            if (error) {
-                console.log('Usuario no encontrado o error:', error.message);
+            if (error || !data) {
                 return null;
             }
 
-            // Mapear respuesta de Supabase a nuestro tipo UserProfile
-            if (data) {
-                return {
-                    id: data.id,
-                    name: data.name,
-                    email: data.email,
-                    role: data.role,
-                    about: data.about,
-                    avatar: data.avatar_url,
-                    settings: data.settings as AccessibilitySettings
-                };
-            }
-            return null;
+            return {
+                id: data.id,
+                name: data.name,
+                email: data.email,
+                role: data.role,
+                about: data.about,
+                avatar: data.avatar_url,
+                settings: data.settings as AccessibilitySettings
+            };
 
         } catch (error) {
-            console.error('Error obteniendo usuario:', error);
             return null;
         }
     }
