@@ -22,7 +22,7 @@ const HelpCenter: React.FC<HelpCenterProps> = ({ user, onNavigate }) => {
   const getInitials = (name: string) => name.substring(0, 2).toUpperCase();
 
   return (
-    <div className="bg-[#f2ead9] font-public text-[#121316] min-h-screen flex flex-col animate-fade-in">
+    <div className="bg-bg-s1 font-public text-[#121316] min-h-screen flex flex-col animate-fade-in">
       {/* Top Navigation */}
 
 
