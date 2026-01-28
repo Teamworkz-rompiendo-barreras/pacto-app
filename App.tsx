@@ -598,7 +598,8 @@ const AppContent: React.FC = () => {
               View.AGREEMENT_DETAILS, View.EDIT_AGREEMENT, View.NEW_AGREEMENT,
               View.INCLUSION_BOX, View.ACHIEVEMENTS, View.ORGANIZATION,
               View.REPORTS, View.NOTIFICATIONS, View.GLOBAL_SEARCH, View.LIBRARY,
-              View.RITUAL_REMINDER, View.RITUAL_DETAILS
+              View.RITUALS, View.RITUAL_REMINDER, View.RITUAL_DETAILS,
+              View.TEAM, View.MY_AGREEMENTS
             ].includes(view)) return () => navigateTo(View.DASHBOARD);
             if (view === View.PUBLIC_PROFILE) return () => navigateTo(View.PROFILE);
             if (view === View.TEAM_PRIVACY) return () => navigateTo(View.TEAM);
