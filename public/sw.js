@@ -1,4 +1,4 @@
-
+// SW Version: v1.0.1
 const CACHE_NAME = 'pacto-v1';
 const urlsToCache = [
   '/',

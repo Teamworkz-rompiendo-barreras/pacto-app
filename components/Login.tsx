@@ -1,3 +1,4 @@
+// Verified Deployment
 import React, { useState } from 'react';
 import { AccessibilitySettings } from '../types';
 import { authService } from '../services/authService';
