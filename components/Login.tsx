@@ -30,7 +30,6 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
 
     const [settings, setSettings] = useState<AccessibilitySettings>({
         id: 'temp',
-        low_stimulus: false,
         dyslexia_font: false,
         high_contrast: false,
         comm_preference: 'Escrito'
@@ -379,19 +378,6 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                                 </legend>
 
                                 <div className="space-y-4 mt-2">
-                                    <label className="flex items-center justify-between cursor-pointer group p-2 hover:bg-white rounded-lg transition-colors">
-                                        <span className="flex flex-col">
-                                            <span className="font-bold text-text-n900">Modo Bajo Estímulo</span>
-                                            <span className="text-sm opacity-70">Reduce animaciones y distracciones.</span>
-                                        </span>
-                                        <input
-                                            type="checkbox"
-                                            checked={settings.low_stimulus}
-                                            onChange={(e) => setSettings({ ...settings, low_stimulus: e.target.checked })}
-                                            className="w-6 h-6 accent-primary cursor-pointer rounded focus:ring-primary"
-                                        />
-                                    </label>
-
                                     <label className="flex items-center justify-between cursor-pointer group p-2 hover:bg-white rounded-lg transition-colors">
                                         <span className="flex flex-col">
                                             <span className="font-bold text-text-n900">Alto Contraste</span>

@@ -3,7 +3,6 @@ export type CommPreference = 'Visual' | 'Escrito' | 'Verbal';
 
 export interface AccessibilitySettings {
   id: string;
-  low_stimulus: boolean;
   dyslexia_font: boolean;
   high_contrast: boolean;
   comm_preference: CommPreference;

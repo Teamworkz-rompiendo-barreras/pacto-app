@@ -155,11 +155,11 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCoun
             {/* Main Content Area */}
             <main className="flex-1 lg:ml-64 w-full pt-16 lg:pt-0 relative">
 
-                {/* Desktop Top Bar (Notification Bell) - Floating */}
-                <div className="hidden lg:flex absolute top-6 right-6 z-20 gap-3">
+                {/* Desktop Top Bar (Notification Bell) - Floating -> Now Sticky/Flex to avoid overlap */}
+                <div className="hidden lg:flex w-full justify-end items-center px-8 py-6 gap-3 sticky top-0 bg-bg-s1/90 backdrop-blur-sm z-20">
                     <button
                         onClick={onOpenNotifications}
-                        className="bg-white p-3 rounded-full shadow-md text-gray-500 hover:text-primary hover:shadow-lg transition-all relative border border-gray-100"
+                        className="bg-white p-3 rounded-full shadow-sm text-gray-500 hover:text-primary hover:shadow-md transition-all relative border border-gray-100"
                         title={t('global.notifications')}
                     >
                         <span className="material-symbols-outlined">notifications</span>
@@ -167,7 +167,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCoun
                             <span className="absolute top-0 right-0 size-3 bg-red-500 border-2 border-white rounded-full"></span>
                         )}
                     </button>
-                    <div className="bg-white pl-2 pr-4 py-2 rounded-full shadow-md border border-gray-100 flex items-center gap-3 cursor-pointer hover:shadow-lg transition-all" onClick={() => onNavigate(View.PROFILE)}>
+                    <div className="bg-white pl-2 pr-4 py-2 rounded-full shadow-sm border border-gray-100 flex items-center gap-3 cursor-pointer hover:shadow-md transition-all" onClick={() => onNavigate(View.PROFILE)}>
                         <div className="size-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs overflow-hidden">
                             {user.avatar ? <img src={user.avatar} className="size-full object-cover" /> : user.name[0]}
                         </div>

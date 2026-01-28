@@ -95,9 +95,6 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
         const body = document.body;
         const root = document.documentElement;
 
-        if (localSettings.low_stimulus) root.classList.add('low-stimulus');
-        else root.classList.remove('low-stimulus');
-
         if (localSettings.high_contrast) root.classList.add('high-contrast');
         else root.classList.remove('high-contrast');
 
@@ -446,19 +443,8 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                             <h2 className="text-2xl font-bold text-text-n900">Preferencias Sensoriales</h2>
                         </div>
                         <div className="space-y-8">
-                            {/* Toggle Item 1 */}
-                            <div className="flex items-start justify-between gap-4 cursor-pointer" onClick={() => toggleSetting('low_stimulus')}>
-                                <div className="max-w-md">
-                                    <p className="font-bold text-lg text-text-n900">Modo de Bajo Estímulo</p>
-                                    <p className="text-sm opacity-70 leading-relaxed text-text-n900">Reduce automáticamente las animaciones, transiciones y suaviza los contrastes de color brillantes para evitar la fatiga cognitiva.</p>
-                                </div>
-                                <div className="relative inline-flex items-center cursor-pointer mt-1 pointer-events-none">
-                                    <input type="checkbox" className="sr-only peer" checked={localSettings.low_stimulus} readOnly />
-                                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
-                                </div>
-                            </div>
-                            {/* Toggle Item 2 */}
-                            <div className="flex items-start justify-between gap-4 border-t border-black/5 pt-6 cursor-pointer" onClick={() => toggleSetting('dyslexia_font')}>
+                            {/* Toggle Item 2 -> Now 1 */}
+                            <div className="flex items-start justify-between gap-4 cursor-pointer" onClick={() => toggleSetting('dyslexia_font')}>
                                 <div className="max-w-md">
                                     <p className="font-bold text-lg text-text-n900">Fuentes para Dislexia</p>
                                     <p className="text-sm opacity-70 leading-relaxed text-text-n900">Cambia la tipografía del sistema por una diseñada específicamente para mejorar la legibilidad.</p>
@@ -468,7 +454,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                                     <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
                                 </div>
                             </div>
-                            {/* Toggle Item 3 */}
+                            {/* Toggle Item 3 -> Now 2 */}
                             <div className="flex items-start justify-between gap-4 border-t border-black/5 pt-6 cursor-pointer" onClick={() => toggleSetting('high_contrast')}>
                                 <div className="max-w-md">
                                     <p className="font-bold text-lg text-text-n900">Alto Contraste</p>

@@ -98,18 +98,80 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, onArchi
     }
   };
 
-  const handleGenerateAI = () => {
-    setIsGenerating(true);
-    setTimeout(() => {
-      setTitle("Política de 'Cámaras Opcionales'");
-      setDesc("Para reducir la fatiga por zoom y la ansiedad social, se acuerda que el uso de cámaras es completamente opcional.");
-      setRules([
+  /* 
+   * AI TEMPLATES SYSTEM 
+   * Mocks a generative AI behavior by selecting from pre-defined high-quality templates
+   */
+  const AI_TEMPLATES = [
+    {
+      title: "Política de 'Cámaras Opcionales'",
+      desc: "Para reducir la fatiga por zoom y la ansiedad social, se acuerda que el uso de cámaras es completamente opcional.",
+      category: "Comunicación",
+      rules: [
         "Cámara opcional en reuniones internas.",
         "Cámara recomendada (no obligatoria) con clientes nuevos.",
         "Obligatorio: Foto de perfil clara si no hay cámara."
-      ]);
+      ]
+    },
+    {
+      title: "Horas de Foco Sin Interrupciones",
+      desc: "Bloque de tiempo diario donde el equipo se compromete a no enviar mensajes ni convocar reuniones.",
+      category: "Foco",
+      rules: [
+        "De 09:00 a 11:00 no se programan reuniones.",
+        "Slack/Teams en modo 'No Molestar'.",
+        "Urgencias reales solo por teléfono."
+      ]
+    },
+    {
+      title: "Feedback Radicalmente Honesto",
+      desc: "Fomentar una cultura donde el feedback constructivo es bienvenido y esperado en cualquier momento.",
+      category: "Feedback",
+      rules: [
+        "El feedback se da en privado, el elogio en público.",
+        "Usar la estructura: Situación - Comportamiento - Impacto.",
+        "Siempre asumir intenciones positivas."
+      ]
+    },
+    {
+      title: "Desconexión Digital Fin de Semana",
+      desc: "Garantizar el descanso real del equipo evitando comunicaciones fuera de horario laboral.",
+      category: "Social",
+      rules: [
+        "No enviar correos ni mensajes viernes tarde a lunes mañana.",
+        "Programar envíos para el lunes a las 09:00.",
+        "Respetar el derecho a no responder."
+      ]
+    }
+  ];
+
+  const handleGenerateAI = () => {
+    // Check if user has already input content to prevent accidental overwrite
+    if ((title || desc) && !window.confirm("¿Reemplazar el contenido actual con una nueva sugerencia de IA?")) {
+      return;
+    }
+
+    setIsGenerating(true);
+
+    // Simulate network delay and "thinking"
+    setTimeout(() => {
+      // Pick a random template different from the current title if possible
+      let template = AI_TEMPLATES[Math.floor(Math.random() * AI_TEMPLATES.length)];
+
+      // If we accidentally picked the same one (unlikely but possible), try next one
+      if (template.title === title) {
+        const currentIndex = AI_TEMPLATES.indexOf(template);
+        template = AI_TEMPLATES[(currentIndex + 1) % AI_TEMPLATES.length];
+      }
+
+      setTitle(template.title);
+      setDesc(template.desc);
+      setCategory(template.category);
+      setRules(template.rules);
+
       setIsGenerating(false);
-    }, 1500);
+      toast("Sugerencia generada con éxito", "success");
+    }, 800);
   };
 
   return (

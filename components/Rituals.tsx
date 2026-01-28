@@ -370,9 +370,12 @@ const Rituals: React.FC<RitualsProps> = ({ rituals, onCreate, onViewDetails, onT
                     </p>
 
                     {ritualCount > 3 && (
-                        <div className="bg-primary/5 rounded-xl p-3 flex gap-3 items-start border border-primary/10">
+                        <div className="bg-primary/5 rounded-xl p-3 flex gap-3 items-start border border-primary/10 select-none cursor-default">
                             <span className="material-symbols-outlined text-primary text-[20px] mt-0.5">lightbulb</span>
-                            <p className="text-xs text-text-n900 font-bold">{t('ritual.widget.suggestion')}</p>
+                            <div className="flex flex-col">
+                                <span className="text-[10px] uppercase font-bold text-primary mb-0.5">Sugerencia</span>
+                                <p className="text-xs text-text-n900 font-medium leading-tight">{t('ritual.widget.suggestion')}</p>
+                            </div>
                         </div>
                     )}
                 </div>

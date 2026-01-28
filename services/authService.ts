@@ -80,7 +80,6 @@ export const authService = {
                         role: 'Administrador',
                         settings: {
                             id: 'demo-settings',
-                            low_stimulus: false,
                             dyslexia_font: false,
                             high_contrast: false,
                             comm_preference: 'Visual'
@@ -111,7 +110,6 @@ export const authService = {
                     role: 'Miembro de Equipo',
                     settings: {
                         id: crypto.randomUUID(),
-                        low_stimulus: false,
                         dyslexia_font: false,
                         high_contrast: false,
                         comm_preference: 'Escrito'

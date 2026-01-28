@@ -12,7 +12,6 @@ export const userService = {
                 .from('accessibility_settings')
                 .insert([{
                     id: user.settings.id, // Usamos el mismo ID que en el objeto local (o generamos uno nuevo si es necesario)
-                    low_stimulus: user.settings.low_stimulus,
                     dyslexia_font: user.settings.dyslexia_font,
                     high_contrast: user.settings.high_contrast,
                     comm_preference: user.settings.comm_preference,
