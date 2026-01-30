@@ -48,49 +48,23 @@ const RitualConclusions: React.FC<RitualConclusionsProps> = ({ onBack, onFinish 
                     {/* Two Column Summary Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                        {/* Card: Acuerdos Mantenidos */}
+                        {/* Card: Resumen de Sesión */}
                         <section className="bg-[#FCF8ED] rounded-xl border border-white/60 shadow-[0_4px_20px_rgba(55,73,164,0.03)] overflow-hidden flex flex-col h-full">
                             <div className="p-6 border-b border-[#EBE3D0] bg-white/40 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <span className="material-symbols-outlined text-green-700">check_circle</span>
-                                    <h3 className="text-lg font-bold text-[#121316]">Acuerdos Mantenidos</h3>
+                                    <h3 className="text-lg font-bold text-[#121316]">Sesión Finalizada</h3>
                                 </div>
-                                <span className="text-xs font-bold bg-green-100 text-green-800 px-2 py-1 rounded-md">3 Logrados</span>
                             </div>
-                            <div className="p-6 flex flex-col gap-4 h-full">
-                                <div className="flex items-start gap-3">
-                                    <div className="mt-1 min-w-[20px] text-green-600">
-                                        <span className="material-symbols-outlined text-[20px]">check</span>
-                                    </div>
-                                    <div>
-                                        <p className="text-[#121316] font-semibold text-base">Escucha activa en reuniones</p>
-                                        <p className="text-[#6a6d81] text-sm mt-0.5">Se redujeron las interrupciones en un 40%.</p>
-                                    </div>
-                                </div>
-                                <div className="w-full h-px bg-[#EBE3D0]"></div>
-                                <div className="flex items-start gap-3">
-                                    <div className="mt-1 min-w-[20px] text-green-600">
-                                        <span className="material-symbols-outlined text-[20px]">check</span>
-                                    </div>
-                                    <div>
-                                        <p className="text-[#121316] font-semibold text-base">Agenda enviada 24h antes</p>
-                                        <p className="text-[#6a6d81] text-sm mt-0.5">Todos los participantes llegaron preparados.</p>
-                                    </div>
-                                </div>
-                                <div className="w-full h-px bg-[#EBE3D0]"></div>
-                                <div className="flex items-start gap-3">
-                                    <div className="mt-1 min-w-[20px] text-green-600">
-                                        <span className="material-symbols-outlined text-[20px]">check</span>
-                                    </div>
-                                    <div>
-                                        <p className="text-[#121316] font-semibold text-base">Espacios de silencio</p>
-                                        <p className="text-[#6a6d81] text-sm mt-0.5">Respetados después de preguntas complejas.</p>
-                                    </div>
-                                </div>
+                            <div className="p-6 flex flex-col gap-4 h-full justify-center">
+                                <p className="text-[#121316] font-semibold text-lg text-center">¡Gracias por facilitar este espacio!</p>
+                                <p className="text-[#6a6d81] text-center max-w-sm mx-auto">
+                                    Has completado el ritual de sincronización. Las reflexiones del equipo ayudarán a mejorar la colaboración futura.
+                                </p>
                             </div>
                         </section>
 
-                        {/* Card: Nuevos Compromisos */}
+                        {/* Card: Próximos Pasos */}
                         <section className="bg-white rounded-xl border-l-4 border-l-primary shadow-[0_4px_20px_rgba(55,73,164,0.05)] overflow-hidden flex flex-col h-full relative">
                             {/* Subtle background pattern */}
                             <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
@@ -99,33 +73,18 @@ const RitualConclusions: React.FC<RitualConclusionsProps> = ({ onBack, onFinish 
                             <div className="p-6 border-b border-[#f1f1f4] flex items-center justify-between bg-white relative z-10">
                                 <div className="flex items-center gap-3">
                                     <span className="material-symbols-outlined text-primary">flag</span>
-                                    <h3 className="text-lg font-bold text-[#121316]">Nuevos Compromisos</h3>
+                                    <h3 className="text-lg font-bold text-[#121316]">Próximos Pasos</h3>
                                 </div>
-                                <span className="text-xs font-bold bg-primary/10 text-primary px-2 py-1 rounded-md">2 Metas</span>
                             </div>
                             <div className="p-6 flex flex-col gap-4 h-full relative z-10">
-                                <div className="flex items-start gap-3 p-3 rounded-lg bg-[#f8f9fc] border border-transparent hover:border-primary/20 transition-colors">
-                                    <div className="mt-1 min-w-[20px] text-primary">
-                                        <span className="material-symbols-outlined text-[20px]">arrow_circle_right</span>
-                                    </div>
-                                    <div>
-                                        <p className="text-[#121316] font-bold text-base">Rotar el rol de facilitador</p>
-                                        <p className="text-[#6a6d81] text-sm mt-0.5">Para fomentar el liderazgo compartido.</p>
-                                    </div>
+                                <p className="text-gray-600 leading-relaxed">
+                                    Continúa monitoreando el bienestar de tu equipo en los próximos Check-ins.
+                                </p>
+                                <div className="mt-auto pt-4">
+                                    <button className="w-full py-3 rounded-xl border border-primary/20 text-primary font-bold hover:bg-primary/5 transition-colors">
+                                        Programar siguiente sesión
+                                    </button>
                                 </div>
-                                <div className="flex items-start gap-3 p-3 rounded-lg bg-[#f8f9fc] border border-transparent hover:border-primary/20 transition-colors">
-                                    <div className="mt-1 min-w-[20px] text-primary">
-                                        <span className="material-symbols-outlined text-[20px]">arrow_circle_right</span>
-                                    </div>
-                                    <div>
-                                        <p className="text-[#121316] font-bold text-base">Feedback asíncrono los viernes</p>
-                                        <p className="text-[#6a6d81] text-sm mt-0.5">Reducir la presión de la respuesta inmediata.</p>
-                                    </div>
-                                </div>
-                                <button className="mt-auto flex items-center justify-center gap-2 text-sm font-bold text-primary hover:text-primary/80 py-2 border-2 border-dashed border-primary/20 rounded-lg hover:border-primary/40 hover:bg-primary/5 transition-all">
-                                    <span className="material-symbols-outlined text-[18px]">add</span>
-                                    Añadir otro compromiso
-                                </button>
                             </div>
                         </section>
                     </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, UserProfile } from '../types';
 import { useLanguage } from '../LanguageContext';
+import AccessibilityPanel from './AccessibilityPanel';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -205,6 +206,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCoun
 
                 {children}
             </main>
+            <AccessibilityPanel />
         </div>
     );
 };

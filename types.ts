@@ -11,11 +11,19 @@ export interface AccessibilitySettings {
   profile_visibility?: 'team' | 'managers' | 'private';
 }
 
-export interface UserProfile {
+export interface Organization {
   id: string;
   name: string;
+  plan: 'SEED' | 'GROWTH' | 'ENTERPRISE';
+}
+
+export interface UserProfile {
+  id: string;
+  organizationId?: string;
+  name: string;
   email: string;
-  role: string;
+  role: 'Admin' | 'Manager' | 'Colaborador';
+  jobTitle?: string; // Cargo real (ej: 'Frontend Developer')
   about?: string;
   avatar?: string; // Nuevo campo para la foto
   phone?: string;

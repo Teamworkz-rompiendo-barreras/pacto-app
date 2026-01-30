@@ -1,17 +1,20 @@
 
 import React, { useState } from 'react';
 
+import { Agreement } from '../types';
+
 interface RitualReflectionProps {
   onNext: () => void;
   userAvatar?: string;
+  agreements: Agreement[];
 }
 
-const RitualReflection: React.FC<RitualReflectionProps> = ({ onNext, userAvatar }) => {
+const RitualReflection: React.FC<RitualReflectionProps> = ({ onNext, userAvatar, agreements }) => {
   // State to track the decision for each agreement: 'keep', 'adjust', or null
-  const [decisions, setDecisions] = useState<Record<string, 'keep' | 'adjust' | null>>({
-    '1': null,
-    '2': 'adjust', // Pre-selected for demo purposes per mockup
-    '3': null,
+  const [decisions, setDecisions] = useState<Record<string, 'keep' | 'adjust' | null>>(() => {
+    const initial: Record<string, 'keep' | 'adjust' | null> = {};
+    agreements.forEach(a => initial[a.id] = null);
+    return initial;
   });
 
   const [feedback, setFeedback] = useState<Record<string, string>>({});
@@ -24,38 +27,15 @@ const RitualReflection: React.FC<RitualReflectionProps> = ({ onNext, userAvatar 
     setFeedback(prev => ({ ...prev, [id]: text }));
   };
 
-  const agreements = [
-    {
-      id: '1',
-      category: 'Comunicación',
-      categoryColor: 'bg-blue-100 text-blue-800',
-      title: 'Comunicación Asíncrona',
-      desc: 'Priorizamos los mensajes escritos y evitamos llamadas sin aviso previo.',
-      icon: 'chat',
-      iconColor: 'text-primary',
-      accentColor: 'bg-primary/80',
-    },
-    {
-      id: '2',
-      category: 'Reuniones',
-      categoryColor: 'bg-amber-100 text-amber-800',
-      title: 'Agenda Invisible',
-      desc: 'No agendamos reuniones sin una agenda clara compartida 24h antes.',
-      icon: 'calendar_month',
-      iconColor: 'text-amber-600',
-      accentColor: 'bg-amber-500/80',
-    },
-    {
-      id: '3',
-      category: 'Feedback',
-      categoryColor: 'bg-emerald-100 text-emerald-800',
-      title: 'Retroalimentación Directa',
-      desc: 'Damos feedback honesto y directo, enfocándonos en la tarea y no en la persona.',
-      icon: 'rate_review',
-      iconColor: 'text-emerald-700',
-      accentColor: 'bg-emerald-600/80',
+  const getCategoryStyles = (category: string) => {
+    switch (category) {
+      case 'Comunicación': return { color: 'bg-blue-100 text-blue-800', accent: 'bg-primary/80', icon: 'chat', iconColor: 'text-primary' };
+      case 'Reuniones': return { color: 'bg-amber-100 text-amber-800', accent: 'bg-amber-500/80', icon: 'calendar_month', iconColor: 'text-amber-600' };
+      case 'Feedback': return { color: 'bg-emerald-100 text-emerald-800', accent: 'bg-emerald-600/80', icon: 'rate_review', iconColor: 'text-emerald-700' };
+      case 'Foco': return { color: 'bg-purple-100 text-purple-800', accent: 'bg-purple-600/80', icon: 'timer', iconColor: 'text-purple-700' };
+      default: return { color: 'bg-gray-100 text-gray-800', accent: 'bg-gray-500/80', icon: 'article', iconColor: 'text-gray-700' };
     }
-  ];
+  };
 
   const reviewedCount = Object.values(decisions).filter(v => v !== null).length;
 
@@ -89,93 +69,92 @@ const RitualReflection: React.FC<RitualReflectionProps> = ({ onNext, userAvatar 
 
         {/* Cards Container */}
         <div className="flex flex-col gap-8 mt-4 pb-24">
-          {agreements.map((agreement) => (
-            <article
-              key={agreement.id}
-              className="group relative bg-[#FCFBF7] rounded-2xl shadow-sm border border-[#E6E2D6] overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/20"
-            >
-              <div className={`absolute top-0 left-0 w-1.5 h-full ${agreement.accentColor}`}></div>
-              <div className="p-6 md:p-8 flex flex-col gap-6">
-                {/* Header */}
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className={`${agreement.categoryColor} text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide`}>
+          {agreements.map((agreement) => {
+            const styles = getCategoryStyles(agreement.category);
+            return (
+              <article
+                key={agreement.id}
+                className="group relative bg-[#FCFBF7] rounded-2xl shadow-sm border border-[#E6E2D6] overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/20"
+              >
+                <div className={`absolute top-0 left-0 w-1.5 h-full ${styles.accent}`}></div>
+                <div className="p-6 md:p-8 flex flex-col gap-6">
+                  {/* Header */}
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-col gap-3">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider w-fit ${styles.color}`}>
                         {agreement.category}
                       </span>
                     </div>
-                    <h3 className="text-2xl font-bold text-text-n900">{agreement.title}</h3>
-                    <p className="text-text-n900/80 text-lg leading-relaxed font-medium">{agreement.desc}</p>
-                  </div>
-                  <div className={`hidden sm:flex shrink-0 size-12 items-center justify-center rounded-full bg-[#F0E8D1] ${agreement.iconColor}`}>
-                    <span className="material-symbols-outlined text-2xl">{agreement.icon}</span>
-                  </div>
-                </div>
-
-                <div className="h-px w-full bg-[#E6E2D6]"></div>
-
-                {/* Actions */}
-                <div className="flex flex-col gap-4">
-                  <label className="block text-sm font-bold uppercase tracking-wider text-gray-500 mb-1">¿Cómo te sientes con esto?</label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Option 1: Keep */}
-                    <label className="cursor-pointer relative group/option">
-                      <input
-                        type="radio"
-                        name={`agreement_${agreement.id}`}
-                        className="peer sr-only"
-                        checked={decisions[agreement.id] === 'keep'}
-                        onChange={() => handleDecisionChange(agreement.id, 'keep')}
-                      />
-                      <div className="flex items-center justify-between p-4 rounded-xl border-2 border-[#E6E2D6] bg-white transition-all duration-200 peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary/40">
-                        <div className="flex items-center gap-3">
-                          <div className="size-5 rounded-full border border-current text-primary flex items-center justify-center">
-                            <div className="size-2.5 rounded-full bg-current opacity-0 peer-checked:opacity-100 transition-opacity"></div>
-                          </div>
-                          <span className="font-semibold text-text-n900">Mantener como está</span>
-                        </div>
-                        <span className="material-symbols-outlined text-[#6C7D64]">thumb_up</span>
-                      </div>
-                    </label>
-
-                    {/* Option 2: Adjust */}
-                    <label className="cursor-pointer relative group/option">
-                      <input
-                        type="radio"
-                        name={`agreement_${agreement.id}`}
-                        className="peer sr-only"
-                        checked={decisions[agreement.id] === 'adjust'}
-                        onChange={() => handleDecisionChange(agreement.id, 'adjust')}
-                      />
-                      <div className="flex items-center justify-between p-4 rounded-xl border-2 border-[#E6E2D6] bg-white transition-all duration-200 peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary/40">
-                        <div className="flex items-center gap-3">
-                          <div className="size-5 rounded-full border border-current text-primary flex items-center justify-center">
-                            <div className="size-2.5 rounded-full bg-current opacity-0 peer-checked:opacity-100 transition-opacity"></div>
-                          </div>
-                          <span className="font-semibold text-text-n900">Necesita un ajuste</span>
-                        </div>
-                        <span className="material-symbols-outlined text-primary">edit_note</span>
-                      </div>
-                    </label>
-                  </div>
-
-                  {/* Expanded Text Area for Feedback */}
-                  {decisions[agreement.id] === 'adjust' && (
-                    <div className="mt-2 animate-fade-in">
-                      <label className="block text-sm font-bold text-text-n900 mb-2">Propuesta de cambio:</label>
-                      <textarea
-                        className="w-full rounded-xl border-2 border-primary/30 bg-white p-4 text-base focus:border-primary focus:ring-4 focus:ring-primary/10 resize-none transition-shadow shadow-sm outline-none"
-                        placeholder="Describe cómo te gustaría adaptar este acuerdo... Por ejemplo: 'Prefiero que sea 48h antes para temas complejos'."
-                        rows={3}
-                        value={feedback[agreement.id] || ''}
-                        onChange={(e) => handleFeedbackChange(agreement.id, e.target.value)}
-                      />
+                    <div className={`hidden sm:flex shrink-0 size-12 items-center justify-center rounded-full bg-[#F0E8D1] ${styles.iconColor}`}>
+                      <span className="material-symbols-outlined text-2xl">{styles.icon}</span>
                     </div>
-                  )}
+                  </div>
+
+                  <div className="h-px w-full bg-[#E6E2D6]"></div>
+
+                  {/* Actions */}
+                  <div className="flex flex-col gap-4">
+                    <label className="block text-sm font-bold uppercase tracking-wider text-gray-500 mb-1">¿Cómo te sientes con esto?</label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Option 1: Keep */}
+                      <label className="cursor-pointer relative group/option">
+                        <input
+                          type="radio"
+                          name={`agreement_${agreement.id}`}
+                          className="peer sr-only"
+                          checked={decisions[agreement.id] === 'keep'}
+                          onChange={() => handleDecisionChange(agreement.id, 'keep')}
+                        />
+                        <div className="flex items-center justify-between p-4 rounded-xl border-2 border-[#E6E2D6] bg-white transition-all duration-200 peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary/40">
+                          <div className="flex items-center gap-3">
+                            <div className="size-5 rounded-full border border-current text-primary flex items-center justify-center">
+                              <div className="size-2.5 rounded-full bg-current opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+                            </div>
+                            <span className="font-semibold text-text-n900">Mantener como está</span>
+                          </div>
+                          <span className="material-symbols-outlined text-[#6C7D64]">thumb_up</span>
+                        </div>
+                      </label>
+
+                      {/* Option 2: Adjust */}
+                      <label className="cursor-pointer relative group/option">
+                        <input
+                          type="radio"
+                          name={`agreement_${agreement.id}`}
+                          className="peer sr-only"
+                          checked={decisions[agreement.id] === 'adjust'}
+                          onChange={() => handleDecisionChange(agreement.id, 'adjust')}
+                        />
+                        <div className="flex items-center justify-between p-4 rounded-xl border-2 border-[#E6E2D6] bg-white transition-all duration-200 peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary/40">
+                          <div className="flex items-center gap-3">
+                            <div className="size-5 rounded-full border border-current text-primary flex items-center justify-center">
+                              <div className="size-2.5 rounded-full bg-current opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+                            </div>
+                            <span className="font-semibold text-text-n900">Necesita un ajuste</span>
+                          </div>
+                          <span className="material-symbols-outlined text-primary">edit_note</span>
+                        </div>
+                      </label>
+                    </div>
+
+                    {/* Expanded Text Area for Feedback */}
+                    {decisions[agreement.id] === 'adjust' && (
+                      <div className="mt-2 animate-fade-in">
+                        <label className="block text-sm font-bold text-text-n900 mb-2">Propuesta de cambio:</label>
+                        <textarea
+                          className="w-full rounded-xl border-2 border-primary/30 bg-white p-4 text-base focus:border-primary focus:ring-4 focus:ring-primary/10 resize-none transition-shadow shadow-sm outline-none"
+                          placeholder="Describe cómo te gustaría adaptar este acuerdo... Por ejemplo: 'Prefiero que sea 48h antes para temas complejos'."
+                          rows={3}
+                          value={feedback[agreement.id] || ''}
+                          onChange={(e) => handleFeedbackChange(agreement.id, e.target.value)}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </main>
 

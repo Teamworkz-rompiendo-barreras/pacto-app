@@ -1,20 +1,21 @@
 
 import React, { useState } from 'react';
 
+import { Agreement } from '../types';
+
 interface RitualPreparationProps {
     onBack: () => void;
     onNext: () => void;
+    agreements: Agreement[];
 }
 
-const RitualPreparation: React.FC<RitualPreparationProps> = ({ onBack, onNext }) => {
-    const [agreements, setAgreements] = useState([
-        { id: 1, title: 'Escucha Activa sin Juicios', desc: 'Escuchar para entender, no para responder. Permitir pausas.', checked: true },
-        { id: 2, title: 'Cámaras Opcionales', desc: 'Respetar la necesidad de privacidad o regulación sensorial.', checked: true },
-        { id: 3, title: 'Turnos de Palabra', desc: 'Levantar la mano (física o digital) para evitar interrupciones sonoras.', checked: true },
-        { id: 4, title: 'Minutos de Aterrizaje', desc: 'Dedicar los primeros 5 minutos a llegar mentalmente.', checked: false },
-    ]);
+const RitualPreparation: React.FC<RitualPreparationProps> = ({ onBack, onNext, agreements: initialAgreements }) => {
+    // Initialize state with real agreements, adding a 'checked' property for local selection
+    const [agreements, setAgreements] = useState(() =>
+        initialAgreements.map(a => ({ ...a, checked: true }))
+    );
 
-    const toggleAgreement = (id: number) => {
+    const toggleAgreement = (id: string) => {
         setAgreements(prev => prev.map(a => a.id === id ? { ...a, checked: !a.checked } : a));
     };
 
@@ -121,7 +122,7 @@ const RitualPreparation: React.FC<RitualPreparationProps> = ({ onBack, onNext })
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className={`text-base font-bold ${agreement.checked ? 'text-primary' : 'text-text-n900'}`}>{agreement.title}</span>
-                                                <span className="text-sm text-gray-500 mt-1 font-medium">{agreement.desc}</span>
+                                                <span className="text-sm text-gray-500 mt-1 font-medium">{agreement.description}</span>
                                             </div>
                                             <div className={`absolute right-4 top-4 transition-opacity text-primary ${agreement.checked ? 'opacity-100' : 'opacity-0'}`}>
                                                 <span className="material-symbols-outlined filled">check_circle</span>

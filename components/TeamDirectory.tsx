@@ -60,19 +60,20 @@ const TeamDirectory: React.FC<TeamDirectoryProps> = ({ members, onViewProfile, o
         // Simulación: Ocultar 'managers' a no-managers (asumiendo visualización pública básica per se)
         if (member.settings?.profile_visibility === 'managers' && !member.role.toLowerCase().includes('manager')) return false;
 
+        const roleToDisplay = (member.jobTitle || member.role).toLowerCase();
+
         // 1. Búsqueda por Texto
         const matchesSearch =
             member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            member.role.toLowerCase().includes(searchTerm.toLowerCase());
+            roleToDisplay.includes(searchTerm.toLowerCase());
 
         // 2. Filtro por Departamento (Mapeo de Roles a Depts)
         let matchesDept = true;
         if (selectedDepts.length > 0) {
-            const role = member.role.toLowerCase();
             matchesDept = selectedDepts.some(dept => {
-                if (dept === 'Ingeniería') return role.includes('developer') || role.includes('engineer') || role.includes('devops') || role.includes('cto');
-                if (dept === 'Diseño') return role.includes('diseñador') || role.includes('designer') || role.includes('ux') || role.includes('ui') || role.includes('product');
-                if (dept === 'Operaciones') return role.includes('manager') || role.includes('owner') || role.includes('rrhh') || role.includes('people');
+                if (dept === 'Ingeniería') return roleToDisplay.includes('developer') || roleToDisplay.includes('engineer') || roleToDisplay.includes('devops') || roleToDisplay.includes('cto');
+                if (dept === 'Diseño') return roleToDisplay.includes('diseñador') || roleToDisplay.includes('designer') || roleToDisplay.includes('ux') || roleToDisplay.includes('ui') || roleToDisplay.includes('product');
+                if (dept === 'Operaciones') return roleToDisplay.includes('manager') || roleToDisplay.includes('owner') || roleToDisplay.includes('rrhh') || roleToDisplay.includes('people');
                 return false;
             });
         }
@@ -311,7 +312,7 @@ const TeamDirectory: React.FC<TeamDirectoryProps> = ({ members, onViewProfile, o
 
                                     <div className="flex flex-col gap-1">
                                         <h3 className="text-xl font-black text-text-n900 group-hover:text-primary transition-colors">{member.name}</h3>
-                                        <p className="text-sm font-bold text-primary/80">{member.role}</p>
+                                        <p className="text-sm font-bold text-primary/80">{member.jobTitle || member.role}</p>
                                     </div>
 
                                     <div className="flex flex-col gap-3">

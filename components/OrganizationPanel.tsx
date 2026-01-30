@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BillingSettings from './BillingSettings';
 import InvitationsQueue from './InvitationsQueue';
 import { Team } from '../types';
@@ -27,11 +27,9 @@ const INITIAL_TEAMS: Team[] = [
 ];
 
 const INITIAL_USERS: OrgUser[] = [
-    { id: '1', name: 'Ana Martínez', email: 'ana.m@organizacion.pacto', role: 'Admin', status: 'Activo', teamId: 't1', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200' },
-    { id: '2', name: 'Carlos Ruiz', email: 'c.ruiz@organizacion.pacto', role: 'Manager', status: 'Activo', teamId: 't1', avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=200' },
-    { id: '3', name: 'Elena Soler', email: 'e.soler@organizacion.pacto', role: 'Member', status: 'Pendiente', teamId: 't2', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=200' },
-    { id: '4', name: 'David Chen', email: 'd.chen@organizacion.pacto', role: 'Member', status: 'Activo', teamId: 't2' },
-    { id: '5', name: 'Sofía López', email: 'sofia.l@organizacion.pacto', role: 'Member', status: 'Inactivo', teamId: 't3' },
+    { id: '2', name: 'Ana García', email: 'ana@team.com', role: 'Manager', status: 'Activo', teamId: 't1', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d' },
+    { id: '3', name: 'Carlos Ruiz', email: 'carlos@team.com', role: 'Member', status: 'Activo', teamId: 't1', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d' },
+    { id: '4', name: 'Marta Díaz', email: 'marta@team.com', role: 'Member', status: 'Activo', teamId: 't2', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704e' }
 ];
 
 type TabType = 'general' | 'team' | 'teams_groups' | 'billing' | 'roles' | 'settings' | 'invitations';
@@ -47,16 +45,38 @@ const AVAILABLE_PERMISSIONS = [
 ];
 
 const OrganizationPanel: React.FC<OrganizationPanelProps> = ({ onNavigateToBulkUpload, onNavigateToDataExport }) => {
+    // Estado inicializado desde localStorage o valores por defecto
+    const [users, setUsers] = useState<OrgUser[]>(() => {
+        const saved = localStorage.getItem('demo_org_users');
+        return saved ? JSON.parse(saved) : INITIAL_USERS;
+    });
+    const [teams, setTeams] = useState<Team[]>(() => {
+        const saved = localStorage.getItem('demo_org_teams');
+        return saved ? JSON.parse(saved) : INITIAL_TEAMS;
+    });
+
+    // Efectos para persistencia
+    useEffect(() => {
+        localStorage.setItem('demo_org_users', JSON.stringify(users));
+    }, [users]);
+
+    useEffect(() => {
+        localStorage.setItem('demo_org_teams', JSON.stringify(teams));
+    }, [teams]);
+
     const [activeTab, setActiveTab] = useState<TabType>('team');
-    const [users, setUsers] = useState<OrgUser[]>(INITIAL_USERS);
-    const [teams, setTeams] = useState<Team[]>(INITIAL_TEAMS);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 4;
 
-    // Estado para General
-    const [orgName, setOrgName] = useState('Teamworkz');
-    const [orgDomain, setOrgDomain] = useState('teamworkz.pacto.dev');
+    // Configuración Persistente
+    const [orgName, setOrgName] = useState(() => localStorage.getItem('demo_org_name') || 'Teamworkz');
+    const [orgDomain, setOrgDomain] = useState(() => localStorage.getItem('demo_org_domain') || 'teamworkz.pacto.dev');
+
+    useEffect(() => {
+        localStorage.setItem('demo_org_name', orgName);
+        localStorage.setItem('demo_org_domain', orgDomain);
+    }, [orgName, orgDomain]);
 
     // Estado para la configuración global
     const [globalSettings, setGlobalSettings] = useState({

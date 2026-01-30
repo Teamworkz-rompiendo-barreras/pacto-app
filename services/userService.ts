@@ -55,6 +55,8 @@ export const userService = {
                     name: user.name,
                     email: user.email,
                     role: user.role,
+                    job_title: user.jobTitle,
+                    organization_id: user.organizationId,
                     about: user.about,
                     avatar_url: user.avatar,
                     settings_id: user.settings.id
@@ -97,7 +99,9 @@ export const userService = {
                 id: data.id,
                 name: data.name,
                 email: data.email,
-                role: data.role,
+                role: data.role as any,
+                jobTitle: data.job_title,
+                organizationId: data.organization_id,
                 about: data.about,
                 avatar: data.avatar_url,
                 settings: data.settings as AccessibilitySettings

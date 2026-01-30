@@ -21,14 +21,20 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user, agreements = [], on
   const [showGreetingModal, setShowGreetingModal] = useState(false);
   const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
 
-  // Datos de fallback si no se pasa usuario
-  const displayUser = user || {
-    name: 'Alex Rivera',
-    role: 'Diseñador de Producto en Teamworkz',
-    about: '"Construyendo entornos de trabajo inclusivos donde cada mente pueda brillar a su propia manera."',
-    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCMM47oiMLJXa2nwIvhtyq4rYZGQh5nHhEcPgWaWoa7Xu0ADpIuPtdQLYKQv3oueKcetRIHXFeND-quocUywbyzTE5r7KV-T9CVC92D7Mq5th2zM5P8TF72AlmMnOuOC4EulcTd3uuwGceMJUM82CsM7ghIEnGsOHPV-I59E-aLShxA_8gmeZXDk7bZIbgH5L9ZMmjX4IklfOeaTExbHUMgxBylgfkG8OzSFwWS-VvH7466Wrteqh6EGjCLmGtvN49N9IftAmXaYco',
-    settings: { comm_preference: 'Escrito' }
-  };
+  // Si no hay usuario, mostrar estado de carga o error
+  if (!user) {
+    return (
+      <div className="bg-bg-s1 dark:bg-gray-900 min-h-screen flex items-center justify-center text-text-n900 font-display">
+        <div className="flex flex-col items-center gap-4">
+          <span className="material-symbols-outlined text-4xl text-gray-400">person_off</span>
+          <p className="text-xl font-bold">Usuario no encontrado</p>
+          <button onClick={onBack} className="text-primary hover:underline">Volver</button>
+        </div>
+      </div>
+    );
+  }
+
+  const displayUser = user;
 
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();

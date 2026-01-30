@@ -30,6 +30,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
     // Estado local para el formulario de perfil
     const [name, setName] = useState(user.name);
     const [role, setRole] = useState(user.role);
+    const [jobTitle, setJobTitle] = useState(user.jobTitle || '');
     const [about, setAbout] = useState(user.about || '');
     const [avatar, setAvatar] = useState(user.avatar || '');
     const [avatarError, setAvatarError] = useState(false);
@@ -107,7 +108,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saved'>('idle');
 
     const handleSaveAll = () => {
-        onUpdateUser({ name, role, about, avatar });
+        onUpdateUser({ name, role, jobTitle, about, avatar });
         onSaveSettings(localSettings);
 
         // Feedback visual con estado React
@@ -122,6 +123,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
     const handleDiscard = () => {
         setName(user.name);
         setRole(user.role);
+        setJobTitle(user.jobTitle || '');
         setAbout(user.about || '');
         setAvatar(user.avatar || '');
         setLocalSettings(settings);
@@ -269,6 +271,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
         onUpdateUser({
             name,
             role,
+            jobTitle,
             about,
             avatar
         });
@@ -409,14 +412,21 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label htmlFor="role" className="text-sm font-bold opacity-80 text-text-n900">Cargo / Rol</label>
+                                <label htmlFor="jobTitle" className="text-sm font-bold opacity-80 text-text-n900">Cargo (Job Title)</label>
                                 <input
-                                    id="role"
+                                    id="jobTitle"
                                     type="text"
-                                    value={role}
-                                    onChange={(e) => setRole(e.target.value)}
+                                    value={jobTitle}
+                                    onChange={(e) => setJobTitle(e.target.value)}
                                     className="w-full bg-bg-s1/30 border border-black/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                                 />
+                            </div>
+                            <div className="flex flex-col gap-2 sm:col-span-2 md:col-span-1">
+                                <label className="text-sm font-bold opacity-80 text-text-n900">Nivel de Acceso</label>
+                                <div className="w-full bg-gray-100 border border-black/5 rounded-xl px-4 py-3 text-gray-500 font-bold flex items-center gap-2 cursor-not-allowed">
+                                    <span className="material-symbols-outlined text-lg">shield</span>
+                                    {role}
+                                </div>
                             </div>
                             <div className="flex flex-col gap-2 sm:col-span-2">
                                 <label htmlFor="about" className="text-sm font-bold opacity-80 text-text-n900">Sobre mí (Cómo prefiero trabajar)</label>

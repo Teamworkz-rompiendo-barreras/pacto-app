@@ -145,7 +145,8 @@ const AppContent: React.FC = () => {
       id: '2',
       name: 'Ana García',
       email: 'ana@team.com',
-      role: 'Engineering Manager',
+      role: 'Manager',
+      jobTitle: 'Engineering Manager',
       avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
       about: 'Liderando equipos con empatía y estructura.',
       settings: { id: 'temp2', dyslexia_font: false, high_contrast: false, comm_preference: 'Visual', avoid_calls: false, need_processing: false, profile_visibility: 'team' }
@@ -154,7 +155,8 @@ const AppContent: React.FC = () => {
       id: '3',
       name: 'Carlos Ruiz',
       email: 'carlos@team.com',
-      role: 'Frontend Developer',
+      role: 'Colaborador',
+      jobTitle: 'Frontend Developer',
       avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d',
       about: 'Apasionado por UX y accesibilidad.',
       settings: { id: 'temp3', dyslexia_font: false, high_contrast: false, comm_preference: 'Escrito', avoid_calls: true, need_processing: true, profile_visibility: 'team' }
@@ -163,14 +165,66 @@ const AppContent: React.FC = () => {
       id: '4',
       name: 'Marta Díaz',
       email: 'marta@team.com',
-      role: 'Product Owner',
+      role: 'Manager',
+      jobTitle: 'Product Owner',
       avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704e',
       about: 'Definiendo el futuro del producto.',
       settings: { id: 'temp4', dyslexia_font: false, high_contrast: false, comm_preference: 'Verbal', avoid_calls: false, need_processing: false, profile_visibility: 'team' }
     }
   ];
 
-  const [teamMembers] = useState<UserProfile[]>(DEMO_TEAM);
+  const [teamMembers] = useState<UserProfile[]>(() => {
+    // Intentar cargar usuarios desde Persistent Storage del Admin Panel para sincronización
+    const savedUsers = localStorage.getItem('demo_org_users');
+
+    if (savedUsers) {
+      try {
+        const parsedUsers = JSON.parse(savedUsers);
+        // Mapear OrgUser (formato Admin) a UserProfile (formato App)
+        // Preservamos los usuarios originales DE DEMO_TEAM si existen por ID para mantener sus 'settings' ricos
+        return parsedUsers.map((u: any) => {
+          const original = DEMO_TEAM.find(dt => dt.id === u.id);
+          if (original) return original;
+
+          // Para nuevos usuarios invitados, creamos un perfil default
+          return {
+            id: u.id,
+            name: u.name,
+            email: u.email,
+            role: u.role === 'Manager' ? 'Manager' : 'Colaborador',
+            jobTitle: u.role === 'Manager' ? 'Engineering Manager' : 'Team Member',
+            avatar: u.avatar,
+            about: 'Nuevo miembro del equipo.',
+            settings: {
+              id: `temp-${u.id}`,
+              dyslexia_font: false,
+              high_contrast: false,
+              comm_preference: 'Escrito',
+              avoid_calls: false,
+              need_processing: false,
+              profile_visibility: 'team'
+            }
+          };
+        });
+      } catch (e) {
+        console.error('Error parsing demo_org_users', e);
+        return DEMO_TEAM;
+      }
+    } else {
+      // Si no hay datos, inicializamos el storage con DEMO_TEAM para que el Admin Panel tenga datos
+      const initialAdminUsers = DEMO_TEAM.map(u => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        role: u.role, // Ahora es Admin/Manager/Colaborador
+        status: 'Activo',
+        teamId: 't1', // Asignar a equipo default
+        avatar: u.avatar
+      }));
+      localStorage.setItem('demo_org_users', JSON.stringify(initialAdminUsers));
+      return DEMO_TEAM;
+    }
+  });
 
   const navigateTo = (newView: View) => {
     setView(newView);
@@ -501,10 +555,10 @@ const AppContent: React.FC = () => {
         return <RitualReminder onJoin={() => navigateTo(View.RITUAL_PREPARATION)} onSnooze={() => navigateTo(View.DASHBOARD)} />;
 
       case View.RITUAL_PREPARATION:
-        return <RitualPreparation onBack={() => navigateTo(View.RITUALS)} onNext={() => navigateTo(View.RITUAL_REFLECTION)} />
+        return <RitualPreparation agreements={agreements.filter(a => a.status === 'Activo')} onBack={() => navigateTo(View.RITUALS)} onNext={() => navigateTo(View.RITUAL_REFLECTION)} />
 
       case View.RITUAL_REFLECTION:
-        return <RitualReflection onNext={() => navigateTo(View.RITUAL_CONCLUSIONS)} userAvatar={user?.avatar} />;
+        return <RitualReflection agreements={agreements} onNext={() => navigateTo(View.RITUAL_CONCLUSIONS)} userAvatar={user?.avatar} />;
 
       case View.RITUAL_CONCLUSIONS:
         return <RitualConclusions onBack={() => navigateTo(View.RITUAL_REFLECTION)} onFinish={() => navigateTo(View.RITUALS)} />;

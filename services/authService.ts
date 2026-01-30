@@ -41,7 +41,8 @@ export const authService = {
                 id: authData.user.id, // IMPORTANTE: Usar el ID real de Auth
                 name,
                 email: email.trim(),
-                role: companyName ? 'Administrador' : 'Miembro de Equipo',
+                role: companyName ? 'Admin' : 'Colaborador',
+                jobTitle: companyName ? 'CEO / Admin' : 'Miembro del Equipo',
                 phone,
                 language,
                 plan,
@@ -77,7 +78,8 @@ export const authService = {
                         id: 'demo-user-id',
                         name: 'Usuario Demo',
                         email: email,
-                        role: 'Administrador',
+                        role: 'Admin',
+                        jobTitle: 'Demo User',
                         settings: {
                             id: 'demo-settings',
                             dyslexia_font: false,
@@ -107,7 +109,8 @@ export const authService = {
                     id: data.user.id,
                     name: meta.full_name || email.split('@')[0],
                     email: email,
-                    role: 'Miembro de Equipo',
+                    role: 'Colaborador',
+                    jobTitle: 'Miembro del Equipo',
                     settings: {
                         id: crypto.randomUUID(),
                         dyslexia_font: false,
