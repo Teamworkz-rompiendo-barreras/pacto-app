@@ -99,7 +99,7 @@ export const userService = {
                 id: data.id,
                 name: data.name,
                 email: data.email,
-                role: data.role as any,
+                role: data.role as 'SuperAdmin' | 'Admin' | 'User',
                 jobTitle: data.job_title,
                 organizationId: data.organization_id,
                 about: data.about,

@@ -20,15 +20,11 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet" />
     <link href="https://assets.website-files.com/62e24f46cb61d904791a8770/css/open-dyslexic.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -36,18 +32,19 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#374BA6',
+                        primary: '#374BA6', // P2 - Azul Principal
                         'primary-p2': '#374BA6',
+                        'p1': '#F2D680', // P1 - Amarillo Principal
                         'bg-s1': '#F0E8D1',
                         'secondary-s1': '#F0E8D1',
                         'secondary-s3': '#8095F2',
-                        'p1': '#F2D680',
                         'gray-border': '#D1D5DB',
                         'card-bg': '#F9F7EF',
                         'text-main': '#1F2937',
-                        'text-n900': '#0D1321',
+                        'text-n900': '#0D1321', // Negro Profundo
+                        'n300': '#D1D5DB', // Borde Cards
                         'accent-warm': '#E07A5F',
-                        'accent-blue': '#8095F2', // Added for Public Profile
+                        'accent-blue': '#8095F2',
                         pacto: {
                             bg: '#F0E8D1',
                             text: '#0D1321',
@@ -57,15 +54,16 @@
                         }
                     },
                     fontFamily: {
-                        sans: ['"Atkinson Hyperlegible"', 'sans-serif'],
-                        display: ['"Lexend"', 'sans-serif'],
-                        public: ['"Public Sans"', 'sans-serif'],
-                        jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        sans: ['"Atkinson Hyperlegible"', 'sans-serif'], // UI e instrucciones
+                        display: ['"League Spartan"', 'sans-serif'], // Titulares (Futura Alt)
                         dyslexic: ['"OpenDyslexic"', 'sans-serif'],
-                        serif: ['"Merriweather"', 'serif'],
+                    },
+                    fontSize: {
+                        base: '16px', // Base 16px
                     },
                     borderRadius: {
-                        'pacto': '12px',
+                        'pacto': '12px', // Cards 12px
+                        'xl': '12px', // Override XL to match spec
                     }
                 }
             }
@@ -81,9 +79,22 @@
             background-color: var(--bg-body);
             color: var(--text-body);
             font-family: 'Atkinson Hyperlegible', sans-serif;
+            font-size: 16px;
+            /* Base 16px */
+            line-height: 1.5;
             transition: background-color 0.3s, color 0.3s;
             overscroll-behavior-y: none;
-            /* Previene el "rebote" elástico en iOS para sentirlo más nativo */
+        }
+
+        /* Titulares en League Spartan (Futura Alt) */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 700;
         }
 
         /* Accessibilidad: Fuente Dislexia */
@@ -119,11 +130,18 @@
             text-decoration: underline;
         }
 
-
-
+        /* Foco Visible 3px */
         :focus-visible {
-            outline: 4px solid #374BA6 !important;
-            outline-offset: 4px !important;
+            outline: 3px solid #374BA6 !important;
+            outline-offset: 2px !important;
+        }
+
+        /* Standard Card Style */
+        .pacto-card {
+            background-color: #F9F7EF;
+            border: 1px solid #D1D5DB;
+            /* N300 approx */
+            border-radius: 12px;
         }
 
         .material-symbols-outlined {

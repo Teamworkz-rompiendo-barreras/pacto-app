@@ -64,6 +64,18 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCoun
                             {item.label}
                         </button>
                     ))}
+                    {(user.role === 'Admin' || user.role === 'SuperAdmin') && (
+                        <button
+                            onClick={() => onNavigate(View.TEAM)}
+                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${currentView === View.TEAM
+                                ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                                : 'text-gray-500 hover:bg-gray-50 hover:text-text-n900'
+                                }`}
+                        >
+                            <span className="material-symbols-outlined text-[20px]">group</span>
+                            Equipo
+                        </button>
+                    )}
                 </div>
 
                 <div className="p-4 mt-auto border-t border-gray-100 space-y-1">

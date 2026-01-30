@@ -425,7 +425,7 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                                 <label className="text-sm font-bold opacity-80 text-text-n900">Nivel de Acceso</label>
                                 <div className="w-full bg-gray-100 border border-black/5 rounded-xl px-4 py-3 text-gray-500 font-bold flex items-center gap-2 cursor-not-allowed">
                                     <span className="material-symbols-outlined text-lg">shield</span>
-                                    {role}
+                                    {role === 'Admin' ? 'Administrador' : (role === 'SuperAdmin' ? 'Super Admin' : 'Usuario')}
                                 </div>
                             </div>
                             <div className="flex flex-col gap-2 sm:col-span-2">

@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS profiles (
     organization_id UUID REFERENCES organizations(id), -- Multi-tenancy
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    role TEXT DEFAULT 'Colaborador', -- 'Admin', 'Manager', 'Colaborador'
+    role TEXT DEFAULT 'User', -- 'SuperAdmin', 'Admin', 'User'
     job_title TEXT, -- Cargo del usuario
     about TEXT,
     avatar_url TEXT,

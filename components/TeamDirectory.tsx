@@ -57,8 +57,8 @@ const TeamDirectory: React.FC<TeamDirectoryProps> = ({ members, onViewProfile, o
     const filteredMembers = members.filter(member => {
         // 0. Filtro de Privacidad
         if (member.settings?.profile_visibility === 'private') return false;
-        // Simulación: Ocultar 'managers' a no-managers (asumiendo visualización pública básica per se)
-        if (member.settings?.profile_visibility === 'managers' && !member.role.toLowerCase().includes('manager')) return false;
+        // Simulación: Ocultar 'admins' a no-admins (ejemplo de privacidad, aunque generalmente el equipo se ve entre sí)
+        if (member.settings?.profile_visibility === 'managers' && (member.role !== 'Admin' && member.role !== 'SuperAdmin')) return false;
 
         const roleToDisplay = (member.jobTitle || member.role).toLowerCase();
 

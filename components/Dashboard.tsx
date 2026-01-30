@@ -35,13 +35,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user, agreements, notifications, 
     const [currentTip, setCurrentTip] = useState(TIPS_DB[0]);
     const [focusModeActive, setFocusModeActive] = useState(false);
 
-    const isAdmin = user?.role === 'Administrador';
+    const isAdmin = user?.role === 'Admin' || user?.role === 'SuperAdmin';
     // Estado para controlar qué vista ve el admin (Admin vs Personal)
     const [showAdminPanel, setShowAdminPanel] = useState(isAdmin);
 
     // Efecto para sincronizar si cambia el usuario
     useEffect(() => {
-        if (user?.role === 'Administrador') {
+        if (user?.role === 'Admin' || user?.role === 'SuperAdmin') {
             setShowAdminPanel(true);
         } else {
             setShowAdminPanel(false);

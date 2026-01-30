@@ -41,7 +41,7 @@ export const authService = {
                 id: authData.user.id, // IMPORTANTE: Usar el ID real de Auth
                 name,
                 email: email.trim(),
-                role: companyName ? 'Admin' : 'Colaborador',
+                role: companyName ? 'Admin' : 'User',
                 jobTitle: companyName ? 'CEO / Admin' : 'Miembro del Equipo',
                 phone,
                 language,
@@ -109,7 +109,7 @@ export const authService = {
                     id: data.user.id,
                     name: meta.full_name || email.split('@')[0],
                     email: email,
-                    role: 'Colaborador',
+                    role: 'User',
                     jobTitle: 'Miembro del Equipo',
                     settings: {
                         id: crypto.randomUUID(),

@@ -15,6 +15,7 @@ export interface Organization {
   id: string;
   name: string;
   plan: 'SEED' | 'GROWTH' | 'ENTERPRISE';
+  status: 'active' | 'past_due' | 'canceled' | 'trial';
 }
 
 export interface UserProfile {
@@ -22,7 +23,7 @@ export interface UserProfile {
   organizationId?: string;
   name: string;
   email: string;
-  role: 'Admin' | 'Manager' | 'Colaborador';
+  role: 'SuperAdmin' | 'Admin' | 'User';
   jobTitle?: string; // Cargo real (ej: 'Frontend Developer')
   about?: string;
   avatar?: string; // Nuevo campo para la foto

@@ -145,7 +145,7 @@ const AppContent: React.FC = () => {
       id: '2',
       name: 'Ana García',
       email: 'ana@team.com',
-      role: 'Manager',
+      role: 'Admin',
       jobTitle: 'Engineering Manager',
       avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
       about: 'Liderando equipos con empatía y estructura.',
@@ -155,7 +155,7 @@ const AppContent: React.FC = () => {
       id: '3',
       name: 'Carlos Ruiz',
       email: 'carlos@team.com',
-      role: 'Colaborador',
+      role: 'User',
       jobTitle: 'Frontend Developer',
       avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d',
       about: 'Apasionado por UX y accesibilidad.',
@@ -165,7 +165,7 @@ const AppContent: React.FC = () => {
       id: '4',
       name: 'Marta Díaz',
       email: 'marta@team.com',
-      role: 'Manager',
+      role: 'Admin',
       jobTitle: 'Product Owner',
       avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704e',
       about: 'Definiendo el futuro del producto.',
@@ -191,7 +191,7 @@ const AppContent: React.FC = () => {
             id: u.id,
             name: u.name,
             email: u.email,
-            role: u.role === 'Manager' ? 'Manager' : 'Colaborador',
+            role: u.role === 'Manager' ? 'Admin' : 'User',
             jobTitle: u.role === 'Manager' ? 'Engineering Manager' : 'Team Member',
             avatar: u.avatar,
             about: 'Nuevo miembro del equipo.',
@@ -216,7 +216,7 @@ const AppContent: React.FC = () => {
         id: u.id,
         name: u.name,
         email: u.email,
-        role: u.role, // Ahora es Admin/Manager/Colaborador
+        role: u.role, // Ahora ya es Admin/User desde DEMO_TEAM
         status: 'Activo',
         teamId: 't1', // Asignar a equipo default
         avatar: u.avatar
