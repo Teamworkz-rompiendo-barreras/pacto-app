@@ -104,5 +104,25 @@ export const notificationService = {
         }
 
         localStorage.setItem(personalKey, JSON.stringify(notifications));
+    },
+
+    // Simulación de envío de notificación estructurada a Slack/Email
+    sendPactUpdateNotification: async (fromUser: { name: string }, changes: string[]) => {
+        const title = '🔄 Hemos actualizado nuestro PACTO de equipo';
+        const message = `Tras nuestro reciente Ritual de Replay, hemos ajustado nuestros acuerdos: ${changes.join(', ')}.`;
+
+        // Aquí se integrarían las APIs de SendGrid o Slack Webhooks
+        console.log('ENVIANDO NOTIFICACIÓN ESTRUCTURADA:', {
+            subject: title,
+            body: message,
+            style: 'Header P1 on P2, Font Atkinson, LineHeight 1.5'
+        });
+
+        return notificationService.sendNotification(
+            { name: fromUser.name, avatar: 'https://i.pravatar.cc/150?u=pacto' },
+            'agreement',
+            title,
+            message
+        );
     }
 };

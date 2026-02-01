@@ -58,7 +58,7 @@ export const authService = {
                 return { user: null, error: "Usuario creado pero falló al guardar perfil." };
             }
 
-            return { user: createdUser, error: null };
+            return { user: { ...createdUser, email_confirmed_at: authData.user.email_confirmed_at }, error: null };
 
         } catch (error) {
             console.error("Error en signUp:", error);
@@ -124,7 +124,7 @@ export const authService = {
                 else return { user: null, error: "Error crítico: Tu cuenta existe pero no se pudo generar tu perfil." };
             }
 
-            return { user: userProfile, error: null };
+            return { user: { ...userProfile, email_confirmed_at: data.user.email_confirmed_at }, error: null };
 
         } catch (error) {
             console.error("Error en signIn:", error);
@@ -163,6 +163,7 @@ export const authService = {
 
         const { data: { session } } = await supabase.auth.getSession();
         if (!session?.user?.email) return null;
-        return await userService.getUserProfileByEmail(session.user.email);
+        const profile = await userService.getUserProfileByEmail(session.user.email);
+        return profile ? { ...profile, email_confirmed_at: session.user.email_confirmed_at } : null;
     }
 };

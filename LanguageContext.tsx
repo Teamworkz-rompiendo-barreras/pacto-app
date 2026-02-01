@@ -16,6 +16,10 @@ const translations: Record<string, Record<string, string>> = {
     // --- SETTINGS (Existing) ---
     'settings.title': 'Ajustes de Idioma y Región',
     'settings.desc': 'Personaliza tu experiencia en PACTO para que se adapte a tu ubicación y preferencias de trabajo.',
+    'acc.reduced_motion': 'Movimiento Reducido',
+    'acc.high_contrast': 'Alto Contraste',
+    'acc.reduced_motion.desc': 'Reduce las animaciones y transiciones.',
+    'acc.high_contrast.desc': 'Mejora la legibilidad aumentando el contraste.',
     'label.language': 'Idioma de la plataforma',
     'label.region': 'País/Región',
     'label.timezone': 'Zona Horaria',
@@ -288,6 +292,10 @@ const translations: Record<string, Record<string, string>> = {
     // --- SETTINGS (Existing) ---
     'settings.title': 'Language & Region Settings',
     'settings.desc': 'Customize your PACTO experience to match your location and work preferences.',
+    'acc.reduced_motion': 'Reduced Motion',
+    'acc.high_contrast': 'High Contrast',
+    'acc.reduced_motion.desc': 'Reduces animations and transitions.',
+    'acc.high_contrast.desc': 'Improves readability by increasing contrast.',
     'label.language': 'Platform Language',
     'label.region': 'Country/Region',
     'label.timezone': 'Timezone',
@@ -560,6 +568,10 @@ const translations: Record<string, Record<string, string>> = {
     // --- SETTINGS (Existing) ---
     'settings.title': 'Configurações de Idioma e Região',
     'settings.desc': 'Personalize sua experiência no PACTO para se adequar à sua localização e preferências de trabalho.',
+    'acc.reduced_motion': 'Movimento Reduzido',
+    'acc.high_contrast': 'Alto Contraste',
+    'acc.reduced_motion.desc': 'Reduz animações e transições.',
+    'acc.high_contrast.desc': 'Melhora a legibilidade aumentando o contraste.',
     'label.language': 'Idioma da plataforma',
     'label.region': 'País/Região',
     'label.timezone': 'Fuso Horário',

@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { UserProfile, AccessibilitySettings } from '../types';
 import { useToast } from '../context/ToastContext';
+import { useLanguage } from '../LanguageContext';
 import { PageContainer } from './common/PageContainer';
 import { PageHeader } from './common/PageHeader';
 
@@ -27,6 +28,7 @@ const DEMO_SESSIONS = [
 
 const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpdateUser, onOpenPublicView, onLogout, onDeleteAccount, onNavigateToLanguage, initialSection = 'personal' }) => {
     const { toast } = useToast();
+    const { t } = useLanguage();
     // Estado local para el formulario de perfil
     const [name, setName] = useState(user.name);
     const [role, setRole] = useState(user.role);
@@ -281,23 +283,16 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
     return (
         <PageContainer>
             <PageHeader
-                title="Perfil y Preferencias"
-                subtitle="Personaliza tu entorno de trabajo digital y tu tarjeta de presentación ante el equipo."
+                title="Mi Manual de Usuario"
+                subtitle="Configura tus 'instrucciones de uso' para que tu equipo sepa cómo colaborar mejor contigo."
                 actionButton={
                     <div className="flex gap-3">
                         <button
-                            onClick={onLogout}
-                            className="shrink-0 flex items-center gap-2 px-6 py-3 border border-gray-300 text-gray-600 font-bold rounded-xl hover:bg-gray-100 transition-all shadow-sm"
-                        >
-                            <span className="material-symbols-outlined">logout</span>
-                            Salir
-                        </button>
-                        <button
                             onClick={onOpenPublicView}
-                            className="shrink-0 flex items-center gap-2 px-6 py-3 bg-white border-2 border-primary text-primary font-bold rounded-xl hover:bg-primary hover:text-white transition-all shadow-sm"
+                            className="shrink-0 flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-primary to-secondary-s3 text-white font-black rounded-xl hover:shadow-xl hover:-translate-y-1 transition-all active:scale-95 shadow-lg shadow-primary/20"
                         >
                             <span className="material-symbols-outlined">visibility</span>
-                            Ver Perfil Público
+                            VER MI MANUAL
                         </button>
                     </div>
                 }
@@ -305,69 +300,81 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
                 {/* Sidebar Navigation */}
-                <aside className="md:col-span-1 space-y-2 sticky top-4">
-                    <a
-                        href="#personal"
-                        onClick={(e) => scrollToSection(e, 'personal')}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all cursor-pointer ${activeSection === 'personal'
-                            ? 'bg-white border-l-4 border-primary shadow-sm text-primary'
-                            : 'hover:bg-white/30 text-text-n900/60 border-l-4 border-transparent'
-                            }`}
-                    >
-                        <span className={`material-symbols-outlined ${activeSection === 'personal' ? 'text-primary' : 'opacity-60'}`}>person</span>
-                        Información Personal
-                    </a>
-                    <a
-                        href="#sensorial"
-                        onClick={(e) => scrollToSection(e, 'sensorial')}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all cursor-pointer ${activeSection === 'sensorial'
-                            ? 'bg-white border-l-4 border-primary shadow-sm text-primary'
-                            : 'hover:bg-white/30 text-text-n900/60 border-l-4 border-transparent'
-                            }`}
-                    >
-                        <span className={`material-symbols-outlined ${activeSection === 'sensorial' ? 'text-primary' : 'opacity-60'}`}>neurology</span>
-                        Preferencias Sensoriales
-                    </a>
-                    <a
-                        href="#comunicacion"
-                        onClick={(e) => scrollToSection(e, 'comunicacion')}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all cursor-pointer ${activeSection === 'comunicacion'
-                            ? 'bg-white border-l-4 border-primary shadow-sm text-primary'
-                            : 'hover:bg-white/30 text-text-n900/60 border-l-4 border-transparent'
-                            }`}
-                    >
-                        <span className={`material-symbols-outlined ${activeSection === 'comunicacion' ? 'text-primary' : 'opacity-60'}`}>forum</span>
-                        Modos de Comunicación
-                    </a>
-                    <a
-                        href="#security"
-                        onClick={(e) => scrollToSection(e, 'security')}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all cursor-pointer ${activeSection === 'security'
-                            ? 'bg-white border-l-4 border-primary shadow-sm text-primary'
-                            : 'hover:bg-white/30 text-text-n900/60 border-l-4 border-transparent'
-                            }`}
-                    >
-                        <span className={`material-symbols-outlined ${activeSection === 'security' ? 'text-primary' : 'opacity-60'}`}>lock</span>
-                        Seguridad y Privacidad
-                    </a>
+                <aside className="md:col-span-1 space-y-3 sticky top-24">
+                    <div className="bg-white/50 backdrop-blur-sm p-2 rounded-[24px] border border-white/40 shadow-sm">
+                        <a
+                            href="#personal"
+                            onClick={(e) => scrollToSection(e, 'personal')}
+                            className={`flex items-center gap-3 px-5 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all cursor-pointer ${activeSection === 'personal'
+                                ? 'bg-primary text-white shadow-lg shadow-primary/30 translate-x-1'
+                                : 'hover:bg-primary/5 text-text-n900/60'
+                                }`}
+                        >
+                            <span className="material-symbols-outlined">face</span>
+                            Identidad Persona
+                        </a>
+                        <a
+                            href="#manual"
+                            onClick={(e) => scrollToSection(e, 'manual')}
+                            className={`flex items-center gap-3 px-5 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all cursor-pointer ${activeSection === 'manual'
+                                ? 'bg-primary text-white shadow-lg shadow-primary/30 translate-x-1'
+                                : 'hover:bg-primary/5 text-text-n900/60'
+                                }`}
+                        >
+                            <span className="material-symbols-outlined">menu_book</span>
+                            Manual de Trabajo
+                        </a>
+                        <a
+                            href="#sensorial"
+                            onClick={(e) => scrollToSection(e, 'sensorial')}
+                            className={`flex items-center gap-3 px-5 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all cursor-pointer ${activeSection === 'sensorial'
+                                ? 'bg-primary text-white shadow-lg shadow-primary/30 translate-x-1'
+                                : 'hover:bg-primary/5 text-text-n900/60'
+                                }`}
+                        >
+                            <span className="material-symbols-outlined">neurology</span>
+                            Entorno Sensorial
+                        </a>
+                        <a
+                            href="#security"
+                            onClick={(e) => scrollToSection(e, 'security')}
+                            className={`flex items-center gap-3 px-5 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all cursor-pointer ${activeSection === 'security'
+                                ? 'bg-primary text-white shadow-lg shadow-primary/30 translate-x-1'
+                                : 'hover:bg-primary/5 text-text-n900/60'
+                                }`}
+                        >
+                            <span className="material-symbols-outlined">shield_person</span>
+                            Cuenta y Datos
+                        </a>
+                    </div>
 
-
+                    <button
+                        onClick={onLogout}
+                        className="w-full flex items-center justify-center gap-2 px-5 py-4 rounded-2xl font-black text-xs uppercase tracking-widest text-red-500 hover:bg-red-50 transition-all border-2 border-transparent hover:border-red-100"
+                    >
+                        <span className="material-symbols-outlined text-md">logout</span>
+                        Cerrar Sesión
+                    </button>
                 </aside>
 
                 {/* Main Settings Content */}
                 <div className="md:col-span-2 space-y-10">
 
-                    {/* Section: Información Personal */}
-                    <section id="personal" ref={el => { sectionRefs.current['personal'] = el; }} className="bg-white rounded-2xl p-8 shadow-sm border border-black/5 scroll-mt-6">
-                        <div className="flex items-center gap-3 mb-6">
-                            <span className="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg">id_card</span>
-                            <h2 className="text-2xl font-bold text-text-n900">Información Personal</h2>
+                    {/* Section: Identidad */}
+                    <section id="personal" ref={el => { sectionRefs.current['personal'] = el; }} className="bg-white/70 backdrop-blur-md rounded-[32px] p-8 md:p-10 shadow-xl shadow-primary/5 border border-white/40 scroll-mt-24">
+                        <div className="flex items-center justify-between mb-8">
+                            <div className="flex items-center gap-4">
+                                <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                                    <span className="material-symbols-outlined font-bold text-2xl">face</span>
+                                </div>
+                                <h2 className="font-display text-2xl font-black text-text-n900 tracking-tight uppercase">Identidad Persona</h2>
+                            </div>
                         </div>
 
-                        <div className="mb-8 flex flex-col sm:flex-row gap-6 items-center sm:items-start">
+                        <div className="mb-10 flex flex-col sm:flex-row gap-8 items-center sm:items-start p-6 bg-primary/5 rounded-[24px] border border-primary/10">
                             <div className="relative group shrink-0">
                                 <div
-                                    className="size-32 rounded-full bg-gray-200 border-4 border-white shadow-lg overflow-hidden flex items-center justify-center cursor-pointer"
+                                    className="size-32 md:size-36 rounded-[24px] bg-white border-4 border-white shadow-2xl overflow-hidden flex items-center justify-center cursor-pointer rotate-[-2deg] group-hover:rotate-0 transition-all duration-300"
                                     onClick={handleAvatarClick}
                                 >
                                     {avatar && !avatarError ? (
@@ -378,10 +385,12 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                                             onError={() => setAvatarError(true)}
                                         />
                                     ) : (
-                                        <span className="material-symbols-outlined text-4xl text-gray-400">person</span>
+                                        <div className="size-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-5xl text-gray-400">add_a_photo</span>
+                                        </div>
                                     )}
-                                    <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <span className="material-symbols-outlined text-white text-2xl">edit</span>
+                                    <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                        <span className="material-symbols-outlined text-white text-3xl font-bold">upload</span>
                                     </div>
                                 </div>
                                 <input
@@ -391,95 +400,177 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                                     accept="image/*"
                                     className="hidden"
                                 />
-                                <p className="text-xs text-center mt-2 font-bold text-primary cursor-pointer hover:underline" onClick={handleAvatarClick}>Cambiar foto</p>
                             </div>
-                            <div className="flex-1 space-y-2 text-center sm:text-left">
-                                <h3 className="text-lg font-bold">Tu Foto de Perfil</h3>
-                                <p className="text-sm opacity-70">Esta imagen será visible para todo tu equipo en el directorio y en tus tarjetas de acuerdos.</p>
-                                <p className="text-xs opacity-50 italic">Recomendado: 400x400px</p>
+                            <div className="flex-1 space-y-3 text-center sm:text-left pt-2">
+                                <h3 className="text-xl font-black text-text-n900 leading-none">Tu Imagen de Perfil</h3>
+                                <p className="text-sm text-gray-500 font-medium leading-relaxed">Esta foto acompañará tus acuerdos y será lo primero que vean tus compañeros.</p>
+                                <button
+                                    onClick={handleAvatarClick}
+                                    className="text-xs font-black text-primary uppercase tracking-widest bg-white px-4 py-2 rounded-lg shadow-sm border border-primary/10 hover:bg-primary hover:text-white transition-all"
+                                >
+                                    Subir nueva foto
+                                </button>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div className="flex flex-col gap-2">
-                                <label htmlFor="name" className="text-sm font-bold opacity-80 text-text-n900">Nombre Completo</label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                            <div className="flex flex-col gap-3">
+                                <label htmlFor="name" className="text-xs font-black text-text-n900 uppercase tracking-widest px-1">Nombre Público</label>
                                 <input
                                     id="name"
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="w-full bg-bg-s1/30 border border-black/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                    className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-[16px] px-6 py-4 font-bold text-text-n900 outline-none transition-all shadow-inner"
                                 />
                             </div>
-                            <div className="flex flex-col gap-2">
-                                <label htmlFor="jobTitle" className="text-sm font-bold opacity-80 text-text-n900">Cargo (Job Title)</label>
+                            <div className="flex flex-col gap-3">
+                                <label htmlFor="jobTitle" className="text-xs font-black text-text-n900 uppercase tracking-widest px-1">Cargo Profesional</label>
                                 <input
                                     id="jobTitle"
                                     type="text"
                                     value={jobTitle}
                                     onChange={(e) => setJobTitle(e.target.value)}
-                                    className="w-full bg-bg-s1/30 border border-black/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                    className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-[16px] px-6 py-4 font-bold text-text-n900 outline-none transition-all shadow-inner"
                                 />
                             </div>
-                            <div className="flex flex-col gap-2 sm:col-span-2 md:col-span-1">
-                                <label className="text-sm font-bold opacity-80 text-text-n900">Nivel de Acceso</label>
-                                <div className="w-full bg-gray-100 border border-black/5 rounded-xl px-4 py-3 text-gray-500 font-bold flex items-center gap-2 cursor-not-allowed">
-                                    <span className="material-symbols-outlined text-lg">shield</span>
-                                    {role === 'Admin' ? 'Administrador' : (role === 'SuperAdmin' ? 'Super Admin' : 'Usuario')}
+                            <div className="flex flex-col gap-3">
+                                <label className="text-xs font-black text-text-n900 uppercase tracking-widest px-1">Permisos de Sistema</label>
+                                <div className="w-full bg-gray-100/50 border-2 border-dashed border-black/5 rounded-[16px] px-6 py-4 text-gray-500 font-black text-sm flex items-center gap-3 cursor-not-allowed uppercase tracking-tighter">
+                                    <span className="material-symbols-outlined text-lg">verified_user</span>
+                                    {role === 'Admin' ? 'Administrador' : (role === 'SuperAdmin' ? 'Super Admin' : 'Usuario Estándar')}
                                 </div>
                             </div>
-                            <div className="flex flex-col gap-2 sm:col-span-2">
-                                <label htmlFor="about" className="text-sm font-bold opacity-80 text-text-n900">Sobre mí (Cómo prefiero trabajar)</label>
+                        </div>
+                    </section>
+
+                    {/* Section: Manual de Trabajo */}
+                    <section id="manual" ref={el => { sectionRefs.current['manual'] = el; }} className="bg-white/70 backdrop-blur-md rounded-[32px] p-8 md:p-10 shadow-xl shadow-primary/5 border border-white/40 scroll-mt-24">
+                        <div className="flex items-center gap-4 mb-8">
+                            <div className="size-12 rounded-2xl bg-p1/20 flex items-center justify-center text-p1">
+                                <span className="material-symbols-outlined font-bold text-2xl text-primary">menu_book</span>
+                            </div>
+                            <h2 className="font-display text-2xl font-black text-text-n900 tracking-tight uppercase">Manual de Trabajo</h2>
+                        </div>
+
+                        <div className="space-y-8">
+                            <div className="flex flex-col gap-3">
+                                <label htmlFor="about" className="text-xs font-black text-text-n900 uppercase tracking-widest px-1">Cómo trabajar conmigo (Bio)</label>
                                 <textarea
                                     id="about"
                                     rows={4}
                                     value={about}
                                     onChange={(e) => setAbout(e.target.value)}
-                                    placeholder="Ej: Me gusta tener agendas claras antes de las reuniones..."
-                                    className="w-full bg-bg-s1/30 border border-black/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all resize-none"
+                                    placeholder="Ej: Prefiero las mañanas para tareas de foco. Valoro la comunicación directa pero constructiva..."
+                                    className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-[20px] px-6 py-5 font-bold text-text-n900 outline-none transition-all shadow-inner resize-none min-h-[140px]"
                                 ></textarea>
-                                <p className="text-xs opacity-50 italic text-text-n900">Esta información será visible para tus compañeros de equipo para facilitar la colaboración.</p>
+                                <div className="flex items-start gap-2 p-4 bg-p1/10 rounded-xl border border-p1/20">
+                                    <span className="material-symbols-outlined text-primary text-sm font-bold">tips_and_updates</span>
+                                    <p className="text-xs text-primary/80 font-bold leading-relaxed italic">
+                                        Consejo: Describe qué te hace feliz en el trabajo y qué situaciones te generan fricción. Esto ayuda a tu equipo a ser más inclusivo.
+                                    </p>
+                                </div>
                             </div>
 
-                            <div className="sm:col-span-2 flex justify-end pt-4 border-t border-black/5 mt-2">
-                                <button
-                                    onClick={handleSaveProfile}
-                                    className="bg-primary text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2"
-                                >
-                                    <span className="material-symbols-outlined">save</span>
-                                    Guardar Cambios
-                                </button>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
+                                <div className="bg-white p-6 rounded-[24px] border border-black/5 shadow-sm">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <div className="flex items-center gap-3">
+                                            <span className="material-symbols-outlined text-primary">forum</span>
+                                            <span className="font-display font-black text-sm uppercase tracking-widest text-text-n900">Comunicación</span>
+                                        </div>
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                className="sr-only peer"
+                                                checked={localSettings.comm_preference === 'Escrito'}
+                                                onChange={(e) => handleCommPreference(e.target.checked)}
+                                            />
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                        </label>
+                                    </div>
+                                    <div className="flex gap-4">
+                                        <div className={`flex-1 p-3 rounded-xl border-2 transition-all ${localSettings.comm_preference === 'Escrito' ? 'border-primary bg-primary/5' : 'border-black/5 opacity-50'}`}>
+                                            <p className="text-[10px] font-black uppercase text-center">Escrito</p>
+                                        </div>
+                                        <div className={`flex-1 p-3 rounded-xl border-2 transition-all ${localSettings.comm_preference === 'Verbal' ? 'border-primary bg-primary/5' : 'border-black/5 opacity-50'}`}>
+                                            <p className="text-[10px] font-black uppercase text-center">Verbal</p>
+                                        </div>
+                                    </div>
+                                    <p className="mt-4 text-xs text-gray-400 font-medium">¿Prefieres que te escriban o que te llamen para sincronizar?</p>
+                                </div>
+
+                                <div className="bg-white p-6 rounded-[24px] border border-black/5 shadow-sm">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <span className="material-symbols-outlined text-secondary-s3">visibility</span>
+                                        <span className="font-display font-black text-sm uppercase tracking-widest text-text-n900">Privacidad</span>
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        {(['team', 'managers', 'private'] as const).map((v) => (
+                                            <button
+                                                key={v}
+                                                onClick={() => setProfileVisibility(v)}
+                                                className={`text-left px-4 py-2 rounded-lg text-xs font-black uppercase tracking-tighter transition-all ${localSettings.profile_visibility === v ? 'bg-secondary-s3 text-white shadow-md' : 'hover:bg-gray-50 text-gray-400'}`}
+                                            >
+                                                {v === 'team' ? 'Toda la Organización' : v === 'managers' ? 'Solo mi Equipo' : 'Solo Yo'}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+
+                        <div className="mt-10 flex justify-end">
+                            <button
+                                onClick={handleSaveAll}
+                                className={`px-10 py-4 rounded-2xl font-black text-sm tracking-widest transition-all ${saveStatus === 'saved' ? 'bg-green-500 text-white' : 'bg-primary text-white shadow-xl shadow-primary/20 hover:scale-105 active:scale-95'}`}
+                            >
+                                {saveStatus === 'saved' ? '¡CAMBIOS GUARDADOS!' : 'GUARDAR MI MANUAL'}
+                            </button>
                         </div>
                     </section>
 
-                    {/* Section: Preferencias Sensoriales */}
-                    <section id="sensorial" ref={el => { sectionRefs.current['sensorial'] = el; }} className="bg-white rounded-2xl p-8 shadow-sm border border-black/5 scroll-mt-6">
-                        <div className="flex items-center gap-3 mb-6">
-                            <span className="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg">visibility</span>
-                            <h2 className="text-2xl font-bold text-text-n900">Preferencias Sensoriales</h2>
+                    {/* Section: Entorno Sensorial */}
+                    <section id="sensorial" ref={el => { sectionRefs.current['sensorial'] = el; }} className="bg-white/70 backdrop-blur-md rounded-[32px] p-8 md:p-10 shadow-xl shadow-primary/5 border border-white/40 scroll-mt-24">
+                        <div className="flex items-center gap-4 mb-8">
+                            <div className="size-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500">
+                                <span className="material-symbols-outlined font-bold text-2xl">visibility</span>
+                            </div>
+                            <h2 className="font-display text-2xl font-black text-text-n900 tracking-tight uppercase">Entorno Sensorial</h2>
                         </div>
-                        <div className="space-y-8">
-                            {/* Toggle Item 2 -> Now 1 */}
-                            <div className="flex items-start justify-between gap-4 cursor-pointer" onClick={() => toggleSetting('dyslexia_font')}>
-                                <div className="max-w-md">
-                                    <p className="font-bold text-lg text-text-n900">Fuentes para Dislexia</p>
-                                    <p className="text-sm opacity-70 leading-relaxed text-text-n900">Cambia la tipografía del sistema por una diseñada específicamente para mejorar la legibilidad.</p>
+
+                        <div className="space-y-6">
+                            <div
+                                className={`flex items-start justify-between gap-6 p-6 rounded-[24px] border-2 transition-all cursor-pointer ${localSettings.dyslexia_font ? 'border-primary bg-primary/5' : 'border-black/5 hover:border-primary/20 bg-white'}`}
+                                onClick={() => toggleSetting('dyslexia_font')}
+                            >
+                                <div className="max-w-md flex gap-4">
+                                    <span className={`material-symbols-outlined p-2 rounded-xl h-fit ${localSettings.dyslexia_font ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}`}>spellcheck</span>
+                                    <div>
+                                        <p className="font-black text-lg text-text-n900 uppercase tracking-tighter">Fuentes para Dislexia</p>
+                                        <p className="text-sm text-gray-500 font-medium leading-relaxed">Usa tipografías optimizadas para facilitar la lectura y el procesamiento cognitivo.</p>
+                                    </div>
                                 </div>
                                 <div className="relative inline-flex items-center cursor-pointer mt-1 pointer-events-none">
                                     <input type="checkbox" className="sr-only peer" checked={localSettings.dyslexia_font} readOnly />
-                                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+                                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
                                 </div>
                             </div>
-                            {/* Toggle Item 3 -> Now 2 */}
-                            <div className="flex items-start justify-between gap-4 border-t border-black/5 pt-6 cursor-pointer" onClick={() => toggleSetting('high_contrast')}>
-                                <div className="max-w-md">
-                                    <p className="font-bold text-lg text-text-n900">Alto Contraste</p>
-                                    <p className="text-sm opacity-70 leading-relaxed text-text-n900">Maximiza la separación visual entre elementos y texto para una identificación más rápida.</p>
+
+                            <div
+                                className={`flex items-start justify-between gap-6 p-6 rounded-[24px] border-2 transition-all cursor-pointer ${localSettings.high_contrast ? 'border-primary bg-primary/5' : 'border-black/5 hover:border-primary/20 bg-white'}`}
+                                onClick={() => toggleSetting('high_contrast')}
+                            >
+                                <div className="max-w-md flex gap-4">
+                                    <span className={`material-symbols-outlined p-2 rounded-xl h-fit ${localSettings.high_contrast ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}`}>contrast</span>
+                                    <div>
+                                        <p className="font-black text-lg text-text-n900 uppercase tracking-tighter">{t('acc.high_contrast')}</p>
+                                        <p className="text-sm text-gray-500 font-medium leading-relaxed">{t('acc.high_contrast.desc') || 'Aumenta la distinción visual entre el texto y el fondo para reducir la fatiga ocular.'}</p>
+                                    </div>
                                 </div>
                                 <div className="relative inline-flex items-center cursor-pointer mt-1 pointer-events-none">
                                     <input type="checkbox" className="sr-only peer" checked={localSettings.high_contrast} readOnly />
-                                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+                                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
                                 </div>
                             </div>
                         </div>
@@ -517,160 +608,74 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                         </div>
                     </section>
 
-                    {/* Section: Seguridad y Privacidad */}
-                    <section id="security" ref={el => { sectionRefs.current['security'] = el; }} className="scroll-mt-6 flex flex-col gap-6">
-
-                        {/* Header Section */}
-                        <div className="flex items-center gap-3 border-b border-black/10 pb-4 mb-2">
-                            <span className="material-symbols-outlined text-primary text-3xl">lock_person</span>
-                            <h2 className="text-3xl font-black text-text-n900 tracking-tight">Acceso y Seguridad</h2>
-                        </div>
-
-                        {/* Change Password Card */}
-                        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 transition-all hover:shadow-md">
-                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                                <div className="flex-1 space-y-2">
-                                    <p className="text-lg font-bold text-text-n900">Cambiar Contraseña</p>
-                                    <p className="text-gray-500 font-medium text-sm">Te recomendamos usar una contraseña única que no uses en otros sitios para mantener tu cuenta segura.</p>
-                                </div>
-                                <button
-                                    onClick={() => setShowPasswordModal(true)}
-                                    className="bg-primary text-white px-6 py-3 rounded-lg font-bold hover:brightness-110 transition-all focus:ring-4 focus:ring-primary/30 whitespace-nowrap shadow-md shadow-primary/20 active:scale-95"
-                                >
-                                    Actualizar contraseña
-                                </button>
+                    {/* Section: Cuenta y Datos */}
+                    <section id="security" ref={el => { sectionRefs.current['security'] = el; }} className="bg-white/70 backdrop-blur-md rounded-[32px] p-8 md:p-10 shadow-xl shadow-primary/5 border border-white/40 scroll-mt-24 space-y-10">
+                        <div className="flex items-center gap-4 mb-2">
+                            <div className="size-12 rounded-2xl bg-secondary-s3/10 flex items-center justify-center text-secondary-s3">
+                                <span className="material-symbols-outlined font-bold text-2xl">shield_person</span>
                             </div>
+                            <h2 className="font-display text-2xl font-black text-text-n900 tracking-tight uppercase">Cuenta y Datos</h2>
                         </div>
 
-                        {/* 2FA Card */}
-                        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 transition-all hover:shadow-md">
-                            <div className="flex justify-between items-start gap-6">
-                                <div className="flex-1 space-y-2">
-                                    <p className="text-lg font-bold text-text-n900">Autenticación de dos factores (2FA)</p>
-                                    <p className="text-gray-500 font-medium text-sm leading-relaxed">Añade una capa extra de seguridad. Solicitaremos un código enviado a tu móvil al iniciar sesión.</p>
-                                    <div className="flex items-center gap-2 mt-4 text-xs font-bold text-primary bg-primary/10 w-fit px-3 py-1.5 rounded-full uppercase tracking-wider">
-                                        <span className="material-symbols-outlined text-sm">verified_user</span>
-                                        Recomendado
+                        <div className="grid grid-cols-1 gap-6">
+                            {/* Security Item */}
+                            <div className="bg-white p-8 rounded-[24px] border border-black/5 shadow-sm space-y-6">
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                                    <div className="flex-1">
+                                        <p className="font-black text-lg text-text-n900 uppercase tracking-tighter mb-1">Tu Seguridad</p>
+                                        <p className="text-sm text-gray-500 font-medium leading-relaxed">Protege tu acceso y revisa las sesiones activas en tus dispositivos.</p>
                                     </div>
-                                </div>
-                                <button
-                                    onClick={handle2FAToggle}
-                                    className={`relative inline-flex items-center cursor-pointer h-7 w-14 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${twoFactorActive ? 'bg-primary' : 'bg-gray-200'}`}
-                                >
-                                    <span className="sr-only">Activar 2FA</span>
-                                    <span
-                                        className={`inline-block h-5 w-5 transform bg-white rounded-full transition-transform shadow-sm border border-gray-100 ${twoFactorActive ? 'translate-x-8' : 'translate-x-1'}`}
-                                    />
-                                </button>
-                            </div>
-
-                            {/* Inline confirmation for disabling 2FA */}
-                            {showConfirm2FA && (
-                                <div className="mt-4 p-4 bg-orange-50 border border-orange-100 rounded-xl animate-fade-in">
-                                    <p className="font-bold text-orange-800 text-sm mb-3">¿Estás seguro de desactivar la seguridad extra?</p>
                                     <div className="flex gap-3">
                                         <button
-                                            onClick={confirmDisable2FA}
-                                            className="px-4 py-2 bg-white border border-orange-200 text-orange-700 font-bold rounded-lg text-xs hover:bg-orange-100"
+                                            onClick={() => setShowPasswordModal(true)}
+                                            className="px-6 py-3 bg-text-n900 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:shadow-lg transition-all"
                                         >
-                                            Sí, desactivar
+                                            Password
                                         </button>
                                         <button
-                                            onClick={() => setShowConfirm2FA(false)}
-                                            className="px-4 py-2 bg-orange-600 text-white font-bold rounded-lg text-xs hover:bg-orange-700"
+                                            onClick={handle2FAToggle}
+                                            className={`px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${twoFactorActive ? 'bg-green-500 text-white' : 'bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20'}`}
                                         >
-                                            Mantener activada
+                                            {twoFactorActive ? '2FA Activo' : 'Activar 2FA'}
                                         </button>
                                     </div>
                                 </div>
-                            )}
-                        </div>
-
-
-                        {/* Privacy Section Header */}
-                        <div className="flex items-center gap-3 border-b border-black/10 pb-4 pt-4 mb-2">
-                            <span className="material-symbols-outlined text-primary text-3xl">visibility</span>
-                            <h2 className="text-3xl font-black text-text-n900 tracking-tight">Privacidad de Datos</h2>
-                        </div>
-
-                        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
-                            <div className="space-y-6">
-                                <div>
-                                    <p className="text-lg font-bold text-text-n900 mb-2">¿Quién puede ver mi perfil?</p>
-                                    <p className="text-gray-500 font-medium text-sm mb-6">Controla la visibilidad de tus preferencias y ajustes de apoyo con otros miembros de la organización.</p>
+                                <div className="pt-6 border-t border-black/5">
+                                    <button
+                                        onClick={handleOpenDevicesModal}
+                                        className="text-xs font-black text-gray-400 hover:text-primary uppercase tracking-widest flex items-center gap-2 group"
+                                    >
+                                        <span className="material-symbols-outlined text-md">devices</span>
+                                        Gestionar Dispositivos
+                                        <span className="material-symbols-outlined text-md opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                                    </button>
                                 </div>
-                                <div className="grid gap-4">
-                                    {['team', 'managers', 'private'].map((option) => (
-                                        <label
-                                            key={option}
-                                            className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all ${localSettings.profile_visibility === option
-                                                ? 'border-primary bg-primary/5'
-                                                : 'border-gray-100 hover:border-primary/50 hover:bg-gray-50'
-                                                }`}
+                            </div>
+
+                            {/* Data Export Item */}
+                            <div className="bg-white p-8 rounded-[24px] border border-black/5 shadow-sm">
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                                    <div className="flex-1">
+                                        <p className="font-black text-lg text-text-n900 uppercase tracking-tighter mb-1">Tus Datos</p>
+                                        <p className="text-sm text-gray-500 font-medium leading-relaxed">Cumplimos con el RGPD. Puedes solicitar una copia de tus datos o eliminarlos definitivamente.</p>
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <button
+                                            onClick={handleExportData}
+                                            className="px-6 py-3 bg-gray-100 text-text-n900 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-gray-200 transition-all"
                                         >
-                                            <input
-                                                type="radio"
-                                                name="profile_visibility"
-                                                checked={localSettings.profile_visibility === option}
-                                                onChange={() => setProfileVisibility(option as any)}
-                                                className="w-5 h-5 text-primary border-gray-300 focus:ring-primary accent-primary"
-                                            />
-                                            <div className="ml-4">
-                                                <span className="block font-bold text-text-n900">
-                                                    {option === 'team' && 'Mi Equipo y Managers'}
-                                                    {option === 'managers' && 'Solo Managers'}
-                                                    {option === 'private' && 'Solo Yo'}
-                                                </span>
-                                                <span className="block text-sm text-gray-500 mt-1 font-medium">
-                                                    {option === 'team' && 'Tus compañeros directos y superiores pueden ver tus ajustes para colaborar mejor.'}
-                                                    {option === 'managers' && 'Solo las personas a cargo de la gestión podrán ver tu información de perfil.'}
-                                                    {option === 'private' && 'Nadie más podrá ver tus configuraciones de apoyo, excepto tú mismo.'}
-                                                </span>
-                                            </div>
-                                        </label>
-                                    ))}
+                                            Exportar
+                                        </button>
+                                        <button
+                                            onClick={handleDeleteAccount}
+                                            className="px-6 py-3 text-red-500 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-50 transition-all"
+                                        >
+                                            Eliminar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        {/* Data Management Section Header */}
-                        <div className="flex items-center gap-3 border-b border-black/10 pb-4 pt-4 mb-2">
-                            <span className="material-symbols-outlined text-primary text-3xl">database</span>
-                            <h2 className="text-3xl font-black text-text-n900 tracking-tight">Gestión de Datos</h2>
-                        </div>
-
-                        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 transition-all hover:shadow-md">
-                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                                <div className="flex-1 space-y-2">
-                                    <p className="text-lg font-bold text-text-n900">Exportar mis datos</p>
-                                    <p className="text-gray-500 font-medium text-sm">Recibe una copia completa de toda la información personal que tenemos almacenada en PACTO.</p>
-                                </div>
-                                <button
-                                    onClick={handleExportData}
-                                    className="bg-gray-100 text-text-n900 px-6 py-3 rounded-lg font-bold hover:bg-gray-200 transition-all flex items-center gap-2 active:scale-95"
-                                >
-                                    <span className="material-symbols-outlined text-lg">download</span>
-                                    Solicitar exportación
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="bg-red-50 rounded-xl p-8 border border-red-100 transition-all hover:border-red-200">
-                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                                <div className="flex-1 space-y-2">
-                                    <p className="text-lg font-bold text-red-700">Zona de Riesgo: Eliminar cuenta</p>
-                                    <p className="text-red-600/80 font-medium text-sm">Al eliminar tu cuenta, todos tus datos se borrarán permanentemente. Esta acción no se puede deshacer.</p>
-                                </div>
-                                <button
-                                    onClick={handleDeleteAccount}
-                                    className="text-red-600 font-bold hover:bg-red-100 px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                                >
-                                    <span className="material-symbols-outlined text-lg">delete_forever</span>
-                                    Eliminar mi cuenta definitivamente
-                                </button>
-                            </div>
-                        </div>
-
                     </section>
 
                     {/* Action Footer */}

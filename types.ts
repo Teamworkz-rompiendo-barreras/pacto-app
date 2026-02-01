@@ -32,6 +32,7 @@ export interface UserProfile {
   plan?: 'SEED' | 'GROWTH' | 'ENTERPRISE';
   maxMembers?: number;
   settings: AccessibilitySettings;
+  email_confirmed_at?: string | null;
 }
 
 export interface Team {
@@ -114,6 +115,7 @@ export enum View {
   RITUAL_PREPARATION = 'RITUAL_PREPARATION',
   RITUAL_REFLECTION = 'RITUAL_REFLECTION',
   RITUAL_CONCLUSIONS = 'RITUAL_CONCLUSIONS', // Nueva vista
+  RITUAL_REPLAY_LIVE = 'RITUAL_REPLAY_LIVE',
   REPORTS = 'REPORTS',
   WEEKLY_SUMMARY = 'WEEKLY_SUMMARY',
   NOTIFICATIONS = 'NOTIFICATIONS',

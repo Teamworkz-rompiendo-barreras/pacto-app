@@ -1,13 +1,10 @@
+
 import React, { useState } from 'react';
 import { wellbeingService } from '../services/wellbeingService';
-
 import { PageContainer } from './common/PageContainer';
 import { PageHeader } from './common/PageHeader';
 
-interface InclusionBoxProps {
-}
-
-const InclusionBox: React.FC<InclusionBoxProps> = () => {
+const InclusionBox: React.FC = () => {
   const [category, setCategory] = useState('');
   const [suggestion, setSuggestion] = useState('');
   const [impact, setImpact] = useState('');
@@ -17,166 +14,144 @@ const InclusionBox: React.FC<InclusionBoxProps> = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!category || !suggestion.trim() || !impact.trim()) return;
-
     setIsSubmitting(true);
-
     try {
-      await wellbeingService.submitSuggestion({
-        category,
-        suggestion,
-        impact
-      });
-
+      await wellbeingService.submitSuggestion({ category, suggestion, impact });
       setIsSubmitting(false);
       setShowSuccess(true);
-
-      // Reset form after success
       setTimeout(() => {
         setCategory('');
         setSuggestion('');
         setImpact('');
         setShowSuccess(false);
-      }, 3000);
-
+      }, 4000);
     } catch (error) {
-      console.error("Submission failed", error);
       setIsSubmitting(false);
-      alert("Error al enviar la sugerencia. Por favor intenta de nuevo.");
+      alert("Error al enviar. Intenta de nuevo.");
     }
   };
 
   return (
     <PageContainer>
       <PageHeader
-        title="Buzón de Sugerencias"
-        subtitle="Un espacio seguro y anónimo diseñado para escuchar tu voz y mejorar juntos nuestra cultura laboral."
-        badge={
-          <>
-            <span className="material-symbols-outlined text-sm">mark_email_unread</span>
-            Buzón de Inclusión
-          </>
+        title="Escucha Activa"
+        subtitle="Un canal de comunicación 100% anónimo para mejorar nuestra cultura."
+        actionButton={
+          <div className="flex items-center gap-3 bg-indigo-50 px-5 py-2.5 rounded-2xl border border-indigo-100">
+            <span className="material-symbols-outlined text-indigo-500">verified_user</span>
+            <span className="text-[10px] font-black uppercase text-indigo-400 tracking-widest">Canal Cifrado</span>
+          </div>
         }
       />
 
-      <div className="bg-white rounded-3xl shadow-xl shadow-primary/5 border border-gray-100 overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-12 relative">
+        <div className="lg:col-span-8 space-y-8">
+          <section className="bg-white/70 backdrop-blur-md rounded-[40px] p-8 md:p-12 border border-white/60 shadow-xl shadow-primary/5 relative overflow-hidden">
+            <div className="absolute top-0 right-0 size-32 bg-indigo-500/5 rounded-bl-full pointer-events-none"></div>
 
-        {/* Aviso de Privacidad */}
-        <div className="bg-[#EEF2FF] p-6 border-b border-[#E0E7FF] flex gap-4 items-start">
-          <div className="size-10 rounded-full bg-[#374BA6] flex items-center justify-center shrink-0 mt-1">
-            <span className="material-symbols-outlined text-white text-xl">security</span>
-          </div>
-          <div>
-            <h3 className="text-[#374BA6] font-bold text-sm mb-1 uppercase tracking-wide">Aviso de Privacidad</h3>
-            <p className="text-[#4338ca] text-sm leading-relaxed">
-              Tu identidad está 100% protegida. No recolectamos nombres, correos ni direcciones IP. Este es un canal anónimo dedicado a tu seguridad psicológica.
-            </p>
-          </div>
-        </div>
+            <form onSubmit={handleSubmit} className="space-y-10">
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase text-text-n900 tracking-widest px-1">Área de Mejora</label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {[
+                    { id: 'entorno_fisico', label: 'Sensorial', icon: 'visibility' },
+                    { id: 'comunicacion', label: 'Comunicación', icon: 'chat' },
+                    { id: 'cultura', label: 'Cultura', icon: 'diversity_1' },
+                    { id: 'procesos', label: 'Procesos', icon: 'account_tree' },
+                    { id: 'otro', label: 'Otro', icon: 'more_horiz' }
+                  ].map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setCategory(cat.id)}
+                      className={`flex flex-col items-center gap-3 p-6 rounded-2xl border-2 transition-all ${category === cat.id ? 'bg-primary border-primary text-white shadow-xl shadow-primary/20 scale-105' : 'bg-gray-50 border-transparent text-gray-400 hover:border-primary/20 hover:text-primary'}`}
+                    >
+                      <span className="material-symbols-outlined text-3xl">{cat.icon}</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest">{cat.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-        <form onSubmit={handleSubmit} className="p-8 space-y-8">
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase text-text-n900 tracking-widest px-1">Tu Sugerencia</label>
+                <textarea
+                  value={suggestion}
+                  onChange={(e) => setSuggestion(e.target.value)}
+                  required
+                  rows={4}
+                  className="w-full bg-gray-50/50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-[24px] px-8 py-6 font-bold text-text-n900 outline-none transition-all shadow-inner resize-none text-lg"
+                  placeholder="Describe el cambio que te gustaría ver..."
+                />
+              </div>
 
-          {/* Categoría */}
-          <div className="space-y-2">
-            <label htmlFor="category" className="block text-sm font-bold text-text-n900">
-              Tipo de sugerencia
-            </label>
-            <div className="relative">
-              <select
-                id="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none appearance-none cursor-pointer font-medium text-gray-700"
-                required
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase text-text-n900 tracking-widest px-1">¿Qué impacto tendría?</label>
+                <textarea
+                  value={impact}
+                  onChange={(e) => setImpact(e.target.value)}
+                  required
+                  rows={3}
+                  className="w-full bg-gray-50/50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-[24px] px-8 py-6 font-bold text-text-n900 outline-none transition-all shadow-inner resize-none text-lg"
+                  placeholder="¿Cómo ayudaría esto al equipo?"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting || !category}
+                className="w-full bg-primary text-white py-6 rounded-[28px] font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-30"
               >
-                <option value="" disabled>Selecciona una categoría</option>
-                <option value="entorno_fisico">Entorno Físico / Sensorial</option>
-                <option value="comunicacion">Comunicación y Herramientas</option>
-                <option value="cultura">Cultura y Convivencia</option>
-                <option value="procesos">Procesos y Rituales</option>
-                <option value="otro">Otro</option>
-              </select>
-              <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
-            </div>
-          </div>
+                {isSubmitting ? <span className="material-symbols-outlined animate-spin">refresh</span> : <span>Enviar de forma Anónima</span>}
+                <span className="material-symbols-outlined">shield</span>
+              </button>
+            </form>
 
-          {/* Sugerencia */}
-          <div className="space-y-2">
-            <label htmlFor="suggestion" className="block text-sm font-bold text-text-n900">
-              Tu sugerencia
-            </label>
-            <textarea
-              id="suggestion"
-              rows={4}
-              value={suggestion}
-              onChange={(e) => setSuggestion(e.target.value)}
-              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none resize-none font-medium placeholder:text-gray-400"
-              placeholder="Describe detalladamente el cambio o mejora que propones..."
-              required
-            />
-            <p className="text-xs text-gray-400 italic text-right">Evita incluir nombres propios para mantener el anonimato.</p>
-          </div>
-
-          {/* Impacto */}
-          <div className="space-y-2">
-            <label htmlFor="impact" className="block text-sm font-bold text-text-n900">
-              Impacto esperado
-            </label>
-            <textarea
-              id="impact"
-              rows={3}
-              value={impact}
-              onChange={(e) => setImpact(e.target.value)}
-              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none resize-none font-medium placeholder:text-gray-400"
-              placeholder="¿Cómo crees que este cambio ayudaría al equipo o a personas neurodivergentes?"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={!category || !suggestion.trim() || !impact.trim() || isSubmitting}
-            className="w-full py-4 bg-primary text-white rounded-xl font-bold text-lg shadow-lg hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            {isSubmitting ? (
-              <>
-                <span className="material-symbols-outlined animate-spin">refresh</span>
-                Enviando...
-              </>
-            ) : (
-              <>
-                Enviar sugerencia de forma anónima
-                <span className="material-symbols-outlined">send</span>
-              </>
+            {showSuccess && (
+              <div className="absolute inset-0 bg-white/95 backdrop-blur-md flex items-center justify-center p-12 text-center animate-fade-in z-20 rounded-[40px]">
+                <div className="space-y-6 animate-scale-in">
+                  <div className="size-24 bg-green-500 text-white rounded-[32px] flex items-center justify-center mx-auto shadow-2xl rotate-12">
+                    <span className="material-symbols-outlined text-5xl">verified</span>
+                  </div>
+                  <h3 className="font-display text-4xl font-black uppercase tracking-tight">¡Enviado!</h3>
+                  <p className="text-gray-400 font-bold text-lg leading-relaxed max-w-sm">Tu voz ha sido guardada en el buzón. Gracias por ayudarnos a ser mejores.</p>
+                </div>
+              </div>
             )}
-          </button>
-
-          <p className="text-[10px] text-gray-400 text-center leading-normal px-4">
-            Al enviar, confirmas que esta información será compartida con el equipo de RRHH y Diversidad de forma agregada.
-          </p>
-
-        </form>
-      </div>
-
-      <div className="mt-12 text-center opacity-60">
-        <p className="text-xs font-bold tracking-widest uppercase text-text-n900 mb-1">PACTO • Inclusion by Design</p>
-        <p className="text-[10px] text-gray-500">© 2024 PACTO. Todos los derechos reservados.</p>
-      </div>
-
-      {/* Success Modal Overlay */}
-      {showSuccess && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-3xl z-10 animate-fade-in">
-          <div className="bg-white p-8 rounded-2xl shadow-2xl border border-gray-100 text-center max-w-sm mx-4 transform scale-100 animate-bounce-in">
-            <div className="size-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="material-symbols-outlined text-4xl">check_circle</span>
-            </div>
-            <h3 className="text-2xl font-black text-text-n900 mb-2">¡Recibido!</h3>
-            <p className="text-gray-600 font-medium">
-              Tu sugerencia ha sido enviada al buzón de forma segura y anónima. Gracias por ayudarnos a mejorar.
-            </p>
-          </div>
+          </section>
         </div>
-      )}
 
+        <aside className="lg:col-span-4 space-y-8">
+          <div className="bg-indigo-600 text-white p-10 rounded-[40px] shadow-2xl shadow-indigo-100 relative overflow-hidden group">
+            <div className="absolute top-[-20%] right-[-20%] size-32 bg-white/10 rounded-full blur-2xl"></div>
+            <div className="relative z-10 space-y-6">
+              <div className="size-12 rounded-2xl bg-white/20 flex items-center justify-center">
+                <span className="material-symbols-outlined text-3xl font-black">security</span>
+              </div>
+              <h3 className="font-display text-2xl font-black uppercase tracking-tight">Privacidad Total</h3>
+              <p className="text-white/80 font-bold leading-relaxed italic">
+                &ldquo;Ni nombres, ni correos, ni IPs. Pacto elimina cualquier rastro para que puedas hablar con libertad absoluta.&rdquo;
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white/70 backdrop-blur-md rounded-[40px] p-8 border border-white/60 shadow-xl shadow-primary/5 space-y-6">
+            <h4 className="font-display text-lg font-black uppercase tracking-widest px-2">Cultura de Escucha</h4>
+            <div className="space-y-4">
+              {[
+                { title: 'Transparencia', icon: 'insights' },
+                { title: 'Seguridad Psicológica', icon: 'psychology' },
+                { title: 'Mejora Continua', icon: 'trending_up' }
+              ].map(item => (
+                <div key={item.title} className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50/50">
+                  <span className="material-symbols-outlined text-primary">{item.icon}</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{item.title}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </aside>
+      </div>
     </PageContainer>
   );
 };

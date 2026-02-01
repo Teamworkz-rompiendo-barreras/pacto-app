@@ -9,7 +9,7 @@ interface AgreementFormProps {
   onSave: (data: Partial<Agreement>) => void;
   onCancel: () => void;
   onArchive?: () => void;
-  initialData?: Partial<Agreement>; // Allow pre-filling
+  initialData?: Partial<Agreement>;
 }
 
 const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, onArchive, initialData }) => {
@@ -18,15 +18,10 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, onArchi
   const [desc, setDesc] = useState('');
   const [category, setCategory] = useState('Comunicación');
   const [visibility, setVisibility] = useState<'Organization' | 'Team' | 'Private'>('Team');
-
-  // Rules List State
   const [rules, setRules] = useState<string[]>(['']);
-
-  // Granular Urgency State
   const [days, setDays] = useState('');
   const [hours, setHours] = useState('');
   const [minutes, setMinutes] = useState('');
-
   const [deadline, setDeadline] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -38,26 +33,19 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, onArchi
   };
   const removeRule = (index: number) => setRules(rules.filter((_, i) => i !== index));
 
-  // Helper to parse urgency string
   const parseUrgency = (str: string) => {
     if (!str) return;
-
-    // Robust parsing for "Xd Xh Xm" format
     const daysMatch = str.match(/(\d+)\s*d/i);
     const hoursMatch = str.match(/(\d+)\s*h/i);
     const minsMatch = str.match(/(\d+)\s*m/i);
-
     if (daysMatch) setDays(daysMatch[1]);
     if (hoursMatch) setHours(hoursMatch[1]);
     if (minsMatch) setMinutes(minsMatch[1]);
-
-    // Blockers
     if (str.includes('Inmediato')) {
       setMinutes('0'); setHours('0'); setDays('0');
     }
   };
 
-  // Pre-fill data
   useEffect(() => {
     if (initialData) {
       if (initialData.title) setTitle(initialData.title);
@@ -66,7 +54,6 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, onArchi
       if (initialData.urgency) parseUrgency(initialData.urgency);
       if (initialData.deadline) setDeadline(initialData.deadline);
       if (initialData.visibility) setVisibility(initialData.visibility);
-
       if (initialData.rules && initialData.rules.length > 0) {
         setRules(initialData.rules);
       }
@@ -76,13 +63,11 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, onArchi
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim()) {
-      // Construct urgency string
       let urgencyStr = '';
       if (days && days !== '0') urgencyStr += `${days}d `;
       if (hours && hours !== '0') urgencyStr += `${hours}h `;
       if (minutes && minutes !== '0') urgencyStr += `${minutes}m`;
       urgencyStr = urgencyStr.trim();
-
       if (!urgencyStr && (days === '0' || hours === '0' || minutes === '0')) urgencyStr = 'Inmediato (Blocker)';
       if (!urgencyStr) urgencyStr = 'Sin urgencia';
 
@@ -100,10 +85,6 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, onArchi
     }
   };
 
-  /* 
-   * AI TEMPLATES SYSTEM 
-   * Mocks a generative AI behavior by selecting from pre-defined high-quality templates
-   */
   const AI_TEMPLATES = [
     {
       title: "Política de 'Cámaras Opcionales'",
@@ -134,272 +115,262 @@ const AgreementForm: React.FC<AgreementFormProps> = ({ onSave, onCancel, onArchi
         "Usar la estructura: Situación - Comportamiento - Impacto.",
         "Siempre asumir intenciones positivas."
       ]
-    },
-    {
-      title: "Desconexión Digital Fin de Semana",
-      desc: "Garantizar el descanso real del equipo evitando comunicaciones fuera de horario laboral.",
-      category: "Social",
-      rules: [
-        "No enviar correos ni mensajes viernes tarde a lunes mañana.",
-        "Programar envíos para el lunes a las 09:00.",
-        "Respetar el derecho a no responder."
-      ]
     }
   ];
 
   const handleGenerateAI = () => {
-    // Check if user has already input content to prevent accidental overwrite
-    if ((title || desc) && !window.confirm("¿Reemplazar el contenido actual con una nueva sugerencia de IA?")) {
-      return;
-    }
-
+    if ((title || desc) && !window.confirm("¿Reemplazar el contenido actual con una nueva sugerencia de IA?")) return;
     setIsGenerating(true);
-
-    // Simulate network delay and "thinking"
     setTimeout(() => {
-      // Pick a random template different from the current title if possible
       let template = AI_TEMPLATES[Math.floor(Math.random() * AI_TEMPLATES.length)];
-
-      // If we accidentally picked the same one (unlikely but possible), try next one
-      if (template.title === title) {
-        const currentIndex = AI_TEMPLATES.indexOf(template);
-        template = AI_TEMPLATES[(currentIndex + 1) % AI_TEMPLATES.length];
-      }
-
       setTitle(template.title);
       setDesc(template.desc);
       setCategory(template.category);
       setRules(template.rules);
-
       setIsGenerating(false);
-      toast("Sugerencia generada con éxito", "success");
-    }, 800);
+      toast("Sugerencia mágica aplicada", "success");
+    }, 1200);
   };
 
-  // Determine if editing based on ID presence
   const isEdit = initialData && (initialData as any).id;
 
   return (
-    <PageContainer>
+    <div className="max-w-5xl mx-auto w-full pb-20 px-4 animate-fade-in">
       <PageHeader
-        title={isEdit ? "Editar Acuerdo" : "Crear un Nuevo Acuerdo Vivo"}
-        subtitle={isEdit ? "Modifica los detalles del acuerdo existente." : "Define expectativas claras para que todo el equipo sepa cómo colaborar mejor."}
+        title={isEdit ? "Refinando el Pacto" : "Creando un Nuevo Pacto Vivo"}
+        subtitle="Los mejores equipos no asumen, acuerdan. Define las reglas del juego para una colaboración sin fricciones."
         actionButton={
           <button
             type="button"
             onClick={handleGenerateAI}
             disabled={isGenerating}
-            className="hidden md:flex items-center gap-2 bg-primary hover:brightness-110 text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-md transition-all active:scale-95 disabled:opacity-70 focus:outline-none focus:ring-4 focus:ring-primary/40"
-            aria-label="Sugerir contenido usando Inteligencia Artificial"
+            className="flex items-center gap-3 bg-gradient-to-br from-primary to-secondary-s3 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:shadow-2xl hover:-translate-y-1 transition-all active:scale-95 disabled:opacity-70 shadow-lg shadow-primary/20"
           >
             {isGenerating ? (
-              <span className="material-symbols-outlined animate-spin text-sm">refresh</span>
+              <span className="material-symbols-outlined animate-spin text-lg">refresh</span>
             ) : (
-              <span className="material-symbols-outlined text-sm">auto_awesome</span>
+              <span className="material-symbols-outlined text-lg">magic_button</span>
             )}
-            {isGenerating ? 'Generando...' : 'Sugerir con IA'}
+            {isGenerating ? 'Inspirándome...' : 'Sugerencia Mágica (IA)'}
           </button>
         }
       />
 
-      <form onSubmit={handleSubmit} className="bg-white border border-gray-border p-8 rounded-xl space-y-8 shadow-xl shadow-primary/5">
-
-        {/* Botón IA Móvil */}
-        <button
-          type="button"
-          onClick={handleGenerateAI}
-          disabled={isGenerating}
-          className="md:hidden w-full flex items-center justify-center gap-2 bg-primary/10 text-primary border-2 border-primary/20 px-4 py-2 rounded-lg text-xs font-bold mb-4 active:bg-primary/20"
-        >
-          <span className="material-symbols-outlined text-sm">auto_awesome</span>
-          Sugerir Contenido con IA
-        </button>
-
-        <div className="space-y-2">
-          <label htmlFor="title" className="block text-lg font-bold text-text-n900">Nombre del Acuerdo</label>
-          <input
-            id="title"
-            type="text"
-            required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-4 border-2 border-gray-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all bg-gray-50 font-medium"
-            placeholder="Ej. Ventanas de Respuesta Rápida"
-            aria-required="true"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <label htmlFor="category" className="block text-lg font-bold text-text-n900">Categoría</label>
-            <div className="relative">
-              <select
-                id="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full p-4 border-2 border-gray-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none bg-white appearance-none cursor-pointer font-medium"
-              >
-                <option>Comunicación</option>
-                <option>Foco</option>
-                <option>Feedback</option>
-                <option>Social</option>
-              </select>
-              <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
+      <form onSubmit={handleSubmit} className="mt-12 space-y-8">
+        {/* Section 1: Core Identity */}
+        <section className="bg-white/70 backdrop-blur-md rounded-[32px] p-8 md:p-10 border border-white/40 shadow-xl shadow-primary/5">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+              <span className="material-symbols-outlined font-bold">edit_document</span>
             </div>
+            <h2 className="font-display text-xl font-black text-text-n900 tracking-tight uppercase">Definición General</h2>
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="visibility" className="block text-lg font-bold text-text-n900">Visibilidad</label>
-            <div className="relative">
-              <select
-                id="visibility"
-                value={visibility}
-                onChange={(e) => setVisibility(e.target.value as any)}
-                className="w-full p-4 border-2 border-gray-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none bg-white appearance-none cursor-pointer font-medium"
-              >
-                <option value="Team">Equipo (Miembros)</option>
-                <option value="Organization">Organización (Global)</option>
-                <option value="Private">Privado (Solo yo)</option>
-              </select>
-              <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">visibility</span>
+          <div className="space-y-6">
+            <div className="flex flex-col gap-3">
+              <label htmlFor="title" className="text-xs font-black text-text-n900 uppercase tracking-widest px-1">Título del Acuerdo</label>
+              <input
+                id="title"
+                type="text"
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-[20px] px-6 py-5 font-bold text-text-n900 outline-none transition-all shadow-inner"
+                placeholder="Ej. Desconexión Digital Post-Working"
+              />
             </div>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-3">
-            <label className="block text-lg font-bold text-text-n900">Urgencia Esperada</label>
-            <div className="bg-gray-50 p-4 rounded-xl border border-gray-border">
-              <p className="text-xs text-gray-500 mb-3 font-bold uppercase tracking-wider">Tiempo de respuesta máximo</p>
-              <div className="flex gap-2">
-                <div className="flex-1 relative">
-                  <input
-                    type="number"
-                    min="0"
-                    value={days}
-                    onChange={(e) => setDays(e.target.value)}
-                    className="w-full h-12 pl-3 pr-8 rounded-lg border border-gray-300 font-bold text-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-                    placeholder="0"
-                  />
-                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 pointer-events-none uppercase">Días</span>
+            <div className="flex flex-col gap-3">
+              <label htmlFor="desc" className="text-xs font-black text-text-n900 uppercase tracking-widest px-1">Propósito y Mantra</label>
+              <textarea
+                id="desc"
+                rows={3}
+                value={desc}
+                onChange={(e) => setDesc(e.target.value)}
+                className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-[24px] px-6 py-5 font-bold text-text-n900 outline-none transition-all shadow-inner resize-none"
+                placeholder="¿Por qué este pacto beneficia la salud del equipo?"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="flex flex-col gap-3">
+                <label htmlFor="category" className="text-xs font-black text-text-n900 uppercase tracking-widest px-1">Categoría</label>
+                <div className="relative">
+                  <select
+                    id="category"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-[20px] px-6 py-5 font-bold text-text-n900 outline-none transition-all shadow-inner appearance-none cursor-pointer"
+                  >
+                    <option>Comunicación</option>
+                    <option>Foco</option>
+                    <option>Feedback</option>
+                    <option>Social/Inclusión</option>
+                  </select>
+                  <span className="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">expand_more</span>
                 </div>
-                <div className="flex-1 relative">
-                  <input
-                    type="number"
-                    min="0"
-                    max="23"
-                    value={hours}
-                    onChange={(e) => setHours(e.target.value)}
-                    className="w-full h-12 pl-3 pr-8 rounded-lg border border-gray-300 font-bold text-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-                    placeholder="0"
-                  />
-                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 pointer-events-none uppercase">Hrs</span>
-                </div>
-                <div className="flex-1 relative">
-                  <input
-                    type="number"
-                    min="0"
-                    max="59"
-                    value={minutes}
-                    onChange={(e) => setMinutes(e.target.value)}
-                    className="w-full h-12 pl-3 pr-8 rounded-lg border border-gray-300 font-bold text-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-                    placeholder="0"
-                  />
-                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 pointer-events-none uppercase">Min</span>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <label htmlFor="visibility" className="text-xs font-black text-text-n900 uppercase tracking-widest px-1">Quién lo ve</label>
+                <div className="relative">
+                  <select
+                    id="visibility"
+                    value={visibility}
+                    onChange={(e) => setVisibility(e.target.value as any)}
+                    className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-[20px] px-6 py-5 font-bold text-text-n900 outline-none transition-all shadow-inner appearance-none cursor-pointer"
+                  >
+                    <option value="Team">Todo el Equipo</option>
+                    <option value="Organization">Toda la Organización</option>
+                    <option value="Private">Solo Yo (Borrador)</option>
+                  </select>
+                  <span className="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">visibility</span>
                 </div>
               </div>
             </div>
           </div>
+        </section>
 
-          <div className="space-y-2">
-            <label htmlFor="deadline" className="block text-lg font-bold text-text-n900">Fecha Límite (Opcional)</label>
-            <input
-              id="deadline"
-              type="date"
-              value={deadline}
-              onChange={(e) => setDeadline(e.target.value)}
-              className="w-full p-4 border-2 border-gray-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all bg-gray-50 font-medium"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="desc" className="block text-lg font-bold text-text-n900">Propósito (El "Por Qué")</label>
-          <div className="relative">
-            <textarea
-              id="desc"
-              rows={3}
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
-              className="w-full p-4 border-2 border-gray-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all bg-gray-50 font-medium resize-none"
-              placeholder="Describe por qué este acuerdo es importante para el bienestar del equipo..."
-            />
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <label className="block text-lg font-bold text-text-n900">Reglas del Juego (El "Cómo")</label>
-            <button type="button" onClick={addRule} className="text-sm font-bold text-primary hover:underline">+ Añadir Regla</button>
+        {/* Section 2: Rules of the Game */}
+        <section className="bg-white/70 backdrop-blur-md rounded-[32px] p-8 md:p-10 border border-white/40 shadow-xl shadow-primary/5">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <div className="size-10 rounded-xl bg-secondary-s3/10 flex items-center justify-center text-secondary-s3">
+                <span className="material-symbols-outlined font-bold">rocket_launch</span>
+              </div>
+              <h2 className="font-display text-xl font-black text-text-n900 tracking-tight uppercase">Reglas del Juego</h2>
+            </div>
+            <button
+              type="button"
+              onClick={addRule}
+              className="px-4 py-2 bg-secondary-s3/10 text-secondary-s3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-secondary-s3 hover:text-white transition-all"
+            >
+              + Añadir Regla
+            </button>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             {rules.map((rule, idx) => (
-              <div key={idx} className="flex gap-2 animate-fade-in">
-                <span className="flex-shrink-0 w-8 h-12 flex items-center justify-center bg-gray-100 rounded-lg text-gray-500 font-bold">{idx + 1}</span>
+              <div key={idx} className="flex gap-4 animate-fade-in group">
+                <div className="size-14 rounded-2xl bg-white border border-black/5 shadow-sm flex items-center justify-center font-black text-primary transition-all group-hover:scale-110">
+                  {idx + 1}
+                </div>
                 <input
                   type="text"
                   value={rule}
                   onChange={(e) => updateRule(idx, e.target.value)}
-                  placeholder={`Regla nº ${idx + 1}`}
-                  className="flex-grow p-3 border border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none font-medium"
+                  placeholder={`Redacta la norma nº ${idx + 1}...`}
+                  className="flex-1 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-[20px] px-6 py-4 font-bold text-text-n900 outline-none transition-all shadow-inner"
                 />
                 {rules.length > 1 && (
-                  <button type="button" onClick={() => removeRule(idx)} className="text-gray-400 hover:text-red-500 p-2">
+                  <button
+                    type="button"
+                    onClick={() => removeRule(idx)}
+                    className="size-14 rounded-2xl hover:bg-red-50 text-gray-300 hover:text-red-500 transition-all flex items-center justify-center"
+                  >
                     <span className="material-symbols-outlined">delete</span>
                   </button>
                 )}
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
-        <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-100">
+        {/* Section 3: Time & Deadlines */}
+        <section className="bg-white/70 backdrop-blur-md rounded-[32px] p-8 md:p-10 border border-white/40 shadow-xl shadow-primary/5">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="size-10 rounded-xl bg-p1/20 flex items-center justify-center text-p1">
+              <span className="material-symbols-outlined font-bold text-primary">timer</span>
+            </div>
+            <h2 className="font-display text-xl font-black text-text-n900 tracking-tight uppercase">Tiempos y Compromisos</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="space-y-4">
+              <label className="text-xs font-black text-text-n900 uppercase tracking-widest px-1">Urgencia Esperada</label>
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <input
+                    type="number"
+                    min="0"
+                    value={days}
+                    onChange={(e) => setDays(e.target.value)}
+                    className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl p-4 font-black text-center text-lg outline-none transition-all shadow-inner"
+                    placeholder="0"
+                  />
+                  <p className="text-[10px] text-center font-black uppercase text-gray-400 mt-2">Días</p>
+                </div>
+                <div className="flex-1">
+                  <input
+                    type="number"
+                    min="0"
+                    max="23"
+                    value={hours}
+                    onChange={(e) => setHours(e.target.value)}
+                    className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl p-4 font-black text-center text-lg outline-none transition-all shadow-inner"
+                    placeholder="0"
+                  />
+                  <p className="text-[10px] text-center font-black uppercase text-gray-400 mt-2">Horas</p>
+                </div>
+                <div className="flex-1">
+                  <input
+                    type="number"
+                    min="0"
+                    max="59"
+                    value={minutes}
+                    onChange={(e) => setMinutes(e.target.value)}
+                    className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl p-4 font-black text-center text-lg outline-none transition-all shadow-inner"
+                    placeholder="0"
+                  />
+                  <p className="text-[10px] text-center font-black uppercase text-gray-400 mt-2">Mins</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <label htmlFor="deadline" className="text-xs font-black text-text-n900 uppercase tracking-widest px-1">Fecha de Revisión (Opcional)</label>
+              <input
+                id="deadline"
+                type="date"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+                className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl px-6 py-4 font-bold text-text-n900 outline-none transition-all shadow-inner"
+              />
+              <p className="text-[10px] font-bold text-gray-400 px-1 leading-relaxed">Poner una fecha ayuda a revisar si el pacto sigue siendo útil para el equipo.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer Actions */}
+        <div className="flex flex-col sm:flex-row gap-4 pt-12">
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 border-2 border-transparent text-gray-500 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 hover:text-text-n900 transition-colors"
+            className="flex-1 px-8 py-5 rounded-[24px] font-black text-sm uppercase tracking-widest text-text-n900/40 hover:text-text-n900 hover:bg-white/50 transition-all"
           >
-            Cancelar
+            Cancelar y Salir
           </button>
 
-          {onArchive ? (
-            <>
+          <div className="flex-[2] flex flex-col sm:flex-row gap-4">
+            {onArchive && (
               <button
                 type="button"
                 onClick={onArchive}
-                className="flex-1 bg-red-50 text-red-600 border-2 border-red-100 py-4 rounded-xl font-bold text-lg hover:bg-red-100 hover:border-red-200 transition-colors"
+                className="flex-1 bg-red-50 text-red-500 px-8 py-5 rounded-[24px] font-black text-sm uppercase tracking-widest hover:bg-red-100 transition-all border-2 border-transparent"
               >
                 Archivar
               </button>
-              <button
-                type="submit"
-                className="flex-[2] bg-primary text-white py-4 rounded-xl font-bold text-lg hover:brightness-110 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
-              >
-                Guardar Cambios
-              </button>
-            </>
-          ) : (
+            )}
             <button
               type="submit"
-              className="flex-[2] bg-primary text-white py-4 rounded-xl font-bold text-lg hover:brightness-110 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              className="flex-[2] bg-primary text-white px-10 py-5 rounded-[24px] font-black text-sm uppercase tracking-widest shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
-              Publicar Acuerdo
+              {isEdit ? 'Actualizar Pacto' : 'Publicar Pacto Vivo'}
             </button>
-          )}
+          </div>
         </div>
       </form>
-    </PageContainer>
+    </div>
   );
 };
 

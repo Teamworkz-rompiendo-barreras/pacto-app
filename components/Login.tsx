@@ -1,4 +1,4 @@
-// Verified Deployment
+
 import React, { useState } from 'react';
 import { AccessibilitySettings, UserProfile } from '../types';
 import { authService } from '../services/authService';
@@ -11,6 +11,7 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
     const [mode, setMode] = useState<'LOGIN' | 'SIGNUP_COMPANY' | 'SIGNUP_EMPLOYEE' | 'RECOVERY'>('LOGIN');
+    const { t } = useLanguage();
 
     // Form States
     const [email, setEmail] = useState('');
@@ -19,7 +20,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
     const [companyName, setCompanyName] = useState('');
     const [invitationCode, setInvitationCode] = useState('');
     const [phone, setPhone] = useState('');
-    const { language = 'es-la' } = useLanguage(); // Default safe value
+    const { language = 'es-la' } = useLanguage();
 
     // Pricing States
     const [selectedPlanTier, setSelectedPlanTier] = useState<'SEED' | 'GROWTH' | 'ENTERPRISE'>('SEED');
@@ -47,21 +48,15 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                 const { user, error } = await authService.signIn(email, password);
                 if (error) {
                     let msg = error;
-                    if (error === "Credenciales incorrectas") msg = "Correo o contraseña incorrectos.";
-                    if (error.includes("rate limit")) msg = "Has intentado demasiadas veces. Espera unos minutos.";
-                    if (error.includes("Email not confirmed")) msg = "Debes confirmar tu correo electrónico antes de entrar.";
+                    if (error === "Credenciales incorrectas") msg = "Usuario o contraseña incorrectos. Verifica tus datos.";
                     setNotification(msg);
                 } else if (user) {
                     onLogin(user);
                 }
-
             } else if (mode === 'SIGNUP_COMPANY' || mode === 'SIGNUP_EMPLOYEE') {
-
-                // Si es empresa y aún no se eligió plan, mostrar selección
                 if (mode === 'SIGNUP_COMPANY' && !showPlanSelection) {
-                    // Validar campos previos antes de pasar a plan
-                    if (!name || !companyName || !email || !password || !phone || !language) {
-                        setNotification("Por favor completa todos los datos antes de elegir plan.");
+                    if (!name || !companyName || !email || !password || !phone) {
+                        setNotification("Completa todos los datos para continuar.");
                         setLoading(false);
                         return;
                     }
@@ -70,404 +65,153 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                     return;
                 }
 
-                // Validación final
-                if (!name || !email || !password || !phone) {
-                    setNotification("Por favor completa todos los campos obligatorios.");
-                    setLoading(false);
-                    return;
-                }
-
-                if (mode === 'SIGNUP_EMPLOYEE' && !invitationCode) {
-                    setNotification("Necesitas un código de invitación para unirte.");
-                    setLoading(false);
-                    return;
-                }
-
-                // Validación Codigo Invitación
-                if (mode === 'SIGNUP_EMPLOYEE' && invitationCode !== (import.meta.env.VITE_INVITATION_CODE || 'PACTO2026')) {
-                    // Demo validation
-                    if (invitationCode.length < 4) {
-                        setNotification("Código de invitación inválido.");
-                        setLoading(false);
-                        return;
-                    }
-                }
-
-                const finalCompanyName = mode === 'SIGNUP_COMPANY' ? companyName : undefined;
-                const finalPlan = mode === 'SIGNUP_COMPANY' ? selectedPlanTier : undefined;
-
-                const { user, error } = await authService.signUp(email, password, name, settings, finalCompanyName, phone, language || 'es-la', finalPlan);
-
-                if (error) {
-                    let msg = error;
-                    if (error.includes("rate limit")) msg = "Límite de intentos seguridad excedido. Espera 1h.";
-                    if (error.includes("already registered")) msg = "Este correo ya está registrado.";
-                    setNotification(msg);
-                } else if (user) {
-                    onLogin(user);
-                }
+                const { user, error } = await authService.signUp(email, password, name, settings, mode === 'SIGNUP_COMPANY' ? companyName : undefined, phone, language || 'es-la', mode === 'SIGNUP_COMPANY' ? selectedPlanTier : undefined);
+                if (error) setNotification(error);
+                else if (user) onLogin(user);
             } else {
-                // RECOVERY
                 if (email) {
                     const { success, error } = await authService.resetPassword(email);
-                    if (!success && error) {
-                        let msg = error;
-                        if (error.includes("rate limit")) msg = "Espera unos minutos antes de volver a intentarlo.";
-                        setNotification(msg);
-                    } else {
-                        setNotification('¡Listo! Revisa tu email para restablecer la contraseña.');
+                    if (!success && error) setNotification(error);
+                    else {
+                        setNotification('¡Listo! Revisa tu email.');
                         setTimeout(() => setMode('LOGIN'), 3000);
                     }
-                } else {
-                    setNotification('Por favor, introduce tu correo electrónico.');
                 }
             }
         } catch (error) {
-            setNotification("Ocurrió un error inesperado.");
+            setNotification("Error inesperado.");
         } finally {
             setLoading(false);
         }
     };
 
-    const isErrorCallback = (txt: string) => {
-        if (txt.includes('¡Listo!')) return false;
-        return true;
-    };
-
     const getTitle = () => {
-        if (showPlanSelection) return 'Elige tu Plan';
-        if (mode === 'LOGIN') return 'Bienvenido de nuevo';
-        if (mode === 'SIGNUP_COMPANY') return 'Registrar Empresa';
-        if (mode === 'SIGNUP_EMPLOYEE') return 'Unirse a un Equipo';
-        if (mode === 'RECOVERY') return 'Recuperar Cuenta';
+        if (showPlanSelection) return 'Selecciona tu Plan';
+        if (mode === 'LOGIN') return 'Entrada';
+        if (mode === 'SIGNUP_COMPANY') return 'Regístrate';
+        if (mode === 'SIGNUP_EMPLOYEE') return 'Únete';
+        return 'Recuperar';
     };
 
     return (
-        <div className={`w-full ${showPlanSelection ? 'max-w-4xl' : 'max-w-lg'} mx-auto animate-fade-in my-10 transition-all duration-500`}>
-            <section className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
-                <div className="text-center mb-8">
-                    {!showPlanSelection && (
-                        <div className="inline-flex items-center justify-center size-12 rounded-xl bg-primary text-white mb-4 shadow-lg shadow-primary/20">
-                            <span className="material-symbols-outlined text-2xl">diversity_3</span>
+        <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+            {/* Animated Background Orbs */}
+            <div className="fixed top-[-10%] right-[-10%] size-[500px] bg-primary/10 blur-[120px] rounded-full animate-pulse"></div>
+            <div className="fixed bottom-[-10%] left-[-10%] size-[500px] bg-p1/20 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+
+            <main className={`w-full ${showPlanSelection ? 'max-w-5xl' : 'max-w-lg'} relative z-10 animate-fade-in`}>
+                <section className="bg-white/70 backdrop-blur-2xl rounded-[48px] p-10 md:p-16 border border-white/40 shadow-2xl shadow-primary/10">
+                    <div className="text-center mb-12">
+                        <div className="inline-flex items-center justify-center size-20 rounded-3xl bg-gradient-to-br from-primary to-secondary-s3 text-white mb-8 shadow-2xl shadow-primary/30 rotate-3">
+                            <span className="material-symbols-outlined text-4xl font-black">lock_open</span>
+                        </div>
+                        <h2 className="font-display text-4xl md:text-5xl font-black text-text-n900 tracking-tight uppercase leading-none mb-4">
+                            {getTitle()}
+                        </h2>
+                        <p className="text-gray-400 font-bold text-lg italic">
+                            {mode === 'LOGIN' ? 'Entra a tu cultura de acuerdos.' : 'Comienza tu viaje hacia la inclusión.'}
+                        </p>
+                    </div>
+
+                    {notification && (
+                        <div className="mb-10 p-6 rounded-2xl bg-red-50 text-red-600 border border-red-100 font-black text-sm flex items-center gap-4 animate-shake">
+                            <span className="material-symbols-outlined">warning</span>
+                            {notification}
                         </div>
                     )}
-                    <h2 className="text-3xl font-black text-text-n900 tracking-tight">
-                        {getTitle()}
-                    </h2>
-                    <p className="text-gray-500 mt-2 font-medium">
-                        {showPlanSelection && 'Selecciona el tamaño de tu organización para continuar.'}
-                        {!showPlanSelection && mode === 'LOGIN' && 'Tu espacio de trabajo inclusivo te espera.'}
-                        {!showPlanSelection && mode === 'SIGNUP_COMPANY' && 'Crea el entorno ideal para tu organización.'}
-                        {!showPlanSelection && mode === 'SIGNUP_EMPLOYEE' && 'Usa tu invitación para colaborar.'}
-                        {!showPlanSelection && mode === 'RECOVERY' && 'Ingresa tu correo para restablecer.'}
-                    </p>
-                </div>
 
-                {notification && (
-                    <div role="alert" aria-live="polite" className={`mb-6 p-4 rounded-xl text-sm font-bold flex items-center gap-2 border ${isErrorCallback(notification) ? 'bg-red-50 text-red-700 border-red-100' : 'bg-green-50 text-green-700 border-green-100'}`}>
-                        <span className="material-symbols-outlined text-lg">
-                            {isErrorCallback(notification) ? 'error' : 'check_circle'}
-                        </span>
-                        {notification}
-                    </div>
-                )}
-
-                {/* VISTA DE SELECCIÓN DE PLAN */}
-                {showPlanSelection ? (
-                    <div className="space-y-8 animate-fade-in">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {/* SEMILLA */}
-                            <button
-                                type="button"
-                                onClick={() => setSelectedPlanTier('SEED')}
-                                className={`w-full text-left p-6 rounded-2xl border-2 cursor-pointer transition-all hover:scale-105 focus:outline-none focus:ring-4 focus:ring-primary/20 ${selectedPlanTier === 'SEED' ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10' : 'border-gray-100 hover:border-primary/50'}`}
-                            >
-                                <div className="mb-4">
-                                    <span className="text-xs font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded">Semilla</span>
-                                </div>
-                                <h3 className="text-2xl font-black text-text-n900 mb-2">Gratis</h3>
-                                <p className="text-gray-500 text-sm mb-6">Para startups y equipos pequeños.</p>
-                                <ul className="space-y-3 text-sm text-gray-600 mb-6">
-                                    <li className="flex gap-2"><span className="material-symbols-outlined text-green-500 text-lg">check</span> Hasta 5 usuarios</li>
-                                    <li className="flex gap-2"><span className="material-symbols-outlined text-green-500 text-lg">check</span> Acuerdos ilimitados</li>
-                                    <li className="flex gap-2"><span className="material-symbols-outlined text-green-500 text-lg">check</span> Rituales básicos</li>
-                                </ul>
-                                <div className={`size-6 rounded-full border-2 ml-auto flex items-center justify-center ${selectedPlanTier === 'SEED' ? 'border-primary bg-primary text-white' : 'border-gray-300'}`}>
-                                    {selectedPlanTier === 'SEED' && <span className="material-symbols-outlined text-sm">check</span>}
-                                </div>
-                            </button>
-
-                            {/* CRECIMIENTO */}
-                            <button
-                                type="button"
-                                onClick={() => setSelectedPlanTier('GROWTH')}
-                                className={`w-full text-left p-6 rounded-2xl border-2 cursor-pointer transition-all hover:scale-105 focus:outline-none focus:ring-4 focus:ring-secondary-s3/20 ${selectedPlanTier === 'GROWTH' ? 'border-secondary-s3 bg-secondary-s3/5 shadow-lg shadow-secondary-s3/10' : 'border-gray-100 hover:border-secondary-s3/50'}`}
-                            >
-                                <div className="mb-4">
-                                    <span className="text-xs font-black uppercase tracking-widest text-secondary-s3 bg-secondary-s3/10 px-2 py-1 rounded">Crecimiento</span>
-                                </div>
-                                <h3 className="text-2xl font-black text-text-n900 mb-2">6€ <span className="text-sm font-medium text-gray-400">/ usuario</span></h3>
-                                <p className="text-gray-500 text-sm mb-6">Para PYMES en expansión.</p>
-                                <ul className="space-y-3 text-sm text-gray-600 mb-6">
-                                    <li className="flex gap-2"><span className="material-symbols-outlined text-green-500 text-lg">check</span> Hasta 50 usuarios</li>
-                                    <li className="flex gap-2"><span className="material-symbols-outlined text-green-500 text-lg">check</span> Análisis de equipo</li>
-                                    <li className="flex gap-2"><span className="material-symbols-outlined text-green-500 text-lg">check</span> Soporte prioritario</li>
-                                </ul>
-                                <div className={`size-6 rounded-full border-2 ml-auto flex items-center justify-center ${selectedPlanTier === 'GROWTH' ? 'border-secondary-s3 bg-secondary-s3 text-white' : 'border-gray-300'}`}>
-                                    {selectedPlanTier === 'GROWTH' && <span className="material-symbols-outlined text-sm">check</span>}
-                                </div>
-                            </button>
-
-                            {/* CORPORATIVO */}
-                            <button
-                                type="button"
-                                onClick={() => setSelectedPlanTier('ENTERPRISE')}
-                                className={`w-full text-left p-6 rounded-2xl border-2 cursor-pointer transition-all hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 ${selectedPlanTier === 'ENTERPRISE' ? 'border-text-n900 bg-gray-50 shadow-lg' : 'border-gray-100 hover:border-gray-300'}`}
-                            >
-                                <div className="mb-4">
-                                    <span className="text-xs font-black uppercase tracking-widest text-text-n900 bg-gray-200 px-2 py-1 rounded">Corporativo</span>
-                                </div>
-                                <h3 className="text-2xl font-black text-text-n900 mb-2">A medida</h3>
-                                <p className="text-gray-500 text-sm mb-6">Grandes organizaciones (+50).</p>
-                                <ul className="space-y-3 text-sm text-gray-600 mb-6">
-                                    <li className="flex gap-2"><span className="material-symbols-outlined text-green-500 text-lg">check</span> Usuarios ilimitados</li>
-                                    <li className="flex gap-2"><span className="material-symbols-outlined text-green-500 text-lg">check</span> SSO & Auditoría</li>
-                                    <li className="flex gap-2"><span className="material-symbols-outlined text-green-500 text-lg">check</span> Gestor de cuenta</li>
-                                </ul>
-                                <div className={`size-6 rounded-full border-2 ml-auto flex items-center justify-center ${selectedPlanTier === 'ENTERPRISE' ? 'border-text-n900 bg-text-n900 text-white' : 'border-gray-300'}`}>
-                                    {selectedPlanTier === 'ENTERPRISE' && <span className="material-symbols-outlined text-sm">check</span>}
-                                </div>
-                            </button>
+                    {showPlanSelection ? (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 animate-scale-in">
+                            {[
+                                { tier: 'SEED', name: 'Semilla', price: 'Gratis', desc: 'Equipos < 5', color: 'border-primary' },
+                                { tier: 'GROWTH', name: 'Crecimiento', price: '6€', desc: 'PYMES < 50', color: 'border-secondary-s3' },
+                                { tier: 'ENTERPRISE', name: 'Corporativo', price: 'Custom', desc: 'Grandes orgs', color: 'border-text-n900' }
+                            ].map((plan) => (
+                                <button
+                                    key={plan.tier}
+                                    onClick={() => setSelectedPlanTier(plan.tier as any)}
+                                    className={`relative p-8 rounded-[32px] border-4 text-left transition-all duration-300 group hover:translate-y-[-4px] ${selectedPlanTier === plan.tier ? `${plan.color} bg-white shadow-2xl` : 'border-transparent bg-gray-50/50 grayscale opacity-60'}`}
+                                >
+                                    <h3 className="font-display text-2xl font-black text-text-n900 uppercase mb-1">{plan.name}</h3>
+                                    <p className="text-4xl font-black text-text-n900 mb-4 tracking-tighter">{plan.price}</p>
+                                    <p className="text-sm font-bold text-gray-400 mb-8">{plan.desc}</p>
+                                    <div className={`size-8 rounded-full border-4 flex items-center justify-center transition-colors ${selectedPlanTier === plan.tier ? 'bg-primary border-primary text-white' : 'border-gray-200'}`}>
+                                        {selectedPlanTier === plan.tier && <span className="material-symbols-outlined text-xs">check</span>}
+                                    </div>
+                                </button>
+                            ))}
                         </div>
-
-                        <div className="flex gap-4 pt-4">
-                            <button
-                                type="button"
-                                onClick={() => setShowPlanSelection(false)}
-                                className="px-6 py-3 rounded-xl text-gray-500 font-bold hover:bg-gray-100 transition-colors"
-                            >
-                                Atrás
-                            </button>
-                            <button
-                                onClick={handleSubmit}
-                                disabled={loading}
-                                className="flex-1 bg-primary text-white py-3 rounded-xl font-bold text-lg hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-primary/20"
-                            >
-                                {loading ? 'Procesando...' : (selectedPlanTier === 'ENTERPRISE' ? 'Solicitar Acceso' : 'Confirmar y Crear Cuenta')}
-                            </button>
-                        </div>
-                    </div>
-                ) : (
-                    <form onSubmit={handleSubmit} className="space-y-5">
-
-                        {/* Campos Específicos de Registro */}
-                        {(mode === 'SIGNUP_COMPANY' || mode === 'SIGNUP_EMPLOYEE') && (
-                            <>
-                                <div className="space-y-1">
-                                    <label className="text-sm font-bold text-text-n900">Nombre Completo</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                        className="w-full p-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium"
-                                        placeholder="Ej. Alex Rivera"
-                                    />
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-1">
-                                        <label className="text-sm font-bold text-text-n900">Teléfono</label>
-                                        <input
-                                            type="tel"
-                                            required
-                                            value={phone}
-                                            onChange={(e) => setPhone(e.target.value)}
-                                            className="w-full p-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium"
-                                            placeholder="+34 600..."
-                                        />
+                    ) : (
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            {mode !== 'LOGIN' && mode !== 'RECOVERY' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 px-2">Nombre</label>
+                                        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className="w-full bg-gray-50/50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl px-6 py-4 font-bold outline-none transition-all shadow-inner" placeholder="Tu nombre" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 px-2">Teléfono</label>
+                                        <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required className="w-full bg-gray-50/50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl px-6 py-4 font-bold outline-none transition-all shadow-inner" placeholder="+34..." />
                                     </div>
                                 </div>
-                            </>
-                        )}
+                            )}
 
-                        {mode === 'SIGNUP_COMPANY' && (
-                            <div className="space-y-1">
-                                <label className="text-sm font-bold text-text-n900">Nombre de la Organización</label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={companyName}
-                                    onChange={(e) => setCompanyName(e.target.value)}
-                                    className="w-full p-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium"
-                                    placeholder="Ej. Teamworkz Inc"
-                                />
+                            {mode === 'SIGNUP_COMPANY' && (
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 px-2">Organización</label>
+                                    <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} required className="w-full bg-gray-50/50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl px-6 py-4 font-bold outline-none transition-all shadow-inner" placeholder="Nombre de tu empresa" />
+                                </div>
+                            )}
+
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 px-2">Email Profesional</label>
+                                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full bg-gray-50/50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl px-6 py-4 font-bold outline-none transition-all shadow-inner" placeholder="hola@pacto.dev" />
                             </div>
-                        )}
 
-                        {mode === 'SIGNUP_EMPLOYEE' && (
-                            <div className="space-y-1">
-                                <label className="text-sm font-bold text-text-n900">Código de Invitación</label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={invitationCode}
-                                    onChange={(e) => setInvitationCode(e.target.value)}
-                                    className="w-full p-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium"
-                                    placeholder="Pega el código aquí"
-                                />
-                            </div>
-                        )}
+                            {mode !== 'RECOVERY' && (
+                                <div className="space-y-2">
+                                    <div className="flex justify-between px-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Contraseña</label>
+                                        {mode === 'LOGIN' && <button type="button" onClick={() => setMode('RECOVERY')} className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">Recuperar</button>}
+                                    </div>
+                                    <div className="relative">
+                                        <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full bg-gray-50/50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl px-6 py-4 font-bold outline-none transition-all shadow-inner" placeholder="••••••••" />
+                                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 hover:text-primary transition-colors"><span className="material-symbols-outlined">{showPassword ? 'visibility_off' : 'visibility'}</span></button>
+                                    </div>
+                                </div>
+                            )}
 
-                        {/* Campos Comunes (Email/Pass) */}
-                        <div className="space-y-1">
-                            <label className="text-sm font-bold text-text-n900">Correo Electrónico</label>
-                            <input
-                                type="email"
-                                required
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full p-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium"
-                                placeholder="nombre@empresa.com"
-                            />
-                        </div>
+                            <div className="pt-6 space-y-6">
+                                <button type="submit" disabled={loading} className="w-full bg-gradient-to-br from-primary to-secondary-s3 text-white py-5 rounded-[24px] font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
+                                    {loading ? <span className="material-symbols-outlined animate-spin">refresh</span> : <span>{mode === 'LOGIN' ? 'Entrar ahora' : 'Siguiente Paso'}</span>}
+                                </button>
 
-                        {mode !== 'RECOVERY' && (
-                            <div className="space-y-1">
-                                <div className="flex justify-between">
-                                    <label className="text-sm font-bold text-text-n900">Contraseña</label>
-                                    {mode === 'LOGIN' && (
-                                        <button
-                                            type="button"
-                                            onClick={() => setMode('RECOVERY')}
-                                            className="text-xs font-bold text-primary hover:underline"
-                                        >
-                                            ¿Olvidaste tu contraseña?
+                                <div className="flex items-center justify-center gap-6">
+                                    {mode === 'LOGIN' ? (
+                                        <>
+                                            <button type="button" onClick={() => setMode('SIGNUP_EMPLOYEE')} className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-primary transition-colors">Soy Empleado</button>
+                                            <div className="size-1 rounded-full bg-gray-200"></div>
+                                            <button type="button" onClick={() => setMode('SIGNUP_COMPANY')} className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-primary transition-colors">Soy Empresa</button>
+                                        </>
+                                    ) : (
+                                        <button type="button" onClick={() => setMode('LOGIN')} className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-sm">arrow_back</span>
+                                            Volver al Login
                                         </button>
                                     )}
                                 </div>
-                                <div className="relative">
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        required
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full p-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium pr-10"
-                                        placeholder="••••••••"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors focus:outline-none"
-                                        aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-                                    >
-                                        <span className="material-symbols-outlined">
-                                            {showPassword ? 'visibility_off' : 'visibility'}
-                                        </span>
-                                    </button>
-                                </div>
                             </div>
-                        )}
+                        </form>
+                    )}
+                </section>
 
-                        {/* Accesibilidad en Registro */}
-                        {(mode === 'SIGNUP_COMPANY' || mode === 'SIGNUP_EMPLOYEE') && (
-                            <fieldset className="p-5 border border-primary/20 rounded-xl bg-primary/5 mt-6 animate-fade-in">
-                                <legend className="px-2 font-bold text-primary flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-lg">accessibility_new</span>
-                                    Configuración de Accesibilidad
-                                </legend>
-
-                                <div className="space-y-4 mt-2">
-                                    <label className="flex items-center justify-between cursor-pointer group p-2 hover:bg-white rounded-lg transition-colors">
-                                        <span className="flex flex-col">
-                                            <span className="font-bold text-text-n900">Alto Contraste</span>
-                                            <span className="text-sm opacity-70">Mejora la legibilidad de elementos.</span>
-                                        </span>
-                                        <input
-                                            type="checkbox"
-                                            checked={settings.high_contrast}
-                                            onChange={(e) => setSettings({ ...settings, high_contrast: e.target.checked })}
-                                            className="w-6 h-6 accent-primary cursor-pointer rounded focus:ring-primary"
-                                        />
-                                    </label>
-                                </div>
-                            </fieldset>
-                        )}
-
-                        {/* Botón Acción Principal */}
-                        <div className="flex flex-col gap-3 pt-4">
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full bg-primary text-white py-4 rounded-xl font-bold text-lg hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {loading ? 'Procesando...' : (mode === 'LOGIN'
-                                    ? 'Iniciar Sesión'
-                                    : (mode === 'RECOVERY'
-                                        ? 'Enviar Contraseña Provisional'
-                                        : 'Siguiente: Elegir Plan'))}
-                            </button>
-
-                            {/* Opciones de Login */}
-                            {mode === 'LOGIN' ? (
-                                <>
-                                    <div className="relative flex py-2 items-center">
-                                        <div className="flex-grow border-t border-gray-200"></div>
-                                        <span className="flex-shrink-0 mx-4 text-gray-400 text-xs font-bold uppercase tracking-wider">¿Eres nuevo?</span>
-                                        <div className="flex-grow border-t border-gray-200"></div>
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <button
-                                            type="button"
-                                            onClick={() => { setMode('SIGNUP_EMPLOYEE'); setNotification(null); }}
-                                            className="w-full bg-gray-50 border border-gray-200 text-text-n900 py-3 rounded-xl font-bold text-sm hover:bg-gray-100 transition-all flex flex-col items-center justify-center p-4 gap-1"
-                                        >
-                                            <span className="material-symbols-outlined text-primary">badge</span>
-                                            Soy Empleado
-                                            <span className="text-[10px] font-normal text-gray-500">Tengo código de invitación</span>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => { setMode('SIGNUP_COMPANY'); setNotification(null); }}
-                                            className="w-full bg-gray-50 border border-gray-200 text-text-n900 py-3 rounded-xl font-bold text-sm hover:bg-gray-100 transition-all flex flex-col items-center justify-center p-4 gap-1"
-                                        >
-                                            <span className="material-symbols-outlined text-primary">business_center</span>
-                                            Soy Empresa
-                                            <span className="text-[10px] font-normal text-gray-500">Quiero administrar mi equipo</span>
-                                        </button>
-                                    </div>
-
-                                    <button
-                                        type="button"
-                                        onClick={onCancel}
-                                        className="w-full bg-transparent text-gray-400 py-2 rounded-xl font-bold text-xs hover:text-text-n900 transition-colors flex items-center justify-center gap-2 cursor-pointer mt-4"
-                                    >
-                                        Cancelar y volver a inicio
-                                    </button>
-                                </>
-                            ) : (
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setMode('LOGIN');
-                                        setNotification(null);
-                                    }}
-                                    className="w-full bg-transparent text-gray-500 py-3 rounded-xl font-bold text-sm hover:text-text-n900 hover:bg-gray-100 transition-colors flex items-center justify-center gap-2 cursor-pointer"
-                                >
-                                    <span className="material-symbols-outlined text-lg">arrow_back</span>
-                                    Volver al inicio de sesión
-                                </button>
-                            )}
-                        </div>
-                    </form>
-                )}
-            </section>
-
-            <div className="mt-8 text-center px-8">
-                <p className="text-sm italic opacity-60">"De la intención a la práctica: Acuerdos vivos para equipos humanos."</p>
-            </div>
-        </div >
+                <div className="text-center mt-12 px-10">
+                    <p className="text-sm font-bold text-text-n900/30 italic">
+                        &ldquo;Diseñado para la neuroinclusión, construido para la excelencia.&rdquo;
+                    </p>
+                </div>
+            </main>
+        </div>
     );
 };
 

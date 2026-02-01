@@ -73,118 +73,145 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user, agreements = [], on
   ];
 
   return (
-    <div className="bg-bg-s1 dark:bg-gray-900 font-public text-text-n900 dark:text-gray-100 min-h-screen flex flex-col animate-fade-in relative">
-      {/* Top Navigation Bar - Specific for Public Profile */}
-      <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-black/10 px-6 py-3 bg-bg-s1 dark:bg-gray-900 sticky top-0 z-50 shadow-sm">
-        <div className="flex items-center gap-8">
-          <div className="flex items-center gap-3 text-primary cursor-pointer" onClick={onBack}>
-            <div className="size-6">
-              <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
-              </svg>
-            </div>
-            <h2 className="text-primary text-xl font-bold leading-tight tracking-[-0.015em] uppercase">PACTO</h2>
-          </div>
-          <nav className="hidden md:flex items-center gap-6">
-            <button onClick={onBack} className="text-text-n900/70 dark:text-gray-400 text-sm font-medium hover:text-primary transition-colors">Volver</button>
-            <span className="text-text-n900 dark:text-gray-200 text-sm font-semibold border-b-2 border-primary pb-0.5">Perfil de {displayUser.name.split(' ')[0]}</span>
-          </nav>
-        </div>
-        <div className="flex flex-1 justify-end gap-6 items-center">
-          <label className="hidden sm:flex flex-col min-w-40 !h-10 max-w-64">
-            <div className="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden">
-              <div className="text-gray-500 flex border-none bg-white/50 dark:bg-white/10 items-center justify-center pl-4">
-                <span className="material-symbols-outlined text-[20px]">search</span>
-              </div>
-              <input
-                className="form-input flex w-full min-w-0 flex-1 border-none bg-white/50 dark:bg-white/10 focus:ring-0 h-full placeholder:text-gray-500 px-3 text-sm outline-none"
-                placeholder="Buscar en el equipo..."
-              />
-            </div>
-          </label>
-          <button
-            onClick={onBack}
-            title="Cerrar"
-            className="size-10 rounded-full border border-black/10 flex items-center justify-center hover:bg-black/5 transition-colors"
-          >
-            <span className="material-symbols-outlined">close</span>
-          </button>
-        </div>
-      </header>
+    <div className="bg-bg-s1 dark:bg-gray-900 font-sans text-text-n900 dark:text-gray-100 min-h-screen flex flex-col animate-fade-in relative transition-colors duration-300">
+      {/* Dynamic Background Accents */}
+      <div className="fixed top-[-10%] right-[-10%] size-96 bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="fixed bottom-[-10%] left-[-10%] size-96 bg-p1/20 blur-[100px] rounded-full pointer-events-none"></div>
 
-      <main className="max-w-4xl mx-auto w-full px-4 py-12">
-        {/* Profile Header */}
-        <section className="flex flex-col items-center mb-16">
-          <div className="mb-6 relative">
+      <main className="max-w-4xl mx-auto w-full px-4 py-8 md:py-16 relative z-10">
+        {/* Profile Card Header */}
+        <section className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-[32px] p-8 md:p-12 border border-white/20 shadow-2xl shadow-primary/5 flex flex-col md:flex-row items-center gap-8 mb-12 overflow-hidden relative group">
+          <div className="absolute top-0 right-0 size-32 bg-primary/5 rounded-bl-[100px] -z-10 group-hover:scale-110 transition-transform duration-700"></div>
+
+          <div className="relative shrink-0">
             {displayUser.avatar && !imgError ? (
               <img
                 src={displayUser.avatar}
                 alt={displayUser.name}
-                className="bg-center bg-no-repeat object-cover aspect-square rounded-full size-32 ring-4 ring-white shadow-xl"
+                className="size-32 md:size-40 object-cover rounded-[24px] ring-4 ring-white shadow-xl rotate-[-2deg] group-hover:rotate-0 transition-all duration-500"
                 onError={() => setImgError(true)}
               />
             ) : (
-              <div className="size-32 rounded-full bg-primary text-white flex items-center justify-center text-4xl font-bold ring-4 ring-white shadow-xl select-none">
+              <div className="size-32 md:size-40 rounded-[24px] bg-gradient-to-br from-primary to-secondary-s3 text-white flex items-center justify-center text-5xl font-black shadow-xl rotate-[-2deg] group-hover:rotate-0 transition-all duration-500">
                 {getInitials(displayUser.name)}
               </div>
             )}
+            <div className="absolute -bottom-2 -right-2 size-10 bg-p1 rounded-full flex items-center justify-center shadow-lg transform scale-100 group-hover:scale-110 transition-transform">
+              <span className="material-symbols-outlined text-primary text-xl font-bold">star</span>
+            </div>
           </div>
-          <div className="text-center">
-            <span className="inline-block px-3 py-1 bg-accent-blue/20 text-primary text-xs font-bold rounded-full mb-3 uppercase tracking-wider">Perfil Público</span>
-            <h1 className="text-primary dark:text-white text-4xl font-bold tracking-tight mb-2">¡Hola! Soy {displayUser.name}</h1>
-            <p className="text-text-n900/70 dark:text-gray-400 text-lg font-medium">{displayUser.role}</p>
-            {displayUser.about && (
-              <p className="mt-4 max-w-lg mx-auto text-text-n900/60 dark:text-gray-500 text-base italic leading-relaxed">
-                "{displayUser.about}"
-              </p>
-            )}
+
+          <div className="text-center md:text-left flex-1">
+            <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
+              <span className="px-3 py-1 bg-primary text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-lg shadow-primary/20">
+                {displayUser.role}
+              </span>
+              <span className="px-3 py-1 bg-white border border-primary/20 text-primary text-[10px] font-black rounded-full uppercase tracking-widest flex items-center gap-1">
+                <span className="material-symbols-outlined text-xs">verified</span>
+                Verificado
+              </span>
+            </div>
+            <h1 className="font-display text-primary dark:text-white text-4xl md:text-5xl font-black tracking-tight mb-2 leading-tight">
+              {displayUser.name}
+            </h1>
+            <p className="text-text-n900/60 dark:text-gray-400 text-lg md:text-xl font-bold mb-6 italic leading-relaxed">
+              &ldquo;{displayUser.about || 'Listo para colaborar de forma inclusiva.'}&rdquo;
+            </p>
+
+            <div className="flex flex-wrap justify-center md:justify-start gap-3">
+              <button
+                onClick={() => {
+                  const filename = `twz_logo_color_rgb.pdf`;
+                  alert(`Generando Manual de Usuario: ${filename} (Simulado)`);
+                }}
+                className="flex items-center gap-2 bg-text-n900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-xl"
+              >
+                <span className="material-symbols-outlined text-lg">download</span>
+                Exportar Manual
+              </button>
+              <button
+                onClick={onBack}
+                className="flex items-center gap-2 bg-white/50 backdrop-blur-sm border border-black/10 text-text-n900 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-white transition-all"
+              >
+                <span className="material-symbols-outlined text-lg">arrow_back</span>
+                Atrás
+              </button>
+            </div>
           </div>
         </section>
 
-        {/* Working Preferences Section */}
+        {/* Working Preferences Section - Instruction Manual */}
         <section className="mb-16">
-          <div className="flex items-center gap-3 px-4 pb-6">
-            <span className="material-symbols-outlined text-primary">psychology_alt</span>
-            <h2 className="text-primary dark:text-white text-[22px] font-bold leading-tight tracking-tight">Cómo trabajar mejor conmigo</h2>
+          <div className="flex items-center justify-between mb-8 px-4">
+            <div className="flex items-center gap-3">
+              <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <span className="material-symbols-outlined font-bold">menu_book</span>
+              </div>
+              <h2 className="font-display text-primary dark:text-white text-2xl font-black tracking-tight uppercase">Instrucciones de Uso</h2>
+            </div>
+            <div className="h-px flex-1 bg-gradient-to-r from-primary/20 to-transparent ml-6 hidden md:block"></div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
-            {/* Comm Card */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-black/5 flex flex-col gap-4">
-              <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <span className="material-symbols-outlined text-primary text-[28px]">chat_bubble_outline</span>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-2">
+            {/* Communication Card */}
+            <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm p-8 rounded-[24px] shadow-sm border border-white/40 flex flex-col gap-6 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <div className="size-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-primary/20 flex items-center justify-center">
+                <span className="material-symbols-outlined text-primary text-3xl">chat_bubble</span>
               </div>
               <div>
-                <p className="text-text-n900 dark:text-white text-lg font-bold">Comunicación</p>
-                <p className="text-accent-blue font-semibold text-sm mb-2">
-                  {displayUser.settings?.comm_preference || 'Escrito'} / Asíncrono
-                </p>
-                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                <h3 className="font-display text-text-n900 dark:text-white text-xl font-black mb-1 uppercase">Comunicación</h3>
+                <div className="h-1 w-10 bg-primary rounded-full mb-4"></div>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-secondary-s3 font-black text-sm uppercase tracking-tighter">Preferencia:</span>
+                  <span className="px-2 py-0.5 bg-secondary-s3/10 text-secondary-s3 text-[10px] font-black rounded uppercase">
+                    {displayUser.settings?.comm_preference || 'Escrito'}
+                  </span>
+                </div>
+                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed font-medium">
                   {displayUser.settings?.comm_preference === 'Escrito'
-                    ? 'Prefiero Slack o e-mail. Me permite procesar la información a mi ritmo.'
-                    : 'Prefiero hablar directamente. Las llamadas cortas resuelven mis dudas mejor.'}
+                    ? 'Valoro la comunicación asíncrona. Escríbeme por Slack para que pueda darte una respuesta pensada.'
+                    : 'Prefiero una llamada rápida para sincronizar. Me ayuda a entender el contexto visualmente.'}
                 </p>
               </div>
             </div>
+
             {/* Focus Card */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-black/5 flex flex-col gap-4">
-              <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <span className="material-symbols-outlined text-primary text-[28px]">timer</span>
+            <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm p-8 rounded-[24px] shadow-sm border border-white/40 flex flex-col gap-6 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <div className="size-14 rounded-2xl bg-gradient-to-br from-p1/20 to-accent-warm/20 flex items-center justify-center">
+                <span className="material-symbols-outlined text-accent-warm text-3xl">target</span>
               </div>
               <div>
-                <p className="text-text-n900 dark:text-white text-lg font-bold">Concentración</p>
-                <p className="text-accent-blue font-semibold text-sm mb-2">10:00 - 12:00</p>
-                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">Mi bloque de trabajo profundo. Por favor, evita agendar reuniones durante este tiempo si no es urgente.</p>
+                <h3 className="font-display text-text-n900 dark:text-white text-xl font-black mb-1 uppercase">Foco Directo</h3>
+                <div className="h-1 w-10 bg-p1 rounded-full mb-4"></div>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-accent-warm font-black text-sm uppercase tracking-tighter">Horario:</span>
+                  <span className="px-2 py-0.5 bg-accent-warm/10 text-accent-warm text-[10px] font-black rounded uppercase">
+                    10:00 - 12:00
+                  </span>
+                </div>
+                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed font-medium">
+                  Es mi bloque de trabajo profundo. No suelo responder mensajes instantáneos en este periodo para maximizar mi entrega.
+                </p>
               </div>
             </div>
+
             {/* Feedback Card */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-black/5 flex flex-col gap-4">
-              <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <span className="material-symbols-outlined text-primary text-[28px]">rate_review</span>
+            <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm p-8 rounded-[24px] shadow-sm border border-white/40 flex flex-col gap-6 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <div className="size-14 rounded-2xl bg-gradient-to-br from-green-500/20 to-primary/20 flex items-center justify-center">
+                <span className="material-symbols-outlined text-green-600 text-3xl">edit_note</span>
               </div>
               <div>
-                <p className="text-text-n900 dark:text-white text-lg font-bold">Feedback</p>
-                <p className="text-accent-blue font-semibold text-sm mb-2">Directo y privado</p>
-                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">Agradezco la honestidad directa por canales privados. Me ayuda a mejorar sin sentir sobrecarga social.</p>
+                <h3 className="font-display text-text-n900 dark:text-white text-xl font-black mb-1 uppercase">Feedback</h3>
+                <div className="h-1 w-10 bg-green-500 rounded-full mb-4"></div>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-green-600 font-black text-sm uppercase tracking-tighter">Estilo:</span>
+                  <span className="px-2 py-0.5 bg-green-100 text-green-600 text-[10px] font-black rounded uppercase">
+                    Directo
+                  </span>
+                </div>
+                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed font-medium">
+                  Me ayuda mucho el feedback claro y específico. Prefiero leerlo por escrito antes de comentarlo en persona.
+                </p>
               </div>
             </div>
           </div>
@@ -192,66 +219,72 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user, agreements = [], on
 
         {/* Team Agreements Section */}
         <section className="mb-12">
-          <div className="flex items-center gap-3 px-4 pb-6">
-            <span className="material-symbols-outlined text-primary">handshake</span>
-            <h2 className="text-primary dark:text-white text-[22px] font-bold leading-tight tracking-tight">Mis acuerdos en PACTO</h2>
+          <div className="flex items-center gap-3 px-4 pb-8">
+            <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+              <span className="material-symbols-outlined font-bold">handshake</span>
+            </div>
+            <h2 className="font-display text-primary dark:text-white text-2xl font-black tracking-tight uppercase">Pactos Activos</h2>
           </div>
-          <div className="bg-white/40 dark:bg-white/5 rounded-xl p-2 mx-4 border border-primary/10">
+          <div className="grid grid-cols-1 gap-4 px-2">
             {agreements && agreements.length > 0 ? (
-              <ul className="flex flex-col gap-1">
-                {agreements.map((agreement) => (
-                  <li key={agreement.id} className="flex items-center justify-between p-4 hover:bg-white dark:hover:bg-gray-800 rounded-lg transition-all group cursor-default">
-                    <div className="flex items-center gap-4">
-                      <span className="material-symbols-outlined text-primary">
+              agreements.filter(a => a.status === 'Activo').map((agreement) => (
+                <div key={agreement.id} className="bg-white/40 dark:bg-white/5 backdrop-blur-[2px] border border-primary/20 rounded-[20px] p-6 flex items-center justify-between group hover:bg-primary/5 transition-all">
+                  <div className="flex items-center gap-5">
+                    <div className="size-12 rounded-full bg-white flex items-center justify-center text-primary shadow-sm border border-primary/10 group-hover:scale-110 transition-transform">
+                      <span className="material-symbols-outlined">
                         {agreement.category === 'Comunicación' ? 'forum' :
                           agreement.category === 'Foco' ? 'timer' :
                             agreement.category === 'Feedback' ? 'rate_review' : 'groups'}
                       </span>
-                      <span className="font-medium text-text-n900 dark:text-gray-200">{agreement.title}</span>
                     </div>
-                    <span className="text-xs font-bold text-accent-blue bg-accent-blue/10 px-2 py-1 rounded uppercase">{agreement.status}</span>
-                  </li>
-                ))}
-              </ul>
+                    <div>
+                      <p className="font-black text-text-n900 dark:text-gray-200 uppercase tracking-tight">{agreement.title}</p>
+                      <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">{agreement.category}</p>
+                    </div>
+                  </div>
+                  <span className="material-symbols-outlined text-primary/30 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </div>
+              ))
             ) : (
-              <div className="p-8 text-center text-gray-500 italic">
-                <p>Aún no he publicado acuerdos visibles en mi perfil.</p>
+              <div className="p-12 text-center bg-white/30 rounded-3xl border-2 border-dashed border-primary/10 text-gray-400">
+                <span className="material-symbols-outlined text-4xl mb-4">folder_open</span>
+                <p className="font-bold">Aún no hay pactos públicos definidos.</p>
               </div>
             )}
           </div>
         </section>
 
-        {/* Footer Action */}
-        <footer className="mt-20 flex flex-col items-center gap-6 pb-20">
-          <p className="text-gray-500 text-sm text-center max-w-xs leading-normal font-medium">
-            ¿Quieres crear un acuerdo con {displayUser.name.split(' ')[0]} o ver los puntos comunes?
+        {/* Footer Action - Call to Action */}
+        <footer className="mt-20 bg-gradient-to-br from-primary to-secondary-s3 rounded-[40px] p-10 md:p-16 text-center text-white relative overflow-hidden shadow-2xl shadow-primary/30">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.1),transparent)] pointer-events-none"></div>
+
+          <h2 className="font-display text-4xl md:text-5xl font-black mb-6 tracking-tight leading-tight">
+            ¿Colaboramos mejor?
+          </h2>
+          <p className="text-white/80 text-lg md:text-xl font-bold mb-10 max-w-lg mx-auto leading-relaxed">
+            Puedes proponer un nuevo acuerdo con {displayUser.name.split(' ')[0]} basado en sus preferencias o enviarle un saludo de reconocimiento.
           </p>
-          <div className="flex gap-4">
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={onProposeAgreement}
-              className="bg-primary hover:bg-primary/90 text-white font-bold py-3 px-8 rounded-full shadow-lg shadow-primary/20 transition-all active:scale-95"
+              className="bg-white text-primary hover:bg-p1 hover:text-primary font-black py-5 px-10 rounded-2xl shadow-xl transition-all active:scale-95 group flex items-center justify-center gap-3"
             >
-              Proponer Nuevo Acuerdo
+              <span className="material-symbols-outlined font-bold">add_circle</span>
+              PROPONER ACUERDO
             </button>
             <button
               onClick={handleOpenGreetingModal}
               disabled={greetingSent}
-              className={`border-2 font-bold py-3 px-8 rounded-full transition-all flex items-center gap-2 ${greetingSent
-                ? 'bg-green-100 border-green-200 text-green-700'
-                : 'border-primary/20 hover:border-primary text-primary'
+              className={`font-black py-5 px-10 rounded-2xl transition-all flex items-center justify-center gap-3 backdrop-blur-md shadow-xl ${greetingSent
+                ? 'bg-green-500 text-white'
+                : 'bg-white/10 border-2 border-white/30 text-white hover:bg-white/20'
                 }`}
             >
-              {greetingSent ? (
-                <>
-                  <span className="material-symbols-outlined text-lg">check</span>
-                  ¡Saludo Enviado!
-                </>
-              ) : (
-                <>
-                  <span className="material-symbols-outlined text-lg">sentiment_satisfied</span>
-                  Enviar un Saludo
-                </>
-              )}
+              <span className="material-symbols-outlined font-bold">
+                {greetingSent ? 'check_circle' : 'celebration'}
+              </span>
+              {greetingSent ? '¡SALUDO ENVIADO!' : 'ENVIAR SALUDO'}
             </button>
           </div>
         </footer>
