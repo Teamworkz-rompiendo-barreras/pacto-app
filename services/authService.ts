@@ -12,7 +12,7 @@ export const authService = {
             let authData = { user: { id: crypto.randomUUID() } } as any;
             let authError = null;
 
-            if (import.meta.env.VITE_SUPABASE_URL?.includes('placeholder')) {
+            if (!import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL.includes('placeholder')) {
                 console.warn("⚠️ DEMO MODE: Bypassing Supabase SignUp");
             } else {
                 const response = await supabase.auth.signUp({
@@ -70,7 +70,7 @@ export const authService = {
     async signIn(email: string, password: string): Promise<{ user: UserProfile | null, error: string | null }> {
         try {
             // --- DEMO MODE BYPASS ---
-            if (import.meta.env.VITE_SUPABASE_URL?.includes('placeholder')) {
+            if (!import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL.includes('placeholder')) {
                 console.warn("⚠️ DEMO MODE: Bypassing Supabase Auth");
                 let mockProfile = await userService.getUserProfileByEmail(email);
                 if (!mockProfile) {
@@ -157,7 +157,7 @@ export const authService = {
 
     // Obtener usuario actual (sesión activa)
     async getCurrentUser(): Promise<UserProfile | null> {
-        if (import.meta.env.VITE_SUPABASE_URL?.includes('placeholder')) {
+        if (!import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL.includes('placeholder')) {
             return null;
         }
 
