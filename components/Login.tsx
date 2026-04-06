@@ -121,25 +121,42 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                     )}
 
                     {showPlanSelection ? (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 animate-scale-in">
-                            {[
-                                { tier: 'SEED', name: 'Semilla', price: 'Gratis', desc: 'Equipos < 5', color: 'border-primary' },
-                                { tier: 'GROWTH', name: 'Crecimiento', price: '6€', desc: 'PYMES < 50', color: 'border-secondary-s3' },
-                                { tier: 'ENTERPRISE', name: 'Corporativo', price: 'Custom', desc: 'Grandes orgs', color: 'border-text-n900' }
-                            ].map((plan) => (
-                                <button
-                                    key={plan.tier}
-                                    onClick={() => setSelectedPlanTier(plan.tier as any)}
-                                    className={`relative p-8 rounded-[32px] border-4 text-left transition-all duration-300 group hover:translate-y-[-4px] ${selectedPlanTier === plan.tier ? `${plan.color} bg-white shadow-2xl` : 'border-transparent bg-gray-50/50 grayscale opacity-60'}`}
+                        <div className="space-y-8 animate-scale-in">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                {[
+                                    { tier: 'SEED', name: 'Semilla', price: 'Gratis', desc: 'Equipos < 5', color: 'border-primary' },
+                                    { tier: 'GROWTH', name: 'Crecimiento', price: '6€', desc: 'PYMES < 50', color: 'border-secondary-s3' },
+                                    { tier: 'ENTERPRISE', name: 'Corporativo', price: 'Custom', desc: 'Grandes orgs', color: 'border-text-n900' }
+                                ].map((plan) => (
+                                    <button
+                                        key={plan.tier}
+                                        onClick={() => setSelectedPlanTier(plan.tier as any)}
+                                        className={`relative p-8 rounded-[32px] border-4 text-left transition-all duration-300 group hover:translate-y-[-4px] ${selectedPlanTier === plan.tier ? `${plan.color} bg-white shadow-2xl` : 'border-transparent bg-gray-50/50 grayscale opacity-60'}`}
+                                    >
+                                        <h3 className="font-display text-2xl font-black text-text-n900 uppercase mb-1">{plan.name}</h3>
+                                        <p className="text-4xl font-black text-text-n900 mb-4 tracking-tighter">{plan.price}</p>
+                                        <p className="text-sm font-bold text-gray-400 mb-8">{plan.desc}</p>
+                                        <div className={`size-8 rounded-full border-4 flex items-center justify-center transition-colors ${selectedPlanTier === plan.tier ? 'bg-primary border-primary text-white' : 'border-gray-200'}`}>
+                                            {selectedPlanTier === plan.tier && <span className="material-symbols-outlined text-xs">check</span>}
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                            
+                            <div className="pt-8 space-y-6 border-t border-gray-100">
+                                <button 
+                                    onClick={handleSubmit} 
+                                    disabled={loading} 
+                                    className="w-full bg-gradient-to-br from-primary to-secondary-s3 text-white py-5 rounded-[24px] font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3"
                                 >
-                                    <h3 className="font-display text-2xl font-black text-text-n900 uppercase mb-1">{plan.name}</h3>
-                                    <p className="text-4xl font-black text-text-n900 mb-4 tracking-tighter">{plan.price}</p>
-                                    <p className="text-sm font-bold text-gray-400 mb-8">{plan.desc}</p>
-                                    <div className={`size-8 rounded-full border-4 flex items-center justify-center transition-colors ${selectedPlanTier === plan.tier ? 'bg-primary border-primary text-white' : 'border-gray-200'}`}>
-                                        {selectedPlanTier === plan.tier && <span className="material-symbols-outlined text-xs">check</span>}
-                                    </div>
+                                    {loading ? <span className="material-symbols-outlined animate-spin">refresh</span> : <span>Confirmar Plan y Entrar</span>}
                                 </button>
-                            ))}
+                                
+                                <button type="button" onClick={() => setShowPlanSelection(false)} className="w-full text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-primary transition-colors flex items-center justify-center gap-2">
+                                    <span className="material-symbols-outlined text-sm">arrow_back</span>
+                                    Volver atrás
+                                </button>
+                            </div>
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit} className="space-y-6">
