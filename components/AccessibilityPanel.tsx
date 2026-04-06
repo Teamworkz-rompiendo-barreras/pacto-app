@@ -75,7 +75,7 @@ const AccessibilityPanel: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <label htmlFor="acc-contrast" className="text-sm font-medium flex items-center gap-2">
                                 <span className="material-symbols-outlined text-gray-500">contrast</span>
-                                {t('acc.high_contrast')}
+                                Alto Contraste
                             </label>
                             <button
                                 id="acc-contrast"
@@ -91,7 +91,7 @@ const AccessibilityPanel: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <label htmlFor="acc-motion" className="text-sm font-medium flex items-center gap-2">
                                 <span className="material-symbols-outlined text-gray-500">motion_photos_off</span>
-                                {t('acc.reduced_motion')}
+                                Reducir Movimiento
                             </label>
                             <button
                                 id="acc-motion"

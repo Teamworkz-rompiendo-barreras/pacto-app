@@ -32,7 +32,6 @@ export interface UserProfile {
   plan?: 'SEED' | 'GROWTH' | 'ENTERPRISE';
   maxMembers?: number;
   settings: AccessibilitySettings;
-  email_confirmed_at?: string | null;
 }
 
 export interface Team {

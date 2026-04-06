@@ -68,7 +68,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, onContact, onNavigate }) => 
                 </span>
                 {t('landing.hero.badge')}
               </div>
-              <h1 className="font-display text-[14vw] md:text-8xl font-black leading-[0.9] tracking-tighter text-text-n900 text-balance uppercase">
+              <h1 className="font-display text-6xl md:text-8xl font-black leading-[0.9] tracking-tighter text-text-n900 text-balance uppercase">
                 {t('landing.hero.title')}
               </h1>
               <p className="text-xl md:text-2xl text-text-n900/40 font-bold leading-relaxed max-w-xl text-balance italic">

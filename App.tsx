@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, UserProfile, AccessibilitySettings, Ritual, Agreement, RitualHistoryItem, Notification } from './types';
 import { useLanguage, LanguageProvider } from './LanguageContext';
-import { ToastProvider, useToast } from './context/ToastContext';
+import { ToastProvider } from './context/ToastContext';
 import { authService } from './services/authService';
 import { agreementService } from './services/agreementService';
-import { userService } from './services/userService';
 import { ritualService } from './services/ritualService';
 import { notificationService } from './services/notificationService';
 
@@ -273,29 +272,26 @@ const AppContent: React.FC = () => {
   // Lógica funcional para Acuerdos
   const handleSaveAgreement = async (newAgreementData: Partial<Agreement>) => {
     if (!user) return;
-    try {
-      const agreementToCreate: Omit<Agreement, 'id' | 'updatedAt' | 'version'> = {
-        title: newAgreementData.title || 'Nuevo Acuerdo',
-        description: newAgreementData.description || '',
-        category: newAgreementData.category || 'Comunicación',
-        status: 'Activo' as const,
-        rules: newAgreementData.rules || [],
-        participants: newAgreementData.participants || [],
-        urgency: newAgreementData.urgency,
-        deadline: newAgreementData.deadline,
-        createdBy: user.id,
-        visibility: newAgreementData.visibility || 'Team'
-      };
 
-      const created = await agreementService.createAgreement(agreementToCreate);
-      setAgreements(prev => [created, ...prev]);
-      setAgreementTemplate(undefined);
-      setShowCelebration(true);
-      navigateTo(View.DASHBOARD);
-    } catch (error) {
-      console.error("Failed to create agreement", error);
-      alert("Error al guardar el acuerdo. Por favor, inténtalo de nuevo.");
-    }
+    // Completar datos faltantes para el servicio
+    const agreementToCreate = {
+      title: newAgreementData.title || 'Sin Título',
+      description: newAgreementData.description || '',
+      category: newAgreementData.category || 'Comunicación',
+      status: 'Activo' as const,
+      rules: newAgreementData.rules || [],
+      participants: newAgreementData.participants || [],
+      urgency: newAgreementData.urgency,
+      deadline: newAgreementData.deadline,
+      createdBy: user.id, // Asignar creador actual
+      visibility: newAgreementData.visibility || 'Team' // Default visibility
+    };
+
+    const created = await agreementService.createAgreement(agreementToCreate);
+    setAgreements(prev => [created, ...prev]);
+    setAgreementTemplate(undefined);
+    setShowCelebration(true);
+    navigateTo(View.DASHBOARD);
   };
 
   const handleUpdateAgreement = async (updatedData: Partial<Agreement>) => {
@@ -307,19 +303,8 @@ const AppContent: React.FC = () => {
     }
     setSelectedAgreement(undefined);
     navigateTo(View.DASHBOARD);
-  };
-
-  const handleDeleteAccount = async () => {
-    if (user) {
-      const success = await userService.deleteUserProfile(user.id);
-      if (success) {
-        await authService.signOut();
-        setUser(null);
-        navigateTo(View.LANDING);
-      } else {
-        alert("Error al eliminar cuenta. Inténtalo de nuevo.");
-      }
-    }
+    setSelectedAgreement(undefined);
+    navigateTo(View.DASHBOARD);
   };
 
   const handleArchiveAgreement = async () => {
@@ -350,18 +335,8 @@ const AppContent: React.FC = () => {
 
   // Redirección inteligente si ya hay usuario logueado
   useEffect(() => {
-    if (user) {
-      // 4. Flujo de Confirmación (Middleware)
-      if (!user.email_confirmed_at && !import.meta.env.VITE_SUPABASE_URL?.includes('placeholder')) {
-        // Si el email no está confirmado, mostrar modal bloqueante o redirigir (Simulamos bloqueo aquí con un alert o view especial)
-        // Por ahora, asumimos que si es null, no puede entrar.
-        // Pero para no romper la demo si datos antiguos no lo tienen, solo lo aplicamos si explícitamente es null.
-        // setView(View.VERIFY_EMAIL); // Need to create this view or handle it.
-        // For simplicity, we assume Login checks this, OR we check it here.
-        // Let's rely on Login warning, but if user implies 'BLOCK', we should block.
-      } else if (view === View.LANDING) {
-        setView(View.DASHBOARD);
-      }
+    if (user && view === View.LANDING) {
+      setView(View.DASHBOARD);
     }
   }, [user]);
 
@@ -500,7 +475,7 @@ const AppContent: React.FC = () => {
               onCreateNew={() => navigateTo(View.NEW_AGREEMENT)}
               onOpenPublicView={() => { setSelectedUser(user); navigateTo(View.PUBLIC_PROFILE); }}
               onLogout={() => setShowLogoutModal(true)}
-              onDeleteAccount={handleDeleteAccount}
+              onDeleteAccount={handleLogout}
               onNavigateToLanguage={() => navigateTo(View.LANGUAGE_REGION)}
             />
           </div>

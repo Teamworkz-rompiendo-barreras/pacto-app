@@ -48,7 +48,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onCancel }) => {
                 const { user, error } = await authService.signIn(email, password);
                 if (error) {
                     let msg = error;
-                    if (error === "Credenciales incorrectas") msg = "Usuario o contraseña incorrectos. Verifica tus datos.";
+                    if (error === "Credenciales incorrectas") msg = "Correo o contraseña incorrectos.";
                     setNotification(msg);
                 } else if (user) {
                     onLogin(user);

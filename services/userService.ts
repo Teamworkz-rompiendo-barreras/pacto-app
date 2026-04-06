@@ -110,26 +110,5 @@ export const userService = {
         } catch (error) {
             return null;
         }
-    },
-    async deleteUserProfile(userId: string): Promise<boolean> {
-        // Local Delete
-        const users = getLocalUsers();
-        const newUsers = users.filter(u => u.id !== userId);
-        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(newUsers));
-
-        // Supabase Delete (RPC)
-        try {
-            if (!import.meta.env.VITE_SUPABASE_URL?.includes('placeholder')) {
-                // Call the RPC function we tried to add earlier
-                await supabase.rpc('delete_own_account');
-
-                // Fallback direct delete if RPC fails or not exists (RLS permitting)
-                await supabase.from('profiles').delete().eq('id', userId);
-            }
-            return true;
-        } catch (e) {
-            console.error('Error deleting user:', e);
-            return false;
-        }
     }
 };

@@ -39,9 +39,6 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCoun
 
     return (
         <div className="flex min-h-screen bg-bg-s1 font-display">
-            <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] bg-white text-primary px-4 py-2 rounded-lg shadow-xl font-bold border-2 border-primary">
-                {t('global.skip_to_content') || 'Saltar al contenido'}
-            </a>
             {/* Sidebar (Desktop) */}
             <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-gray-100 fixed h-full z-30">
                 <div className="p-6 flex items-center gap-3">
@@ -170,7 +167,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, unreadCoun
             )}
 
             {/* Main Content Area */}
-            <main id="main-content" className="flex-1 lg:ml-64 w-full pt-16 lg:pt-0 relative">
+            <main className="flex-1 lg:ml-64 w-full pt-16 lg:pt-0 relative">
 
                 {/* Desktop Top Bar (Notification Bell & Back Button) */}
                 <div className="hidden lg:flex w-full justify-between items-center px-8 py-6 gap-3 sticky top-0 bg-bg-s1/90 backdrop-blur-sm z-20">

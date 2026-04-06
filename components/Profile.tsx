@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { UserProfile, AccessibilitySettings } from '../types';
 import { useToast } from '../context/ToastContext';
-import { useLanguage } from '../LanguageContext';
 import { PageContainer } from './common/PageContainer';
 import { PageHeader } from './common/PageHeader';
 
@@ -28,7 +27,6 @@ const DEMO_SESSIONS = [
 
 const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpdateUser, onOpenPublicView, onLogout, onDeleteAccount, onNavigateToLanguage, initialSection = 'personal' }) => {
     const { toast } = useToast();
-    const { t } = useLanguage();
     // Estado local para el formulario de perfil
     const [name, setName] = useState(user.name);
     const [role, setRole] = useState(user.role);
@@ -564,8 +562,8 @@ const Profile: React.FC<ProfileProps> = ({ user, settings, onSaveSettings, onUpd
                                 <div className="max-w-md flex gap-4">
                                     <span className={`material-symbols-outlined p-2 rounded-xl h-fit ${localSettings.high_contrast ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}`}>contrast</span>
                                     <div>
-                                        <p className="font-black text-lg text-text-n900 uppercase tracking-tighter">{t('acc.high_contrast')}</p>
-                                        <p className="text-sm text-gray-500 font-medium leading-relaxed">{t('acc.high_contrast.desc') || 'Aumenta la distinción visual entre el texto y el fondo para reducir la fatiga ocular.'}</p>
+                                        <p className="font-black text-lg text-text-n900 uppercase tracking-tighter">Máximo Contraste</p>
+                                        <p className="text-sm text-gray-500 font-medium leading-relaxed">Aumenta la distinción visual entre el texto y el fondo para reducir la fatiga ocular.</p>
                                     </div>
                                 </div>
                                 <div className="relative inline-flex items-center cursor-pointer mt-1 pointer-events-none">
